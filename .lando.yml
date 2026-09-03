@@ -1,0 +1,11 @@
+name: luxury-miami
+recipe: pantheon
+config:
+  framework: drupal8
+  site: luxury-miami
+  id: 80fb1ccc-32e0-4e04-a782-c95c6eda82c8
+services:
+  # wodby/varnish starts as user "varnish", but varnishd -j unix requires root.
+  edge:
+    overrides:
+      user: root
