@@ -1,14 +1,14 @@
 _core:
   default_config_hash: ijfbzDTN4CbE7Sr-6ubWzy_t1vH4OtU1doNCLssVz-4
 langcode: en
-uuid: 0763ada4-f28d-4187-8eed-089f7a2234be
-name: 'L&L luxury miami '
+uuid: b356e5d1-8b14-4e0b-896e-6487bb511fe3
+name: 'l&l luxury motors miami'
 mail: info@luxurymotorsmiami.com
 slogan: ''
 page:
   403: ''
   404: ''
-  front: /node
+  front: /node/1
 admin_compact_mode: false
 weight_select_max: 100
 default_langcode: en
