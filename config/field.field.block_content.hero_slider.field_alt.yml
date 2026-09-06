@@ -1,0 +1,19 @@
+uuid: e009cd3e-ab89-4532-80b0-aa6ccf49427f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.hero_slider
+    - field.storage.block_content.field_alt
+id: block_content.hero_slider.field_alt
+field_name: field_alt
+entity_type: block_content
+bundle: hero_slider
+label: Alt
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

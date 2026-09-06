@@ -10,7 +10,7 @@ dependencies:
 id: luxury_motors_vehicle_studio
 theme: luxury_motors
 region: content
-weight: -15
+weight: -9
 provider: null
 plugin: lm_vehicle_studio
 settings:

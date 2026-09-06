@@ -1,0 +1,31 @@
+uuid: 6dfd4862-df51-4134-aaf6-ace1c8b22430
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero_slider:77939aad-212a-4655-91c2-85091a353182'
+  module:
+    - block_content
+    - node
+  theme:
+    - luxury_motors
+id: luxury_motors_contenidoprincipal
+theme: luxury_motors
+region: content
+weight: -2
+provider: null
+plugin: 'block_content:77939aad-212a-4655-91c2-85091a353182'
+settings:
+  id: 'block_content:77939aad-212a-4655-91c2-85091a353182'
+  label: 'Slider principal home'
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      page: page

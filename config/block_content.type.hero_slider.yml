@@ -1,0 +1,8 @@
+uuid: 6036210a-8c5d-43e3-834c-800ff6a073e7
+langcode: en
+status: true
+dependencies: {  }
+id: hero_slider
+label: 'Hero slider'
+revision: false
+description: 'Hero slider'

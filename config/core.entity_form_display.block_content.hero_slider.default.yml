@@ -1,0 +1,29 @@
+uuid: ef92c65b-60db-497d-80e0-b7ee410b9455
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.hero_slider
+    - field.field.block_content.hero_slider.field_alt
+id: block_content.hero_slider.default
+targetEntityType: block_content
+bundle: hero_slider
+mode: default
+content:
+  field_alt:
+    type: string_textfield
+    weight: 26
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
