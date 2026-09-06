@@ -1,0 +1,25 @@
+uuid: 59e1b83c-6d21-453a-8cf4-785f335eadf3
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.utility-menu
+  module:
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_utilitymenu
+theme: luxury_motors
+region: header
+weight: 0
+provider: null
+plugin: 'system_menu_block:utility-menu'
+settings:
+  id: 'system_menu_block:utility-menu'
+  label: 'Utility Menu'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

@@ -1,0 +1,9 @@
+uuid: 383dae63-414f-498a-88eb-7a136c2c04ac
+langcode: en
+status: true
+dependencies: {  }
+name: 'Vehicle category'
+vid: vehicle_category
+description: 'Vehicle categories used for catalog filters and relationships.'
+weight: 0
+new_revision: false

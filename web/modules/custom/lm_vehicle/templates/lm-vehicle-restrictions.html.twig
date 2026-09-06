@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Rental desk restrictions.
+ */
+#}
+<section class="light" id="restrictions">
+  <div class="wrap">
+    <p class="kicker">{{ 'Desk'|t }}</p>
+    <h2 class="title">{{ 'Restrictions'|t }}</h2>
+    <ul class="restrictions">
+      {% for item in restrictions %}
+        <li>
+          <span>{{ item.label }}</span>
+          {{ item.value }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

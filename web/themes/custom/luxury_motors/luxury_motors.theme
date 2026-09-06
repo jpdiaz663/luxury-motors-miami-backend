@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Theme preprocess for Luxury Motors.
+ */
+
+declare(strict_types=1);
+
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media\MediaInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for html.html.twig.
+ */
+function luxury_motors_preprocess_html(array &$variables): void {
+  $variables['#attached']['library'][] = 'luxury_motors/global';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block.html.twig.
+ */
+function luxury_motors_preprocess_block(array &$variables): void {
+  $plugin_id = (string) ($variables['plugin_id'] ?? '');
+  if ($plugin_id === 'system_menu_block:utility-menu') {
+    $variables['attributes']['class'][] = 'nav-tools';
+  }
+  if (str_starts_with($plugin_id, 'lm_vehicle_')) {
+    $variables['attributes']['class'][] = 'lm-vehicle-section';
+    $variables['#attached']['library'][] = 'luxury_motors/vehicle';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page.html.twig.
+ */
+function luxury_motors_preprocess_page(array &$variables): void {
+  if (!empty($variables['is_front'])) {
+    $variables['attributes']['class'][] = 'is-front';
+  }
+  $node = $variables['node'] ?? NULL;
+  if ($node && $node->bundle() === 'vehicle') {
+    $variables['attributes']['class'][] = 'is-vehicle';
+  }
+  $variables['site_name'] = \Drupal::config('system.site')->get('name');
+
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if (in_array($route_name, ['system.403', 'system.404'], TRUE)) {
+    $variables['attributes']['class'][] = 'error-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
+    $variables['error_background_url'] = '/' . $theme_path . '/images/error-4xx-bg.jpg';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node.html.twig.
+ */
+function luxury_motors_preprocess_node(array &$variables): void {
+  $node = $variables['node'];
+  if ($node->bundle() === 'vehicle') {
+    $variables['attributes']['class'][] = 'vehicle-node';
+    return;
+  }
+  if ($node->bundle() !== 'page') {
+    return;
+  }
+
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  $variables['site_name'] = \Drupal::config('system.site')->get('name');
+  $variables['banner_url'] = NULL;
+  $variables['banner_alt'] = '';
+
+  if (!$node->hasField('field_banner') || $node->get('field_banner')->isEmpty()) {
+    return;
+  }
+
+  $media = $node->get('field_banner')->entity;
+  if (!$media instanceof MediaInterface || !$media->hasField('field_media_image') || $media->get('field_media_image')->isEmpty()) {
+    return;
+  }
+
+  $image_item = $media->get('field_media_image');
+  $file = $image_item->entity;
+  if (!$file) {
+    return;
+  }
+
+  $variables['banner_alt'] = (string) ($image_item->alt ?? '');
+  $uri = $file->getFileUri();
+  $style = ImageStyle::load('hero_banner');
+  $variables['banner_url'] = $style ? $style->buildUrl($uri) : \Drupal::service('file_url_generator')->generateString($uri);
+}

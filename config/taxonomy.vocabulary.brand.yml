@@ -1,0 +1,9 @@
+uuid: 524ddfd5-ad0f-4e74-a454-4c6e6a0d9247
+langcode: en
+status: true
+dependencies: {  }
+name: Brand
+vid: brand
+description: 'Vehicle manufacturers used for catalog filters and relationships.'
+weight: 0
+new_revision: false

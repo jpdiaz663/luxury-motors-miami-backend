@@ -1,0 +1,22 @@
+uuid: 29fda806-f571-45dd-927c-c57d28af98eb
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - luxury_motors
+_core:
+  default_config_hash: eYL19CLDyinGTWYQfBD1DswWzglEotE_kHnHx3AxTXM
+id: luxury_motors_powered
+theme: luxury_motors
+region: header
+weight: 0
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  label_display: '0'
+  provider: system
+visibility: {  }

@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Theme hooks for vehicle detail sections.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_theme().
+ */
+function lm_vehicle_theme(): array {
+  $vehicle = ['vehicle' => NULL];
+
+  return [
+    'lm_vehicle_hero' => [
+      'variables' => $vehicle,
+    ],
+    'lm_vehicle_studio' => [
+      'variables' => $vehicle,
+    ],
+    'lm_vehicle_story' => [
+      'variables' => $vehicle,
+    ],
+    'lm_vehicle_specs' => [
+      'variables' => $vehicle,
+    ],
+    'lm_vehicle_restrictions' => [
+      'variables' => [
+        'restrictions' => [],
+        'vehicle' => NULL,
+      ],
+    ],
+    'lm_vehicle_reserve' => [
+      'variables' => $vehicle,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for vehicle theme hooks.
+ */
+function lm_vehicle_preprocess_lm_vehicle_hero(array &$variables): void {
+  $variables['#attached']['library'][] = 'luxury_motors/vehicle';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for studio gallery.
+ */
+function lm_vehicle_preprocess_lm_vehicle_studio(array &$variables): void {
+  $variables['#attached']['library'][] = 'luxury_motors/vehicle';
+}

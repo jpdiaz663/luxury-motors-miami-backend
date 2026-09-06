@@ -1,0 +1,19 @@
+uuid: dd34fd23-652b-47da-913b-4e8b83bddf0c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_model
+    - node.type.vehicle
+id: node.vehicle.field_model
+field_name: field_model
+entity_type: node
+bundle: vehicle
+label: Model
+description: 'Commercial model name (for example S-Class or Cullinan).'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

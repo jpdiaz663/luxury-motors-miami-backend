@@ -1,0 +1,62 @@
+{#
+/**
+ * @file
+ * Reserve desk — rates and request form.
+ */
+#}
+<section class="light" id="reserve">
+  <div class="wrap">
+    <p class="kicker">{{ 'Night desk'|t }}</p>
+    <h2 class="title">{{ 'Reserve'|t }} {{ vehicle.title }}</h2>
+    {% if vehicle.status %}
+      <p class="muted track-micro">{{ vehicle.status }}</p>
+    {% endif %}
+    <div class="split">
+      <div>
+        <dl class="specs">
+          {% if vehicle.daily %}
+            <div class="spec">
+              <dt>{{ 'Day'|t }}</dt>
+              <dd>{{ vehicle.daily }}</dd>
+            </div>
+          {% endif %}
+          {% if vehicle.weekly %}
+            <div class="spec">
+              <dt>{{ 'Week'|t }}</dt>
+              <dd>{{ vehicle.weekly }}</dd>
+            </div>
+          {% endif %}
+          {% if vehicle.monthly %}
+            <div class="spec">
+              <dt>{{ 'Month'|t }}</dt>
+              <dd>{{ vehicle.monthly }}</dd>
+            </div>
+          {% endif %}
+        </dl>
+      </div>
+      <form class="form" action="mailto:info@luxurymotorsmiami.com" method="post" enctype="text/plain">
+        <label class="field">
+          <span>{{ 'Name'|t }}</span>
+          <input type="text" name="name" required autocomplete="name" />
+        </label>
+        <label class="field">
+          <span>{{ 'Phone'|t }}</span>
+          <input type="tel" name="phone" required autocomplete="tel" />
+        </label>
+        <label class="field">
+          <span>{{ 'Start'|t }}</span>
+          <input type="date" name="start" required />
+        </label>
+        <label class="field">
+          <span>{{ 'End'|t }}</span>
+          <input type="date" name="end" required />
+        </label>
+        <label class="field">
+          <span>{{ 'Note'|t }}</span>
+          <input type="text" name="note" placeholder="{{ 'Hotel, airport, or desk'|t }}" />
+        </label>
+        <button class="cta" type="submit">{{ 'Send to desk'|t }}</button>
+      </form>
+    </div>
+  </div>
+</section>

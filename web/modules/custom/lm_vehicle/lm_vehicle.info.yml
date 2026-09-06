@@ -1,0 +1,11 @@
+name: Luxury Motors Vehicle
+type: module
+description: 'OOP blocks and presentation for Vehicle detail pages.'
+package: Luxury Motors
+core_version_requirement: ^11
+dependencies:
+  - drupal:block
+  - drupal:node
+  - drupal:media
+  - drupal:taxonomy
+  - drupal:image

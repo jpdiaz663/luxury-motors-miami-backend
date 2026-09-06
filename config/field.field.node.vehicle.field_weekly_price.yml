@@ -1,0 +1,23 @@
+uuid: b48cd91f-f26e-4447-99e7-af413278ce1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_weekly_price
+    - node.type.vehicle
+id: node.vehicle.field_weekly_price
+field_name: field_weekly_price
+entity_type: node
+bundle: vehicle
+label: 'Weekly price'
+description: 'Rental price for one week.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

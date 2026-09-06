@@ -1,0 +1,5 @@
+services:
+  lm_vehicle.presenter:
+    class: Drupal\lm_vehicle\VehiclePresenter
+    arguments:
+      - '@file_url_generator'

@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Specification pairs.
+ */
+#}
+<section class="light" id="specs">
+  <div class="wrap">
+    <p class="kicker">{{ 'Specifications'|t }}</p>
+    <h2 class="title">{{ 'The plate'|t }}</h2>
+    <dl class="specs">
+      {% for row in vehicle.rows %}
+        <div class="spec">
+          <dt>{{ row.label }}</dt>
+          <dd>
+            {% if row.chip %}
+              <span class="color-chip"><i style="background: {{ row.chip }}"></i>{{ row.value }}</span>
+            {% else %}
+              {{ row.value }}
+            {% endif %}
+          </dd>
+        </div>
+      {% endfor %}
+    </dl>
+  </div>
+</section>

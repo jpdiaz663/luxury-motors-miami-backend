@@ -1,0 +1,23 @@
+uuid: 16cb58b3-d733-46a7-a042-703da22bbe99
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_daily_price
+    - node.type.vehicle
+id: node.vehicle.field_daily_price
+field_name: field_daily_price
+entity_type: node
+bundle: vehicle
+label: 'Daily price'
+description: 'Rental price for one day.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

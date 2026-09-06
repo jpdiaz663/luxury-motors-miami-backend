@@ -1,0 +1,59 @@
+uuid: a341be2b-fcda-4e69-ac7f-75393b187710
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.vehicle.field_brand
+    - field.field.node.vehicle.field_category
+    - field.field.node.vehicle.field_color
+    - field.field.node.vehicle.field_currency
+    - field.field.node.vehicle.field_daily_price
+    - field.field.node.vehicle.field_description
+    - field.field.node.vehicle.field_doors
+    - field.field.node.vehicle.field_drive_type
+    - field.field.node.vehicle.field_engine
+    - field.field.node.vehicle.field_fuel_type
+    - field.field.node.vehicle.field_gallery
+    - field.field.node.vehicle.field_main_image
+    - field.field.node.vehicle.field_mileage
+    - field.field.node.vehicle.field_model
+    - field.field.node.vehicle.field_monthly_price
+    - field.field.node.vehicle.field_seats
+    - field.field.node.vehicle.field_short_description
+    - field.field.node.vehicle.field_transmission
+    - field.field.node.vehicle.field_vehicle_features
+    - field.field.node.vehicle.field_vehicle_status
+    - field.field.node.vehicle.field_weekly_price
+    - field.field.node.vehicle.field_year
+    - node.type.vehicle
+  module:
+    - user
+id: node.vehicle.default
+targetEntityType: node
+bundle: vehicle
+mode: default
+content: {  }
+hidden:
+  field_brand: true
+  field_category: true
+  field_color: true
+  field_currency: true
+  field_daily_price: true
+  field_description: true
+  field_doors: true
+  field_drive_type: true
+  field_engine: true
+  field_fuel_type: true
+  field_gallery: true
+  field_main_image: true
+  field_mileage: true
+  field_model: true
+  field_monthly_price: true
+  field_seats: true
+  field_short_description: true
+  field_transmission: true
+  field_vehicle_features: true
+  field_vehicle_status: true
+  field_weekly_price: true
+  field_year: true
+  links: true

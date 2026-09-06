@@ -1,0 +1,104 @@
+uuid: 9311e91a-9057-4b28-8265-bd751600d2b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.vehicle.field_brand
+    - field.field.node.vehicle.field_category
+    - field.field.node.vehicle.field_color
+    - field.field.node.vehicle.field_currency
+    - field.field.node.vehicle.field_daily_price
+    - field.field.node.vehicle.field_description
+    - field.field.node.vehicle.field_doors
+    - field.field.node.vehicle.field_drive_type
+    - field.field.node.vehicle.field_engine
+    - field.field.node.vehicle.field_fuel_type
+    - field.field.node.vehicle.field_gallery
+    - field.field.node.vehicle.field_main_image
+    - field.field.node.vehicle.field_mileage
+    - field.field.node.vehicle.field_model
+    - field.field.node.vehicle.field_monthly_price
+    - field.field.node.vehicle.field_seats
+    - field.field.node.vehicle.field_short_description
+    - field.field.node.vehicle.field_transmission
+    - field.field.node.vehicle.field_vehicle_features
+    - field.field.node.vehicle.field_vehicle_status
+    - field.field.node.vehicle.field_weekly_price
+    - field.field.node.vehicle.field_year
+    - node.type.vehicle
+  module:
+    - options
+    - user
+id: node.vehicle.teaser
+targetEntityType: node
+bundle: vehicle
+mode: teaser
+content:
+  field_category:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_currency:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_daily_price:
+    type: number_decimal
+    label: inline
+    settings:
+      thousand_separator: ','
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_main_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: media_library
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_short_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_vehicle_status:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  field_brand: true
+  field_color: true
+  field_description: true
+  field_doors: true
+  field_drive_type: true
+  field_engine: true
+  field_fuel_type: true
+  field_gallery: true
+  field_mileage: true
+  field_model: true
+  field_monthly_price: true
+  field_seats: true
+  field_transmission: true
+  field_vehicle_features: true
+  field_weekly_price: true
+  field_year: true
+  links: true

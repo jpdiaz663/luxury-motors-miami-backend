@@ -1,0 +1,20 @@
+uuid: d57a4057-a97f-46cc-9178-e632f48c47d7
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_seats
+field_name: field_seats
+entity_type: node
+type: integer
+settings:
+  unsigned: true
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

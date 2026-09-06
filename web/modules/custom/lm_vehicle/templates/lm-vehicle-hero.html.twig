@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Vehicle hero — full-bleed media, title, reserve CTA.
+ */
+#}
+{% set vehicle = vehicle|default({}) %}
+<section class="hero" data-car-hero>
+  {% if vehicle.image.url %}
+    <div class="hero-media">
+      <img src="{{ vehicle.image.url }}" alt="{{ vehicle.image.alt }}" />
+    </div>
+  {% endif %}
+  <div class="hero-copy">
+    {% if vehicle.brand or vehicle.category or vehicle.year %}
+      <p class="kicker">{{ [vehicle.brand, vehicle.category, vehicle.year]|filter(v => v)|join(' · ') }}</p>
+    {% endif %}
+    <h1 class="title">{{ vehicle.title }}</h1>
+    {% if vehicle.lead %}
+      <p>{{ vehicle.lead }}</p>
+    {% endif %}
+    <div class="cta-row">
+      {% if vehicle.daily_price %}
+        <span class="ghost-link">{{ vehicle.daily_price }}{{ ' / day'|t }}</span>
+      {% endif %}
+      <a class="cta" href="#reserve">{{ 'Reserve'|t }}</a>
+      <a class="ghost-link" href="#studio">{{ 'Photos'|t }}</a>
+    </div>
+  </div>
+</section>

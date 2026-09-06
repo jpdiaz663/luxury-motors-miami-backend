@@ -1,0 +1,21 @@
+uuid: 47501fc9-876e-493a-8c94-d986ad5f4742
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transmission
+    - node.type.vehicle
+  module:
+    - options
+id: node.vehicle.field_transmission
+field_name: field_transmission
+entity_type: node
+bundle: vehicle
+label: Transmission
+description: 'Controlled list for catalog filters.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

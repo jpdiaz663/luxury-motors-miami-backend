@@ -1,0 +1,20 @@
+uuid: 7aed81cc-d234-4d75-bead-5420e293a5d2
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_doors
+field_name: field_doors
+entity_type: node
+type: integer
+settings:
+  unsigned: true
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

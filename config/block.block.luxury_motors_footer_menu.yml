@@ -1,0 +1,25 @@
+uuid: b74367ef-3960-448f-b186-cbed9e5a06d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_footer_menu
+theme: luxury_motors
+region: footer
+weight: 0
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Footer navigation'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 1
+  expand_all_items: false
+visibility: {  }

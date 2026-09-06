@@ -1,0 +1,19 @@
+uuid: 25b2d1a6-5622-496a-a9d9-48f009512433
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_short_description
+    - node.type.vehicle
+id: node.vehicle.field_short_description
+field_name: field_short_description
+entity_type: node
+bundle: vehicle
+label: 'Short description'
+description: 'Plain-text summary for cards, listings, and search snippets.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

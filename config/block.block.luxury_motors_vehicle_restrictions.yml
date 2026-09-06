@@ -1,0 +1,28 @@
+uuid: 7c2e1a90-4b3d-4f8a-9e11-2c8d0a1b3f05
+langcode: en
+status: true
+dependencies:
+  module:
+    - lm_vehicle
+    - node
+  theme:
+    - luxury_motors
+id: luxury_motors_vehicle_restrictions
+theme: luxury_motors
+region: content
+weight: 0
+provider: null
+plugin: lm_vehicle_restrictions
+settings:
+  id: lm_vehicle_restrictions
+  label: 'Vehicle restrictions'
+  label_display: '0'
+  provider: lm_vehicle
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      vehicle: vehicle

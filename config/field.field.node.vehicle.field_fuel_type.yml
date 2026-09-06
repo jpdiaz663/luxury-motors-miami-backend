@@ -1,0 +1,21 @@
+uuid: dffb79a5-bb4d-4a36-bebe-5920c331f0ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_fuel_type
+    - node.type.vehicle
+  module:
+    - options
+id: node.vehicle.field_fuel_type
+field_name: field_fuel_type
+entity_type: node
+bundle: vehicle
+label: 'Fuel type'
+description: 'Controlled list for catalog filters.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

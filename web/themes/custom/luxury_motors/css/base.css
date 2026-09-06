@@ -1,0 +1,65 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--surface-void-black);
+}
+
+body {
+  background: var(--surface-void-black);
+  color: var(--color-bianco-ferrari);
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-body);
+  min-height: 100%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+a {
+  color: var(--color-bianco-ferrari);
+  text-decoration: none;
+}
+  
+
+a:hover,
+a:focus-visible {
+  color: var(--color-rosso-corsa);
+  text-decoration: underline !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+.visually-hidden.focusable:focus {
+  position: fixed;
+  left: var(--spacing-16);
+  top: var(--spacing-16);
+  z-index: 200;
+  width: auto;
+  height: auto;
+  padding: var(--spacing-10);
+  clip: auto;
+  background: var(--surface-void-black);
+  color: var(--color-bianco-ferrari);
+}

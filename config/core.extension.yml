@@ -27,6 +27,9 @@ module:
   layout_builder: 0
   layout_discovery: 0
   link: 0
+  lm_vehicle: 0
+  media: 0
+  media_library: 0
   menu_link_content: 0
   menu_ui: 0
   mysql: 0
@@ -48,4 +51,5 @@ theme:
   olivero: 0
   claro: 0
   gin: 0
+  luxury_motors: 0
 profile: standard

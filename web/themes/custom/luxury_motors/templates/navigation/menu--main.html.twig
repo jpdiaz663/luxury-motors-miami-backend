@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Main navigation — ghost uppercase links.
+ */
+#}
+{% import _self as menus %}
+
+{{ menus.menu_links(items, attributes.addClass('nav-links'), 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    <ul{{ attributes }}>
+      {% for item in items %}
+        <li{{ item.attributes.addClass(item.in_active_trail ? 'is-active') }}>
+          {{ link(item.title, item.url, {'class': ['ghost-link']}) }}
+          {% if item.below %}
+            {{ menus.menu_links(item.below, create_attribute().addClass('nav-links'), menu_level + 1) }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

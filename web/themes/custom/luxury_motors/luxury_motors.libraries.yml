@@ -1,0 +1,20 @@
+global:
+  version: VERSION
+  css:
+    base:
+      '//fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap':
+        type: external
+        minified: true
+      css/tokens.css: {}
+      css/base.css: {}
+    layout:
+      css/layout.css: {}
+    component:
+      css/components.css: {}
+
+vehicle:
+  version: VERSION
+  js:
+    js/vehicle-studio.js: {}
+  dependencies:
+    - luxury_motors/global

@@ -1,0 +1,24 @@
+uuid: beebe1ca-4f1b-4c5b-8b20-d6d778224679
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description
+    - filter.format.full_html
+    - node.type.vehicle
+  module:
+    - text
+id: node.vehicle.field_description
+field_name: field_description
+entity_type: node
+bundle: vehicle
+label: Description
+description: 'Full editorial description of the vehicle.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - full_html
+field_type: text_long

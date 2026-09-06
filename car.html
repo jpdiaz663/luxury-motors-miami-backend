@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car detail — L&L Luxury Motors Miami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <a class="nav-brand" href="index.html">L&L <span class="nav-brand-short">Miami</span><span class="nav-brand-rest">Luxury Motors Miami</span></a>
+    <ul class="nav-links" id="nav-menu" data-nav-menu>
+      <li><a class="ghost-link" href="index.html#fleet">Fleet</a></li>
+      <li><a class="ghost-link" href="guide.html">Guide</a></li>
+      <li><a class="ghost-link" href="#studio">Photos</a></li>
+      <li><a class="ghost-link" href="#specs">Specifications</a></li>
+      <li><a class="ghost-link" href="#restrictions">Restrictions</a></li>
+      <li><a class="ghost-link" href="#reserve">Reserve</a></li>
+    </ul>
+    <div class="nav-tools">
+      <a class="ghost-link nav-call" href="tel:+13055550190">Call</a>
+      <button class="icon-btn" type="button" aria-label="Search fleet" data-open-search>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" /><path d="M11 11l3.5 3.5" /></svg>
+      </button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu" data-nav-toggle>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path class="nav-icon-open" d="M2 5h12M2 11h12" />
+          <path class="nav-icon-close" d="M3 3l10 10M13 3L3 13" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main data-car-page></main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>L&L Luxury Motors Miami</h3>
+        <p class="track-micro muted">Night desk · Brickell</p>
+        <div class="social">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" /><circle cx="8" cy="8" r="3" /><circle cx="12" cy="4" r="0.6" fill="currentColor" stroke="none" /></svg>
+          </a>
+          <a href="#" aria-label="WhatsApp">
+            <svg viewBox="0 0 16 16"><path d="M3 13l1.2-3A5.5 5.5 0 118 13.5H3z" /></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3>Fleet</h3>
+        <ul>
+          <li><a href="car.html?id=turbo-s">911 Turbo S</a></li>
+          <li><a href="car.html?id=urus">Urus</a></li>
+          <li><a href="car.html?id=volante">DB12 Volante</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Desk</h3>
+        <ul>
+          <li><a href="guide.html">Guide</a></li>
+          <li><a href="index.html#delivery">Delivery</a></li>
+          <li><a href="#reserve">Reserve</a></li>
+          <li><a href="tel:+13055550190">+1 305 555 0190</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hours</h3>
+        <ul>
+          <li><a href="#reserve">Daily 8am – 1am</a></li>
+          <li><a href="index.html">Back to home</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <div class="search" id="search" role="dialog" aria-modal="true" aria-label="Search fleet">
+    <div class="search-box">
+      <div class="search-row">
+        <input type="search" placeholder="Type a car" aria-label="Search a car" />
+        <button class="icon-btn" type="button" aria-label="Close search" data-close-search>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        </button>
+      </div>
+      <p class="search-hint"><span class="search-hint-esc">Esc to close · </span>try turbo, urus, volante</p>
+    </div>
+  </div>
+
+  <script src="fleet.js"></script>
+</body>
+</html>

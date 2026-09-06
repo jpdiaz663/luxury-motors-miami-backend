@@ -1,0 +1,20 @@
+uuid: 56c510b7-405f-40cd-a47a-3bb0b6ed370e
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_content
+theme: luxury_motors
+region: content
+weight: 10
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

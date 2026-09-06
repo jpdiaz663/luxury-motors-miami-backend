@@ -1,0 +1,22 @@
+uuid: f8240160-ee5f-4e7c-af16-8cc6563d371d
+langcode: en
+status: false
+dependencies:
+  theme:
+    - luxury_motors
+_core:
+  default_config_hash: ydSxdq7R66I8UMC460rOzlfzvlUL4VRbdwc6z9DWaUI
+id: luxury_motors_secondary_local_tasks
+theme: luxury_motors
+region: header
+weight: -2
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

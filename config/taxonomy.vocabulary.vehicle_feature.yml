@@ -1,0 +1,9 @@
+uuid: 4acb7326-55d7-453b-88a7-b60876e7ee58
+langcode: en
+status: true
+dependencies: {  }
+name: 'Vehicle feature'
+vid: vehicle_feature
+description: 'Vehicle features and amenities used for catalog filters.'
+weight: 0
+new_revision: false

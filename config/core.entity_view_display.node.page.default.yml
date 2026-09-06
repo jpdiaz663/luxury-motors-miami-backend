@@ -1,0 +1,26 @@
+uuid: 99285f34-ad6c-400f-9a46-45eacac2381a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.page.field_banner
+    - field.field.node.page.field_body_description
+    - node.type.page
+  module:
+    - text
+    - user
+id: node.page.default
+targetEntityType: node
+bundle: page
+mode: default
+content:
+  field_body_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_banner: true
+  links: true

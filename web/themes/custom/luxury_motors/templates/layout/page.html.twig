@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Chrome for Luxury Motors pages: overlay nav, content, footer.
+ */
+#}
+<div{{ attributes }}>
+  <header class="nav">
+    {{ page.header }}
+  </header>
+
+  <main id="main-content" tabindex="-1" aria-label="{{ 'Main site content'|t }}"{% if node and node.bundle == 'vehicle' %} data-car-page{% endif %}>
+    {{ page.content }}
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <p class="title">{{ site_name|default('Luxury Motors Miami'|t) }}</p>
+        <p class="track-micro muted">{{ 'Night desk · Brickell'|t }}</p>
+      </div>
+      <div>
+        <h3>{{ 'Fleet'|t }}</h3>
+        {{ page.footer }}
+      </div>
+      <div>
+        <h3>{{ 'Contact'|t }}</h3>
+        <p><a href="mailto:info@luxurymotorsmiami.com">info@luxurymotorsmiami.com</a></p>
+      </div>
+    </div>
+  </footer>
+</div>

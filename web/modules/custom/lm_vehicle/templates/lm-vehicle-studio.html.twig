@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Vehicle studio gallery with filmstrip.
+ */
+#}
+{% set slides = vehicle.slides|default([]) %}
+<section class="studio" id="studio" data-vehicle-studio>
+  <div class="gallery-viewport">
+    <div class="gallery-track" data-gallery-track>
+      {% for slide in slides %}
+        <figure class="gallery-slide" data-gallery-slide>
+          <img src="{{ slide.url }}" alt="{{ slide.alt }}" />
+        </figure>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="studio-dock">
+    <div class="studio-row">
+      <p class="kicker studio-pills">{{ 'Studio'|t }}</p>
+      <p class="title">{{ vehicle.title }}</p>
+    </div>
+    {% if slides|length > 1 %}
+      <div class="film" role="tablist" aria-label="{{ 'Vehicle photographs'|t }}">
+        {% for slide in slides %}
+          <button type="button" data-gallery-thumb class="{{ loop.first ? 'is-active' }}" aria-label="{{ 'Photo @n'|t({'@n': loop.index}) }}">
+            <img src="{{ slide.url }}" alt="" />
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>

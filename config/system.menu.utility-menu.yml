@@ -1,0 +1,8 @@
+uuid: f07e84f3-7e9f-48ce-8e02-c5a7b7f0a2e9
+langcode: en
+status: true
+dependencies: {  }
+id: utility-menu
+label: 'Utility Menu'
+description: 'Menu de contacto e intereses de usuario'
+locked: false

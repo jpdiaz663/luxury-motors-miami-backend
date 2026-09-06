@@ -1,0 +1,21 @@
+uuid: 69ca7625-5963-4557-9816-c0fdbf19a20b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_engine
+field_name: field_engine
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

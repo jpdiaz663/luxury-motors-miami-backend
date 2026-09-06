@@ -1,0 +1,11 @@
+name: Luxury Motors
+type: theme
+base theme: false
+description: 'Front-end theme for Luxury Motors Miami.'
+core_version_requirement: ^11
+libraries:
+  - luxury_motors/global
+regions:
+  header: Header
+  content: Content
+  footer: Footer

@@ -1,0 +1,23 @@
+uuid: 5c001990-8596-46c4-8968-f03ad120226f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_monthly_price
+    - node.type.vehicle
+id: node.vehicle.field_monthly_price
+field_name: field_monthly_price
+entity_type: node
+bundle: vehicle
+label: 'Monthly price'
+description: 'Rental price for one month.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

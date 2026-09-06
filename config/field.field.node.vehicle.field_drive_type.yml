@@ -1,0 +1,21 @@
+uuid: 717ac8b9-8571-4eda-8940-a0bab2b775ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_drive_type
+    - node.type.vehicle
+  module:
+    - options
+id: node.vehicle.field_drive_type
+field_name: field_drive_type
+entity_type: node
+bundle: vehicle
+label: 'Drive type'
+description: 'Controlled list for catalog filters.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

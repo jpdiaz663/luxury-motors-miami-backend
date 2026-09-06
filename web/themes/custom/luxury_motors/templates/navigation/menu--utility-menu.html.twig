@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Utility menu — user actions aligned to the right of the nav.
+ */
+#}
+{% import _self as menus %}
+
+{{ menus.menu_links(items, attributes.addClass('nav-tools'), 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    <ul{{ attributes }}>
+      {% for item in items %}
+        <li{{ item.attributes }}>
+          {{ link(item.title, item.url, {'class': ['ghost-link', 'nav-call']}) }}
+          {% if item.below %}
+            {{ menus.menu_links(item.below, create_attribute(), menu_level + 1) }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

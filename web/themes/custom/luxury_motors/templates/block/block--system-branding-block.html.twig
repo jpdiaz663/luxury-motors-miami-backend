@@ -1,0 +1,12 @@
+<div{{ attributes.addClass('nav-brand') }}>
+  {% if site_logo %}
+    <a href="{{ url('<front>') }}" rel="home">
+      <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
+    </a>
+  {% elseif site_name %}
+    <a href="{{ url('<front>') }}" rel="home">
+      <span class="nav-brand-rest">{{ site_name }}</span>
+      <span class="nav-brand-short">{{ 'LM'|t }}</span>
+    </a>
+  {% endif %}
+</div>

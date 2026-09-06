@@ -1,0 +1,23 @@
+uuid: ff27458d-be83-4e98-abfb-b85a1379b900
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_doors
+    - node.type.vehicle
+id: node.vehicle.field_doors
+field_name: field_doors
+entity_type: node
+bundle: vehicle
+label: Doors
+description: 'Number of doors.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 2
+  max: 6
+  prefix: ''
+  suffix: ''
+field_type: integer

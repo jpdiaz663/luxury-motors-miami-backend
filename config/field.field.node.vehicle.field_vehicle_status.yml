@@ -1,0 +1,23 @@
+uuid: 4cf721e6-1d16-4779-9eee-48f8dc5adebb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vehicle_status
+    - node.type.vehicle
+  module:
+    - options
+id: node.vehicle.field_vehicle_status
+field_name: field_vehicle_status
+entity_type: node
+bundle: vehicle
+label: 'Vehicle status'
+description: 'Operational status used for availability filters.'
+required: true
+translatable: false
+default_value:
+  -
+    value: available
+default_value_callback: ''
+settings: {  }
+field_type: list_string

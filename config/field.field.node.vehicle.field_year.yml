@@ -1,0 +1,23 @@
+uuid: a1b221e0-05b6-41c8-9319-95a75c3e2778
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_year
+    - node.type.vehicle
+id: node.vehicle.field_year
+field_name: field_year
+entity_type: node
+bundle: vehicle
+label: Year
+description: 'Model year of the vehicle.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1990
+  max: 2040
+  prefix: ''
+  suffix: ''
+field_type: integer

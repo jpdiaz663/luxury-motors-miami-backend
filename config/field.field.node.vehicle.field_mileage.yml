@@ -1,0 +1,23 @@
+uuid: ef54f6ce-e0aa-420c-b03b-5d65668715dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_mileage
+    - node.type.vehicle
+id: node.vehicle.field_mileage
+field_name: field_mileage
+entity_type: node
+bundle: vehicle
+label: Mileage
+description: 'Current odometer reading.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ' km'
+field_type: integer

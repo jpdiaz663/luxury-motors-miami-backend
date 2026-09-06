@@ -1,0 +1,29 @@
+uuid: a2ed405a-af86-4b42-99c1-e27e4f3568d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_brand
+    - node.type.vehicle
+    - taxonomy.vocabulary.brand
+id: node.vehicle.field_brand
+field_name: field_brand
+entity_type: node
+bundle: vehicle
+label: Brand
+description: 'Manufacturer of the vehicle. Managed as taxonomy terms.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      brand: brand
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

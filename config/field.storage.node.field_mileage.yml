@@ -1,0 +1,20 @@
+uuid: 5bc936e9-3f67-4bc9-b65e-510e2ad27e37
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_mileage
+field_name: field_mileage
+entity_type: node
+type: integer
+settings:
+  unsigned: true
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

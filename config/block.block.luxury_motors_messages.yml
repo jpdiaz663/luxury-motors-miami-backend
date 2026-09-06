@@ -1,0 +1,20 @@
+uuid: ec902aee-8858-4f33-88e5-6fb2598271d5
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_messages
+theme: luxury_motors
+region: content
+weight: -10
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

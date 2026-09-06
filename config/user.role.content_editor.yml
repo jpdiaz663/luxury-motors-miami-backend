@@ -3,7 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.vehicle
+    - taxonomy.vocabulary.brand
     - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.vehicle_category
+    - taxonomy.vocabulary.vehicle_feature
   module:
     - contextual
     - file
@@ -23,10 +27,22 @@ permissions:
   - 'access contextual links'
   - 'access files overview'
   - 'administer url aliases'
+  - 'create terms in brand'
   - 'create terms in tags'
+  - 'create terms in vehicle_category'
+  - 'create terms in vehicle_feature'
   - 'create url aliases'
+  - 'create vehicle content'
+  - 'delete any vehicle content'
   - 'delete own files'
+  - 'delete terms in brand'
+  - 'delete terms in vehicle_category'
+  - 'delete terms in vehicle_feature'
+  - 'edit any vehicle content'
+  - 'edit terms in brand'
   - 'edit terms in tags'
+  - 'edit terms in vehicle_category'
+  - 'edit terms in vehicle_feature'
   - 'revert all revisions'
   - 'view all revisions'
   - 'view own unpublished content'

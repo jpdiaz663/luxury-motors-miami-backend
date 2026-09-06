@@ -1,0 +1,36 @@
+uuid: f1eef306-1319-4962-a5bc-9391a8ff932b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_vehicle_status
+field_name: field_vehicle_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: available
+      label: Available
+    -
+      value: reserved
+      label: Reserved
+    -
+      value: rented
+      label: Rented
+    -
+      value: maintenance
+      label: Maintenance
+    -
+      value: unavailable
+      label: Unavailable
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

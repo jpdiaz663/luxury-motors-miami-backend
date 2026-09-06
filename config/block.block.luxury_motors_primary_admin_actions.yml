@@ -1,0 +1,20 @@
+uuid: 87c15c6f-9630-49af-8321-0ac4fcd5ca95
+langcode: en
+status: false
+dependencies:
+  theme:
+    - luxury_motors
+_core:
+  default_config_hash: Q9_2whdOj1YIomfvsIfopROW4FT_X5pY0DjdOiOaQ5U
+id: luxury_motors_primary_admin_actions
+theme: luxury_motors
+region: header
+weight: -5
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }

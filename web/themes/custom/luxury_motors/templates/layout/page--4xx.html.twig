@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * 403/404 page with a first-person spill background.
+ */
+#}
+<div{{ attributes }}>
+  <div
+    class="error-media"
+    role="img"
+    aria-label="{{ 'A glass tipping onto a laptop keyboard'|t }}"
+    {% if error_background_url %}
+     
+    {% endif %}
+  ></div>
+
+  <header class="nav">
+    {{ page.header }}
+  </header>
+
+  <main id="main-content" tabindex="-1" aria-label="{{ 'Main site content'|t }}" class="error-main">
+    <div class="error-copy">
+      <h1>{{ 'THE MAIN VISUAL STORY: the road ahead literally DOES NOT EXIST.'|t }}</h1>
+      <a href="/" class="" style="margin-top: 2rem;">{{ 'Go to Home'|t }}</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <p class="title">{{ site_name|default('Luxury Motors Miami'|t) }}</p>
+        <p class="track-micro muted">{{ 'Night desk · Brickell'|t }}</p>
+      </div>
+      <div>
+        <h3>{{ 'Fleet'|t }}</h3>
+        {{ page.footer }}
+      </div>
+      <div>
+        <h3>{{ 'Contact'|t }}</h3>
+        <p><a href="mailto:info@luxurymotorsmiami.com">info@luxurymotorsmiami.com</a></p>
+      </div>
+    </div>
+  </footer>
+</div>

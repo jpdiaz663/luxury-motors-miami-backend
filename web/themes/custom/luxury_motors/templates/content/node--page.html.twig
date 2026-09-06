@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Shared Page render: hero banner, welcome body, extras slot for future CTAs.
+ */
+#}
+<article{{ attributes }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% if banner_url %}
+    <section class="hero">
+      <div class="hero-media">
+        <img src="{{ banner_url }}" alt="{{ banner_alt }}" />
+      </div>
+      <div class="hero-copy">
+        {% if is_front %}
+          <p class="title">{{ site_name|default('Luxury Motors Miami'|t) }}</p>
+        {% elseif label %}
+          <h1{{ title_attributes.addClass('title') }}>{{ label }}</h1>
+        {% endif %}
+      </div>
+    </section>
+  {% else %}
+    <section class="void">
+      {% if is_front %}
+        <p class="title">{{ site_name|default('Luxury Motors Miami'|t) }}</p>
+      {% elseif label %}
+        <h1{{ title_attributes.addClass('title') }}>{{ label }}</h1>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  {% if content.field_body_description %}
+    <section class="void">
+      <div class="wrap">
+        {{ content.field_body_description }}
+      </div>
+    </section>
+  {% endif %}
+
+  {% block page_extras %}
+    {% set extras = content|without('field_banner', 'field_body_description', 'body', 'links') %}
+    {% if extras|render|striptags|trim %}
+      <section class="void">
+        <div class="wrap">
+          {{ extras }}
+        </div>
+      </section>
+    {% endif %}
+  {% endblock %}
+</article>

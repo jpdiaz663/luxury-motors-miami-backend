@@ -1,0 +1,20 @@
+uuid: cf5ae7e1-81ef-46ce-a8a8-21c1dfc67fb7
+langcode: en
+status: false
+dependencies:
+  theme:
+    - luxury_motors
+_core:
+  default_config_hash: 6aOgWsNTXjqrDm98TXSAjP6qd2nCijD1xw45MrnbK-Y
+id: luxury_motors_page_title
+theme: luxury_motors
+region: header
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

@@ -1,0 +1,17 @@
+uuid: a6e63faa-fc0a-44ba-93db-91a39af0a0a5
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Vehicle
+type: vehicle
+description: 'Primary catalog entity for luxury vehicles available to rent.'
+help: 'Use taxonomies for brand, category, and features. Do not enter those values as free text.'
+new_revision: true
+preview_mode: 1
+display_submitted: false

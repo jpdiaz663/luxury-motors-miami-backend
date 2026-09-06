@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Editorial description and feature pills.
+ */
+#}
+<section class="notte" id="about">
+  <div class="wrap">
+    <p class="kicker">{{ vehicle.brand|default('Fleet'|t) }}</p>
+    <h2 class="title">{{ vehicle.title }}</h2>
+    {% if vehicle.features %}
+      <div class="pills">
+        {% for feature in vehicle.features %}
+          <span class="pill">{{ feature }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if vehicle.description %}
+      <div class="body-copy">
+        {{ vehicle.description }}
+      </div>
+    {% endif %}
+  </div>
+</section>

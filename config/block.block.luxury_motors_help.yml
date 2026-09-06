@@ -1,0 +1,22 @@
+uuid: fc038b50-27b7-432d-a815-8ee766b99ba9
+langcode: en
+status: false
+dependencies:
+  module:
+    - help
+  theme:
+    - luxury_motors
+_core:
+  default_config_hash: VfPFqqxfkomud5CO8DUijw85QIl9GIxh_nIxLOYESxg
+id: luxury_motors_help
+theme: luxury_motors
+region: header
+weight: 0
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  label_display: '0'
+  provider: help
+visibility: {  }

@@ -1,0 +1,28 @@
+uuid: 7c2e1a90-4b3d-4f8a-9e11-2c8d0a1b3f03
+langcode: en
+status: true
+dependencies:
+  module:
+    - lm_vehicle
+    - node
+  theme:
+    - luxury_motors
+id: luxury_motors_vehicle_story
+theme: luxury_motors
+region: content
+weight: -10
+provider: null
+plugin: lm_vehicle_story
+settings:
+  id: lm_vehicle_story
+  label: 'Vehicle story'
+  label_display: '0'
+  provider: lm_vehicle
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      vehicle: vehicle

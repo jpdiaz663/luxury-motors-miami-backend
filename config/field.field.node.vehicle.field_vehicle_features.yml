@@ -1,0 +1,29 @@
+uuid: ce6cc9e1-deca-4c7b-9fcc-a8489cee2da8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vehicle_features
+    - node.type.vehicle
+    - taxonomy.vocabulary.vehicle_feature
+id: node.vehicle.field_vehicle_features
+field_name: field_vehicle_features
+entity_type: node
+bundle: vehicle
+label: 'Vehicle features'
+description: 'Amenities and equipment used for filters. Managed as taxonomy terms.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      vehicle_feature: vehicle_feature
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

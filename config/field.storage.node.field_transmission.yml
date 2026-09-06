@@ -1,0 +1,33 @@
+uuid: cb7f4276-9b5b-4beb-94ac-6d9607bf9552
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_transmission
+field_name: field_transmission
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: automatic
+      label: Automatic
+    -
+      value: manual
+      label: Manual
+    -
+      value: dual_clutch
+      label: 'Dual clutch'
+    -
+      value: cvt
+      label: CVT
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
