@@ -1,0 +1,20 @@
+uuid: 2b0e4f61-8d35-4c90-bf22-1a7e3d9b02c4
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_booking_start
+field_name: field_booking_start
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

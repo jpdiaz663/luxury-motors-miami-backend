@@ -1,0 +1,21 @@
+uuid: 6f4283a5-2b79-4034-f366-5e127b3f46a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_start
+    - node.type.booking
+  module:
+    - datetime
+id: node.booking.field_booking_start
+field_name: field_booking_start
+entity_type: node
+bundle: booking
+label: Pickup
+description: 'First day the car is held.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

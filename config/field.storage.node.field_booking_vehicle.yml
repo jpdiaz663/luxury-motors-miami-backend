@@ -1,0 +1,21 @@
+uuid: 1a9d3e50-7c24-4b8f-ae11-0f6d2c8a91b3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_booking_vehicle
+field_name: field_booking_vehicle
+entity_type: node
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes:
+  target_id:
+    - target_id
+persist_with_no_fields: false
+custom_storage: false

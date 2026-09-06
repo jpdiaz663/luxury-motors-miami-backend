@@ -1,0 +1,17 @@
+uuid: 8c2e4a71-5b90-4d1e-9f3a-6d7c1b0e2a44
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Booking
+type: booking
+description: 'Confirmed rental hold against a vehicle for a pickup/return window. Used for real availability on the fleet catalog.'
+help: 'Create a booking when the desk holds a car. Pending and confirmed holds hide the car from /fleet for overlapping dates. Cancelled holds do not.'
+new_revision: true
+preview_mode: 0
+display_submitted: false

@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Vehicle card in the fleet grid. Matches the rental mockup card.
+ */
+#}
+<article{{ attributes.addClass('card').setAttribute('style', '--card-glow: ' ~ (card.glow|default(card.chip)|default('#8a8f94'))) }}>
+  {{ title_prefix }}{{ title_suffix }}
+  {% if card.image.url %}
+    <a class="card-photo" href="{{ card.url }}">
+      <img src="{{ card.image.url }}" alt="{{ card.image.alt }}" />
+    </a>
+  {% endif %}
+  <div class="card-body">
+    <h3 class="title">{{ card.title }}</h3>
+    {% if card.short_description %}
+      <p class="body-copy">{{ card.short_description }}</p>
+    {% endif %}
+    <div class="card-meta">
+      {% if card.daily_price %}
+        <span>{{ 'From @price / day'|t({'@price': card.daily_price}) }}</span>
+      {% endif %}
+      {% if card.color %}
+        <span>{{ card.color }}</span>
+      {% endif %}
+    </div>
+    <a class="btn btn--secondary btn--arrow" href="{{ card.url }}">{{ 'Details'|t }}</a>
+  </div>
+</article>

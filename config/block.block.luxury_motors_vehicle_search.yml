@@ -1,0 +1,26 @@
+uuid: 3b9e7c14-8a21-4d6f-91e0-6c5f2a0d48b7
+langcode: en
+status: true
+dependencies:
+  module:
+    - lm_vehicle
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_vehicle_search
+theme: luxury_motors
+region: content
+weight: -12
+provider: null
+plugin: lm_vehicle_search
+settings:
+  id: lm_vehicle_search
+  label: 'Vehicle search'
+  label_display: '0'
+  provider: lm_vehicle
+  background_media: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/fleet\r\n/fleet/*"

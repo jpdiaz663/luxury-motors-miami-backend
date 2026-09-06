@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L&L Luxury Motors Miami — Design prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <a class="nav-brand" href="#top">L&L <span class="nav-brand-short">Miami</span><span class="nav-brand-rest">Luxury Motors Miami</span></a>
+    <ul class="nav-links" id="nav-menu" data-nav-menu>
+      <li><a class="ghost-link" href="#searched">Most searched</a></li>
+      <li><a class="ghost-link" href="#fleet">Fleet</a></li>
+      <li><a class="ghost-link" href="guide.html">Guide</a></li>
+      <li><a class="ghost-link" href="#opinions">Opinions</a></li>
+      <li><a class="ghost-link" href="#delivery">Delivery</a></li>
+      <li><a class="ghost-link" href="#reserve">Reserve</a></li>
+    </ul>
+    <div class="nav-tools">
+      <a class="ghost-link nav-call" href="tel:+13055550190">Call</a>
+      <button class="icon-btn" type="button" aria-label="Search fleet" data-open-search>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" /><path d="M11 11l3.5 3.5" /></svg>
+      </button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu" data-nav-toggle>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path class="nav-icon-open" d="M2 5h12M2 11h12" />
+          <path class="nav-icon-close" d="M3 3l10 10M13 3L3 13" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero hero--search" id="top" aria-label="Search a car">
+    <div class="hero-media" role="img" aria-label="Dark luxury coupe on empty asphalt at night"></div>
+    <form class="banner" action="#fleet" method="get" data-banner>
+      <p class="kicker">Night desk · Brickell · MIA</p>
+      <h1 class="title">The keys are already in Brickell</h1>
+      <div class="banner-places">
+        <label class="banner-place">
+          <span class="banner-place-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 00-4.5 4.5c0 3.4 4.5 8.5 4.5 8.5s4.5-5.1 4.5-8.5A4.5 4.5 0 008 1.5z"/><circle cx="8" cy="6" r="1.6"/></svg>
+          </span>
+          <span class="banner-place-copy">
+            <span class="track-micro muted">Pickup location</span>
+            <select id="banner-from" name="from" required>
+              <option value="brickell">Brickell desk</option>
+              <option value="miami-beach">Miami Beach</option>
+              <option value="mia">MIA arrivals</option>
+              <option value="hotel">Hotel / residence</option>
+              <option value="hangar">Private hangar</option>
+            </select>
+          </span>
+        </label>
+        <label class="banner-place">
+          <span class="banner-place-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><path d="M2 14h12M8 2v9M5 8l3 3 3-3"/></svg>
+          </span>
+          <span class="banner-place-copy">
+            <span class="track-micro muted">Delivery location</span>
+            <select id="banner-to" name="to">
+              <option value="same">Same as pickup</option>
+              <option value="brickell">Brickell desk</option>
+              <option value="miami-beach">Miami Beach</option>
+              <option value="mia">MIA arrivals</option>
+              <option value="hotel">Hotel / residence</option>
+              <option value="hangar">Private hangar</option>
+            </select>
+          </span>
+        </label>
+      </div>
+      <div class="banner-note" data-banner-note hidden>
+        <label>
+          <span class="track-micro muted">Property name</span>
+          <input id="banner-place" name="place" type="text" placeholder="Faena, Four Seasons, residence…" autocomplete="street-address" />
+        </label>
+      </div>
+      <div class="banner-window">
+        <label class="banner-field">
+          <span>Pickup</span>
+          <input id="banner-pickup" name="pickup" type="date" required />
+        </label>
+        <label class="banner-field">
+          <span>Time</span>
+          <input id="banner-ptime" name="ptime" type="time" value="10:00" required />
+        </label>
+        <label class="banner-field">
+          <span>Return</span>
+          <input id="banner-return" name="return" type="date" required />
+        </label>
+        <label class="banner-field">
+          <span>Time</span>
+          <input id="banner-rtime" name="rtime" type="time" value="10:00" required />
+        </label>
+        <button class="cta banner-submit" type="submit">Search →</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="void">
+    <p class="kicker">Miami Beach · Brickell · MIA</p>
+    <h2 class="title">A black stage. One car. The rest is logistics.</h2>
+    <p class="muted track-ui" style="margin-top:16px">Insurance on file · bilingual desk · after-hours handoff</p>
+    <div class="section-labels">
+      <a class="section-label" href="#searched">Most searched</a>
+      <a class="section-label is-active" href="#fleet">Fleet</a>
+      <a class="section-label" href="guide.html">Guide</a>
+      <a class="section-label" href="#opinions">Opinions</a>
+      <a class="section-label" href="#delivery">Delivery</a>
+      <a class="section-label" href="#reserve">Dates</a>
+    </div>
+  </section>
+
+  <section class="chooser" id="searched">
+    <div class="chooser-head wrap">
+      <div>
+        <p class="kicker">Most searched</p>
+        <h2 class="title">The cars people ask for first</h2>
+      </div>
+      <div class="cta-row">
+        <button class="cta" type="button" data-chooser-prev>Prev ←</button>
+        <button class="cta" type="button" data-chooser-next>Next →</button>
+      </div>
+    </div>
+    <div class="chooser-track" data-chooser></div>
+    <div class="chooser-pips" data-chooser-pips></div>
+  </section>
+
+  <section class="notte" id="fleet">
+    <div class="wrap">
+      <p class="kicker">Inventory on the floor tonight</p>
+      <h2 class="title">Choose a car, not a package</h2>
+      <div class="pills" role="group" aria-label="Fleet filters">
+        <button class="pill is-active" type="button" data-filter="all">All</button>
+        <button class="pill" type="button" data-filter="coupe">Coupe</button>
+        <button class="pill" type="button" data-filter="suv">Suv</button>
+        <button class="pill" type="button" data-filter="convertible">Convertible</button>
+      </div>
+      <div class="fleet" data-fleet></div>
+    </div>
+  </section>
+
+  <!--<section class="bleed" id="delivery">
+    <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=2400&q=80" alt="Wedge exotic parked at night" />
+    <div class="bleed-copy">
+      <h2 class="title">Handoff at the curb, not at a counter</h2>
+      <p class="muted track-ui" style="margin-top:10px">Hotel · residence · private hangar</p>
+    </div>
+  </section>-->
+
+  <section class="light opinions" id="opinions">
+    <div class="wrap">
+      <p class="kicker">Opiniones sobre alquiler de vehículos en Miami</p>
+      <h2 class="title">Written after the keys were already in their hands</h2>
+      <div class="opinion-score">
+        <div>
+          <p class="title">4.9 / 5</p>
+          <p class="track-micro muted">From 128 written reviews</p>
+        </div>
+        <div>
+          <p class="title">45 min</p>
+          <p class="track-micro muted">Average curb handoff</p>
+        </div>
+        <div>
+          <p class="title">Night desk</p>
+          <p class="track-micro muted">Answers after 9pm</p>
+        </div>
+      </div>
+      <div class="opinion-grid">
+        <article class="opinion">
+          <div class="stars" aria-label="5 out of 5">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+          </div>
+          <p class="body-copy">The desk brought the Urus to Faena at 11pm. No counter, no wait. We had the car before the bags were in the room.</p>
+          <p class="opinion-who">Camila R. · Madrid</p>
+          <a class="track-micro body-link" href="car.html?id=urus">Urus · 3 days</a>
+        </article>
+        <article class="opinion">
+          <div class="stars" aria-label="5 out of 5">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+          </div>
+          <p class="body-copy">Same-day at MIA. They met us at arrivals. Insurance was already on file from the email. This is how a Miami rental should work.</p>
+          <p class="opinion-who">James K. · New York</p>
+          <a class="track-micro body-link" href="car.html?id=turbo-s">911 Turbo S · weekend</a>
+        </article>
+        <article class="opinion">
+          <div class="stars" aria-label="5 out of 5">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+          </div>
+          <p class="body-copy">Pedimos el Volante para un día en Key Biscayne. Confirmación por escrito, entrega en Brickell, y el auto exactamente como las fotos.</p>
+          <p class="opinion-who">Sofía M. · Bogotá</p>
+          <a class="track-micro body-link" href="car.html?id=volante">DB12 Volante · 1 day</a>
+        </article>
+        <article class="opinion">
+          <div class="stars" aria-label="4 out of 5">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg class="star-empty" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+          </div>
+          <p class="body-copy">Night desk answered after 9. An hour later the keys were at Four Seasons Brickell. The hold was clear. Return took ten minutes.</p>
+          <p class="opinion-who">Daniel P. · Chicago</p>
+          <a class="track-micro body-link" href="car.html?id=urus">Urus · 2 days</a>
+        </article>
+        <article class="opinion">
+          <div class="stars" aria-label="5 out of 5">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+          </div>
+          <p class="body-copy">We wanted Ocean Drive after dark, not a minivan. The Turbo S was waiting downstairs at 1 Hotel. Bilingual desk, no upsell.</p>
+          <p class="opinion-who">Elena V. · Milan</p>
+          <a class="track-micro body-link" href="car.html?id=turbo-s">911 Turbo S · 4 days</a>
+        </article>
+        <article class="opinion">
+          <div class="stars" aria-label="5 out of 5">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.7 4.4 4.7.3-3.6 2.9 1.1 4.6L8 11.2 4.1 13.6l1.1-4.6-3.6-2.9 4.7-.3z"/></svg>
+          </div>
+          <p class="body-copy">Private hangar drop at Opa-locka. They were on time, the Volante was clean, and the territory rules were in the email. No guessing.</p>
+          <p class="opinion-who">Marcus T. · London</p>
+          <a class="track-micro body-link" href="car.html?id=volante">DB12 Volante · 2 days</a>
+        </article>
+      </div>
+      <p class="cta-row" style="margin-top:44px;justify-content:flex-start">
+        <a class="cta" href="guide.html">Where to take the car →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="light" id="reserve">
+    <div class="wrap">
+      <p class="kicker">Reserve</p>
+      <h2 class="title">Tell us the window. We bring the car.</h2>
+      <div class="split">
+        <ol class="steps">
+          <li>
+            <span>01 · Send dates</span>
+            <p class="body-copy" style="margin-top:6px">Pickup and return. We confirm the car in writing before anything is charged.</p>
+          </li>
+          <li>
+            <span>02 · Insurance on file</span>
+            <p class="body-copy" style="margin-top:6px">Full coverage or your policy. The desk is bilingual and answers after 9pm.</p>
+          </li>
+          <li>
+            <span>03 · Keys in Miami</span>
+            <p class="body-copy" style="margin-top:6px">Brickell, Miami Beach, or MIA. Same-day is possible if the car is on the floor.</p>
+          </li>
+        </ol>
+        <form class="form" action="car.html" method="get">
+          <div class="field">
+            <label for="pickup">Pickup</label>
+            <input id="pickup" name="pickup" type="date" required />
+          </div>
+          <div class="field">
+            <label for="return">Return</label>
+            <input id="return" name="return" type="date" required />
+          </div>
+          <div class="field">
+            <label for="car">Car</label>
+            <select id="car" name="id" data-car-select>
+              <option value="turbo-s">911 Turbo S</option>
+              <option value="urus">Urus</option>
+              <option value="volante">DB12 Volante</option>
+            </select>
+          </div>
+          <div>
+            <button class="cta" type="submit">Reserve →</button>
+            <p class="body-copy" style="margin-top:16px">
+              Prefer WhatsApp? <a class="body-link" href="https://wa.me/13055550190">Message the night desk</a>.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab" id="lab">
+    <div class="wrap">
+      <p class="kicker">Design.md · component lab</p>
+      <h2 class="title">Hover, focus, and filter. Red is action only.</h2>
+      <div class="lab-grid">
+        <div class="lab-item">
+          <p class="kicker">Ghost nav</p>
+          <a class="ghost-link" href="#fleet">Fleet</a>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Guide</p>
+          <a class="cta" href="guide.html">Miami →</a>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Cta arrow</p>
+          <a class="cta" href="#reserve">Reserve →</a>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Body link</p>
+          <a class="body-link track-ui" href="tel:+13055550190">Call the desk</a>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Pills · only rounded element</p>
+          <div class="pills" style="margin:0">
+            <button class="pill is-active" type="button">All</button>
+            <button class="pill" type="button">Coupe</button>
+          </div>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Carousel squares</p>
+          <div class="dots" style="position:static;transform:none">
+            <button class="dot is-active" type="button" aria-hidden="true"></button>
+            <button class="dot" type="button" aria-hidden="true"></button>
+            <button class="dot" type="button" aria-hidden="true"></button>
+          </div>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Utility icon</p>
+          <button class="icon-btn" type="button" aria-label="Close example">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" /></svg>
+          </button>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Hairline</p>
+          <hr class="hairline" />
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Surfaces</p>
+          <div class="swatches">
+            <div class="swatch" style="background:#000" title="Void"></div>
+            <div class="swatch" style="background:#181818" title="Notte"></div>
+            <div class="swatch" style="background:#303030" title="Grafite"></div>
+            <div class="swatch" style="background:#ffffff" title="Bianco"></div>
+            <div class="swatch" style="background:#da291c" title="Rosso hover only"></div>
+          </div>
+        </div>
+        <div class="lab-item">
+          <p class="kicker">Car detail</p>
+          <a class="cta" href="car.html?id=turbo-s">911 Turbo S →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>L&L Luxury Motors Miami</h3>
+        <p class="track-micro muted">Night desk · Brickell</p>
+        <div class="social">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" /><circle cx="8" cy="8" r="3" /><circle cx="12" cy="4" r="0.6" fill="currentColor" stroke="none" /></svg>
+          </a>
+          <a href="#" aria-label="WhatsApp">
+            <svg viewBox="0 0 16 16"><path d="M3 13l1.2-3A5.5 5.5 0 118 13.5H3z" /></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3>Fleet</h3>
+        <ul>
+          <li><a href="#searched">Most searched</a></li>
+          <li><a href="car.html?id=turbo-s">911 Turbo S</a></li>
+          <li><a href="car.html?id=urus">Urus</a></li>
+          <li><a href="car.html?id=volante">DB12 Volante</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Miami</h3>
+        <ul>
+          <li><a href="guide.html">Guide</a></li>
+          <li><a href="#opinions">Opinions</a></li>
+          <li><a href="#delivery">Delivery</a></li>
+          <li><a href="#reserve">Reserve</a></li>
+          <li><a href="tel:+13055550190">+1 305 555 0190</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hours</h3>
+        <ul>
+          <li><a href="#reserve">Daily 8am – 1am</a></li>
+          <li><a href="#reserve">MIA same-day</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <div class="search" id="search" role="dialog" aria-modal="true" aria-label="Search fleet">
+    <div class="search-box">
+      <div class="search-row">
+        <input type="search" placeholder="Type a car" aria-label="Search a car" />
+        <button class="icon-btn" type="button" aria-label="Close search" data-close-search>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        </button>
+      </div>
+      <p class="search-hint"><span class="search-hint-esc">Esc to close · </span>try turbo, urus, volante</p>
+    </div>
+  </div>
+
+  <script src="fleet.js"></script>
+</body>
+</html>

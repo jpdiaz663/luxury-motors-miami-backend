@@ -3,3 +3,8 @@ services:
     class: Drupal\lm_vehicle\VehiclePresenter
     arguments:
       - '@file_url_generator'
+  lm_vehicle.fleet_catalog:
+    class: Drupal\lm_vehicle\FleetCatalog
+    arguments:
+      - '@entity_type.manager'
+      - '@request_stack'

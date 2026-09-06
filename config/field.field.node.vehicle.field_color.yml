@@ -10,7 +10,7 @@ field_name: field_color
 entity_type: node
 bundle: vehicle
 label: Color
-description: 'Exterior color of this specific vehicle.'
+description: 'Exterior paint name (e.g. Nero Noctis, Rosso Corsa) or a hex like #c41e3a. Used for the fleet card hover border.'
 required: false
 translatable: false
 default_value: {  }

@@ -40,7 +40,12 @@ a {
 a:hover,
 a:focus-visible {
   color: var(--color-rosso-corsa);
-  text-decoration: underline !important;
+  text-decoration: underline;
+}
+
+a.btn:hover,
+a.btn:focus-visible {
+  text-decoration: none;
 }
 
 h1,

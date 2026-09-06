@@ -7,6 +7,8 @@
 
 declare(strict_types=1);
 
+use Drupal\lm_vehicle\Form\VehicleRefineForm;
+
 /**
  * Implements hook_theme().
  */
@@ -35,7 +37,49 @@ function lm_vehicle_theme(): array {
     'lm_vehicle_reserve' => [
       'variables' => $vehicle,
     ],
+    'lm_vehicle_search' => [
+      'variables' => [
+        'form' => NULL,
+        'background' => [],
+      ],
+    ],
+    'lm_vehicle_search_form' => [
+      'render element' => 'form',
+    ],
+    'lm_vehicle_refine_form' => [
+      'render element' => 'form',
+    ],
   ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for the fleet Views page.
+ */
+function lm_vehicle_preprocess_views_view(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view || $view->id() !== 'vehicle_fleet') {
+    return;
+  }
+  $catalog = \Drupal::service('lm_vehicle.fleet_catalog');
+  $variables['pills'] = $catalog->categoryPills();
+  $variables['window'] = $catalog->windowLabel();
+  $variables['refine'] = \Drupal::formBuilder()->getForm(VehicleRefineForm::class);
+  $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for the refine form.
+ */
+function lm_vehicle_preprocess_lm_vehicle_refine_form(array &$variables): void {
+  $path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
+  $variables['icon_path'] = '/' . $path . '/images/icons';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for vehicle theme hooks.
+ */
+function lm_vehicle_preprocess_lm_vehicle_search(array &$variables): void {
+  $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';
 }
 
 /**

@@ -18,3 +18,12 @@ vehicle:
     js/vehicle-studio.js: {}
   dependencies:
     - luxury_motors/global
+
+vehicle_search:
+  version: VERSION
+  js:
+    js/vehicle-search.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - luxury_motors/global

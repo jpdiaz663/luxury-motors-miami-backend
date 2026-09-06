@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Fleet pager: Prev / Next as ghost CTAs.
+ */
+#}
+{% if items.previous or items.next %}
+  <nav class="fleet-pager" aria-labelledby="{{ heading_id }}">
+    <{{ pagination_heading_level }} id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</{{ pagination_heading_level }}>
+    <ul>
+      <li>
+        {% if items.previous %}
+          <a class="btn btn--secondary" href="{{ items.previous.href }}" rel="prev">{{ 'Prev'|t }}</a>
+        {% endif %}
+      </li>
+      {% if items.current %}
+        <li class="is-current">{{ 'Page @page'|t({'@page': items.current}) }}</li>
+      {% endif %}
+      <li>
+        {% if items.next %}
+          <a class="btn btn--secondary btn--arrow" href="{{ items.next.href }}" rel="next">{{ 'Next'|t }}</a>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+{% endif %}

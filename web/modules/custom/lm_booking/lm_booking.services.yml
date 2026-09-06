@@ -1,0 +1,5 @@
+services:
+  lm_booking.availability:
+    class: Drupal\lm_booking\AvailabilityManager
+    arguments:
+      - '@entity_type.manager'

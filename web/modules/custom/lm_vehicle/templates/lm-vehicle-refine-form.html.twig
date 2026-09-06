@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Fleet refine: brand, color, daily-price bands.
+ */
+#}
+<form{{ create_attribute(form['#attributes']) }}>
+  {{ form.form_build_id }}
+  {{ form.form_token }}
+  {{ form.form_id }}
+  {{ form.from }}
+  {{ form.to }}
+  {{ form.place }}
+  {{ form.pickup }}
+  {{ form.ptime }}
+  {{ form.return }}
+  {{ form.rtime }}
+  {{ form.category }}
+
+  <label class="banner-field fleet-refine-field">
+    <span class="fleet-refine-label">
+      <img class="fleet-refine-icon" src="{{ icon_path }}/refine-brand.svg" alt="" width="16" height="16" />
+      {{ 'Brand'|t }}
+    </span>
+    {{ form.brand }}
+  </label>
+  <label class="banner-field fleet-refine-field">
+    <span class="fleet-refine-label">
+      <img class="fleet-refine-icon" src="{{ icon_path }}/refine-color.svg" alt="" width="16" height="16" />
+      {{ 'Color'|t }}
+    </span>
+    {{ form.color }}
+  </label>
+  <label class="banner-field fleet-refine-field">
+    <span class="fleet-refine-label">
+      <img class="fleet-refine-icon" src="{{ icon_path }}/refine-price.svg" alt="" width="16" height="16" />
+      {{ 'Price'|t }}
+    </span>
+    {{ form.price }}
+  </label>
+  {{ form.submit }}
+</form>

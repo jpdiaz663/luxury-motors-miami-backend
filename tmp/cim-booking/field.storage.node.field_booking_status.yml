@@ -1,0 +1,30 @@
+uuid: 4d206183-0f57-4e12-d144-3c905f1d24e6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_booking_status
+field_name: field_booking_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: pending
+      label: Pending
+    -
+      value: confirmed
+      label: Confirmed
+    -
+      value: cancelled
+      label: Cancelled
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

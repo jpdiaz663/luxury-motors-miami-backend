@@ -1,0 +1,23 @@
+uuid: 8164a5c7-4d9b-4256-b588-70349d5b68c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_status
+    - node.type.booking
+  module:
+    - options
+id: node.booking.field_booking_status
+field_name: field_booking_status
+entity_type: node
+bundle: booking
+label: Status
+description: 'Pending and confirmed block the vehicle. Cancelled does not.'
+required: true
+translatable: false
+default_value:
+  -
+    value: confirmed
+default_value_callback: ''
+settings: {  }
+field_type: list_string

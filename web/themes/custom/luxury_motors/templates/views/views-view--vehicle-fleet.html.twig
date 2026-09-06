@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Fleet listing under the search hero. Pills filter by category.
+ */
+#}
+{%
+  set classes = [
+    'view-vehicle-fleet',
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<section{{ attributes.addClass(classes, 'notte').setAttribute('id', 'fleet') }}>
+  <div class="wrap">
+    {{ title_prefix }}
+    <p class="kicker">{{ 'Inventory on the floor tonight'|t }}</p>
+    <h2 class="title">{{ 'Choose a car, not a package'|t }}</h2>
+    {% if window %}
+      <p class="muted track-ui fleet-window">{{ 'Available @window'|t({'@window': window}) }}</p>
+    {% endif %}
+    {{ title_suffix }}
+
+    {% if pills %}
+      <div class="pills" role="group" aria-label="{{ 'Fleet filters'|t }}">
+        {% for pill in pills %}
+          <a class="pill{{ pill.active ? ' is-active' }}" href="{{ pill.url }}">{{ pill.label }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if refine %}
+      {{ refine }}
+    {% endif %}
+
+    {{ header }}
+    {{ attachment_before }}
+
+    {% if rows %}
+      <div class="fleet">
+        {{ rows }}
+      </div>
+    {% elseif empty %}
+      <p class="muted track-ui">{{ empty }}</p>
+    {% endif %}
+
+    {{ pager }}
+    {{ attachment_after }}
+    {{ more }}
+    {{ footer }}
+  </div>
+</section>

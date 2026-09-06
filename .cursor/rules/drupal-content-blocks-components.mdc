@@ -1,0 +1,69 @@
+---
+description: Drupal 11 — Content, Blocks & Component Architecture. Distinguishes Content Types, Paragraphs, Custom Blocks, Views, Block Plugins, and Block Layout.
+alwaysApply: true
+---
+
+# Drupal 11 — Content, Blocks & Component Architecture
+
+Antes de implementar un componente, clasificarlo: contenido editorial, composición de página, contenido reutilizable, funcionalidad dinámica, layout global, o consulta de contenido.
+
+## Distinciones (no confundir)
+
+- **Block Layout** = dónde se muestra algo (regiones: header, nav, footer, sidebar, breadcrumbs, search, page title, banners globales).
+- **Block Plugin** = funcionalidad generada por código (API, cálculo, lógica de negocio, datos que el editor no introduce).
+- **Custom Block Type** = modelo editorial de un bloque reutilizable independiente.
+- **Custom Block** = instancia de ese tipo (ej. "20% OFF Luxury Rentals").
+- **Paragraph** = componente editorial **dentro** de una entidad de contenido; cada página decide si lo incluye.
+- **Views / Views Block** = consulta y listado de contenido Drupal.
+- **Content Type** = entidad editorial principal (URL, revisión, workflow, taxonomías, metadatos).
+
+`Structure → Block layout → Place block` no implica un Block Type. Ahí aparecen Core, contrib, custom plugins, Views y Custom Blocks.
+
+## Árbol de decisión
+
+```text
+¿Entidad principal del negocio?          → Content Type
+¿Componente editorial por página?        → Paragraph
+¿Contenido independiente y reutilizable? → Custom Block Type
+¿Consulta de contenido Drupal?           → Views (no PHP custom)
+¿Lógica, API o servicio?                 → Block Plugin
+¿Dónde aparece en el layout del sitio?   → Block Layout
+```
+
+No crear Content Type, Block Type, Paragraph, Block Plugin o módulo custom sin justificar la responsabilidad. Preferir Core y contrib maduros. La solución más simple que no sacrifique mantenibilidad.
+
+## Reglas críticas
+
+- Block Layout no construye el contenido editorial de cada página. Responde: "¿dónde aparece?"
+- No crear Custom Block Type solo para un componente visual. Debe haber razón editorial para una entidad independiente y reutilizable.
+- Si el editor debe decidir "esta página tiene este componente y esta otra no" → **Paragraphs**, no un bloque global.
+- Hero / Slider / gallery / features / CTA de página: Paragraph en Landing Page (u otra entidad), no Block Layout, cuando presencia y contenido varían por página.
+- No crear Block Plugin si Views, Entity Query, config, Custom Block Type o Paragraphs lo resuelven.
+- No usar Blocks como sustituto de Content Types.
+
+## Reutilización vs composición
+
+- **Reutilizar el mismo contenido** en varios sitios → Custom Block (ej. CTA global).
+- **Cada página arma su experiencia** → Paragraphs (Homepage vs Ferrari Landing con Héroes distintos).
+
+## Capas (nunca cruzar responsabilidades)
+
+```text
+WHAT              → Content Model
+HOW GENERATED     → Views / Block Plugin / render
+WHERE             → Block Layout / composición de página
+HOW IT LOOKS      → Twig / HTML / CSS / Web Components
+```
+
+Drupal: modelado, editorial, relaciones, config, business logic, render arrays, Twig, preprocess si hace falta. Frontend: HTML5 semántico, CSS, JS, Web Components, interacciones. Sin business logic en Web Components.
+
+Render: Entity/Paragraph/Block → render array → Twig → HTML → enhancement JS. No generar HTML complejo en PHP si Twig basta.
+
+## Luxury Motors (preferido)
+
+- **Content Types:** Vehicle, Location, Blog, Landing Page, FAQ.
+- **Paragraphs:** Hero, Hero Slider, Vehicle Showcase, Gallery, Features, Testimonials, CTA.
+- **Custom Block Types:** Global CTA, Promotional Banner, Global Announcement.
+- **Views:** Featured / Available / Related Vehicles.
+- **Block Plugins:** solo API externa, lógica dinámica o funcionalidad que no es editorial.
+- **Block Layout:** Header, Navigation, Sidebar, Footer y estructura global.

@@ -1,0 +1,21 @@
+uuid: 705394b6-3c8a-4145-a477-6f238c4a57b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_end
+    - node.type.booking
+  module:
+    - datetime
+id: node.booking.field_booking_end
+field_name: field_booking_end
+entity_type: node
+bundle: booking
+label: Return
+description: 'Last day the car is held. A new rental may start on this day.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -9,3 +9,5 @@ dependencies:
   - drupal:media
   - drupal:taxonomy
   - drupal:image
+  - drupal:views
+  - drupal:options

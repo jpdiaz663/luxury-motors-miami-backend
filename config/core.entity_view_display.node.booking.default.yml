@@ -1,0 +1,54 @@
+uuid: a386c7e9-6f1d-4478-d700-92561f7d80e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.booking.field_booking_end
+    - field.field.node.booking.field_booking_start
+    - field.field.node.booking.field_booking_status
+    - field.field.node.booking.field_booking_vehicle
+    - node.type.booking
+  module:
+    - datetime
+    - options
+    - user
+id: node.booking.default
+targetEntityType: node
+bundle: booking
+mode: default
+content:
+  field_booking_end:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: html_date
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_booking_start:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: html_date
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_booking_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_booking_vehicle:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  links: true

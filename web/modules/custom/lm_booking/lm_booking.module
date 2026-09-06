@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Views integration for fleet availability.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function lm_booking_views_data_alter(array &$data): void {
+  $data['node_field_data']['lm_booking_available_window'] = [
+    'title' => t('Available in rental window'),
+    'help' => t('Hides vehicles that have a pending or confirmed booking overlapping pickup/return.'),
+    'filter' => [
+      'id' => 'lm_booking_available_window',
+    ],
+  ];
+}

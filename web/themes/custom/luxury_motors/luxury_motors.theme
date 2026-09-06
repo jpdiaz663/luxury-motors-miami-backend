@@ -45,6 +45,9 @@ function luxury_motors_preprocess_page(array &$variables): void {
   $variables['site_name'] = \Drupal::config('system.site')->get('name');
 
   $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === 'view.vehicle_fleet.page_1') {
+    $variables['attributes']['class'][] = 'is-fleet';
+  }
   if (in_array($route_name, ['system.403', 'system.404'], TRUE)) {
     $variables['attributes']['class'][] = 'error-page';
     $theme_path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
@@ -59,6 +62,9 @@ function luxury_motors_preprocess_node(array &$variables): void {
   $node = $variables['node'];
   if ($node->bundle() === 'vehicle') {
     $variables['attributes']['class'][] = 'vehicle-node';
+    if (($variables['view_mode'] ?? '') === 'teaser') {
+      $variables['card'] = \Drupal::service('lm_vehicle.presenter')->card($node);
+    }
     return;
   }
   if ($node->bundle() !== 'page') {

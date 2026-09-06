@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Search hero: full-bleed background plus the banner form.
+ */
+#}
+<section class="hero hero--search" id="top" aria-label="{{ 'Search a car'|t }}">
+  <div class="hero-media" role="img" aria-label="{{ background.alt|default('Dark luxury coupe on empty asphalt at night'|t) }}">
+    {% if background.url %}
+      <img src="{{ background.url }}" alt="{{ background.alt }}" />
+    {% endif %}
+  </div>
+  {{ form }}
+</section>

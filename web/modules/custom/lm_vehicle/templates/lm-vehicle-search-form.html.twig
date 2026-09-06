@@ -1,0 +1,85 @@
+{#
+/**
+ * @file
+ * Fleet banner search. Markup matches the rental mockup hero form.
+ */
+#}
+<form{{ create_attribute(form['#attributes']) }}>
+  {{ form.form_build_id }}
+  {{ form.form_token }}
+  {{ form.form_id }}
+  {{ form.category }}
+  {{ form.brand }}
+  {{ form.color }}
+  {{ form.price }}
+
+  <p class="kicker">{{ 'Night desk · Brickell · MIA'|t }}</p>
+  <h1 class="title">{{ 'The keys are already in Brickell'|t }}</h1>
+
+  <div class="banner-places">
+    <label class="banner-place">
+      <span class="banner-place-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 00-4.5 4.5c0 3.4 4.5 8.5 4.5 8.5s4.5-5.1 4.5-8.5A4.5 4.5 0 008 1.5z"/><circle cx="8" cy="6" r="1.6"/></svg>
+      </span>
+      <span class="banner-place-copy">
+        <span class="track-micro muted">{{ 'Pickup location'|t }}</span>
+        {{ form.from }}
+      </span>
+    </label>
+    <label class="banner-place">
+      <span class="banner-place-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16"><path d="M2 14h12M8 2v9M5 8l3 3 3-3"/></svg>
+      </span>
+      <span class="banner-place-copy">
+        <span class="track-micro muted">{{ 'Delivery location'|t }}</span>
+        {{ form.to }}
+      </span>
+    </label>
+  </div>
+
+  <div class="banner-note" data-banner-note{% if not form['#show_place'] %} hidden{% endif %}>
+    <label>
+      <span class="track-micro muted">{{ 'Property name'|t }}</span>
+      {{ form.place }}
+    </label>
+  </div>
+
+  <div class="banner-window">
+    <label class="banner-field">
+      <span>{{ 'Pickup'|t }}</span>
+      {{ form.pickup }}
+    </label>
+    <label class="banner-field">
+      <span>{{ 'Time'|t }}</span>
+      {{ form.ptime }}
+    </label>
+    <label class="banner-field">
+      <span>{{ 'Return'|t }}</span>
+      {{ form.return }}
+    </label>
+    <label class="banner-field">
+      <span>{{ 'Time'|t }}</span>
+      {{ form.rtime }}
+    </label>
+
+  
+    {{ form.submit }}
+
+  </div>
+
+{#<div class="banner-refine">
+    <label class="banner-field">
+      <span>{{ 'Brand'|t }}</span>
+      {{ form.brand }}
+    </label>
+    <label class="banner-field">
+      <span>{{ 'Model'|t }}</span>
+      {{ form.model }}
+    </label>
+    <label class="banner-field">
+      <span>{{ 'Color'|t }}</span>
+      {{ form.color }}
+    </label>
+  </div>#}
+
+</form>
