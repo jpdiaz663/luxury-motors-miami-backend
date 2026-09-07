@@ -10,7 +10,7 @@ dependencies:
 id: luxury_motors_vehicle_search
 theme: luxury_motors
 region: content
-weight: -12
+weight: -2
 provider: null
 plugin: lm_vehicle_search
 settings:

@@ -12,7 +12,7 @@ dependencies:
 id: luxury_motors_contenidoprincipal
 theme: luxury_motors
 region: content
-weight: -2
+weight: -1
 provider: null
 plugin: 'block_content:77939aad-212a-4655-91c2-85091a353182'
 settings:

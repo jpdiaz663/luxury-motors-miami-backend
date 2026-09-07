@@ -1,0 +1,28 @@
+uuid: aa95c4df-cc47-49c9-b8a4-cb066e663eac
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero_slider_featured_cars:4615eddb-8dc9-427b-9817-fd1ea6253afc'
+  module:
+    - block_content
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_featuredvehicules
+theme: luxury_motors
+region: content
+weight: -3
+provider: null
+plugin: 'block_content:4615eddb-8dc9-427b-9817-fd1ea6253afc'
+settings:
+  id: 'block_content:4615eddb-8dc9-427b-9817-fd1ea6253afc'
+  label: 'Featured vehicules'
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /home

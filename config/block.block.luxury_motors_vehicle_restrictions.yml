@@ -10,7 +10,7 @@ dependencies:
 id: luxury_motors_vehicle_restrictions
 theme: luxury_motors
 region: content
-weight: -5
+weight: -6
 provider: null
 plugin: lm_vehicle_restrictions
 settings:
