@@ -1,0 +1,23 @@
+uuid: b02d3f5a-7e49-4c28-9f61-d408b0e2c357
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_requires_place
+    - taxonomy.vocabulary.location
+id: taxonomy_term.location.field_requires_place
+field_name: field_requires_place
+entity_type: taxonomy_term
+bundle: location
+label: 'Requires property name'
+description: 'Show the property name field when this location is Hotel / residence or another address that needs a building name.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

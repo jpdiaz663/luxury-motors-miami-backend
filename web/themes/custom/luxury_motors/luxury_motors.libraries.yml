@@ -25,5 +25,7 @@ vehicle_search:
     js/vehicle-search.js: {}
   dependencies:
     - core/drupal
+    - core/drupalSettings
     - core/once
+    - core/drupal.autocomplete
     - luxury_motors/global

@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for lm_vehicle.
+ */
+
+declare(strict_types=1);
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function lm_vehicle_install(): void {
+  lm_vehicle_ensure_default_locations();
+}
+
+/**
+ * Seed Location terms for the fleet search autocomplete.
+ */
+function lm_vehicle_update_11001(): string {
+  lm_vehicle_ensure_default_locations();
+  return 'Created default location terms for the fleet search banner.';
+}
+
+/**
+ * Creates the rental desks used by the search banner when the vocabulary exists.
+ */
+function lm_vehicle_ensure_default_locations(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if (!$entity_type_manager->getStorage('taxonomy_vocabulary')->load('location')) {
+    return;
+  }
+
+  $storage = $entity_type_manager->getStorage('taxonomy_term');
+  $defaults = [
+    ['name' => 'Brickell desk', 'place' => FALSE],
+    ['name' => 'Miami Beach', 'place' => FALSE],
+    ['name' => 'MIA arrivals', 'place' => FALSE],
+    ['name' => 'Hotel / residence', 'place' => TRUE],
+    ['name' => 'Private hangar', 'place' => FALSE],
+  ];
+
+  foreach ($defaults as $item) {
+    $existing = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', 'location')
+      ->condition('name', $item['name'])
+      ->range(0, 1)
+      ->execute();
+    if ($existing) {
+      continue;
+    }
+
+    $term = Term::create([
+      'vid' => 'location',
+      'name' => $item['name'],
+      'status' => 1,
+    ]);
+    if ($term->hasField('field_requires_place')) {
+      $term->set('field_requires_place', $item['place'] ? 1 : 0);
+    }
+    $term->save();
+  }
+}

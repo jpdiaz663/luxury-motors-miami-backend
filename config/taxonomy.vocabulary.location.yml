@@ -1,0 +1,9 @@
+uuid: 7c3e8a1d-4b92-4f0e-9c6a-1d8e5f2b7a30
+langcode: en
+status: true
+dependencies: {  }
+name: Location
+vid: location
+description: 'Pickup and delivery desks used by the fleet search banner.'
+weight: 0
+new_revision: false

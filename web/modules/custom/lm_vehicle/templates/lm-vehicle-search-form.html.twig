@@ -12,27 +12,33 @@
   {{ form.brand }}
   {{ form.color }}
   {{ form.price }}
+  {{ form.from }}
+  {{ form.to }}
+
+  <div class="search-progress" data-search-progress hidden>
+    <div class="search-progress-bar"></div>
+  </div>
 
   <p class="kicker">{{ 'Night desk · Brickell · MIA'|t }}</p>
   <h1 class="title">{{ 'The keys are already in Brickell'|t }}</h1>
 
   <div class="banner-places">
-    <label class="banner-place">
+    <label class="banner-place" for="banner-from">
       <span class="banner-place-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 00-4.5 4.5c0 3.4 4.5 8.5 4.5 8.5s4.5-5.1 4.5-8.5A4.5 4.5 0 008 1.5z"/><circle cx="8" cy="6" r="1.6"/></svg>
       </span>
       <span class="banner-place-copy">
         <span class="track-micro muted">{{ 'Pickup location'|t }}</span>
-        {{ form.from }}
+        {{ form.from_q }}
       </span>
     </label>
-    <label class="banner-place">
+    <label class="banner-place" for="banner-to">
       <span class="banner-place-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16"><path d="M2 14h12M8 2v9M5 8l3 3 3-3"/></svg>
       </span>
       <span class="banner-place-copy">
         <span class="track-micro muted">{{ 'Delivery location'|t }}</span>
-        {{ form.to }}
+        {{ form.to_q }}
       </span>
     </label>
   </div>
@@ -62,24 +68,26 @@
       {{ form.rtime }}
     </label>
 
-  
-    {{ form.submit }}
-
+    <div class="banner-actions">
+      <button type="submit" class="btn btn--primary banner-submit" data-banner-submit>
+        <span class="banner-submit-icon banner-submit-icon--search" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="7" cy="7" r="4.4"/>
+            <path d="M10.4 10.4L14 14"/>
+          </svg>
+        </span>
+        
+        <span class="banner-submit-icon banner-submit-icon--spinner" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="8" cy="8" r="5.5" stroke-dasharray="22 12" stroke-linecap="round"/>
+          </svg>
+        </span>
+        {{ 'Search'|t }}
+      </button>
+      {% if form['#filtered'] %}
+      <a class="btn btn--secondary banner-reset" href="{{ form['#reset_url'] }}" data-banner-reset>{{ 'Reset filters'|t }}</a>
+      {% endif %}
+    </div>
   </div>
-
-{#<div class="banner-refine">
-    <label class="banner-field">
-      <span>{{ 'Brand'|t }}</span>
-      {{ form.brand }}
-    </label>
-    <label class="banner-field">
-      <span>{{ 'Model'|t }}</span>
-      {{ form.model }}
-    </label>
-    <label class="banner-field">
-      <span>{{ 'Color'|t }}</span>
-      {{ form.color }}
-    </label>
-  </div>#}
 
 </form>

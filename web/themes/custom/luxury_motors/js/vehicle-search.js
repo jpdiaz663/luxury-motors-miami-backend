@@ -1,4 +1,4 @@
-(function (Drupal, once) {
+(function (Drupal, once, drupalSettings) {
   function isoDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -6,14 +6,30 @@
     return `${year}-${month}-${day}`;
   }
 
+  function termId(value) {
+    const match = String(value || "").match(/\((\d+)\)\s*$/);
+    if (match) {
+      return match[1];
+    }
+    return /^\d+$/.test(String(value || "").trim()) ? String(value).trim() : "";
+  }
+
   function bindBanner(form) {
     const from = form.querySelector("#banner-from");
     const to = form.querySelector("#banner-to");
+    const fromId = form.querySelector("#banner-from-id");
+    const toId = form.querySelector("#banner-to-id");
     const pickup = form.querySelector("#banner-pickup");
     const back = form.querySelector("#banner-return");
     const note = form.querySelector("[data-banner-note]");
     const place = form.querySelector("#banner-place");
-    if (!from || !to || !pickup || !back || !note || !place) {
+    const submit = form.querySelector("[data-banner-submit]");
+    const reset = form.querySelector("[data-banner-reset]");
+    const progress = form.querySelector("[data-search-progress]");
+    const settings = drupalSettings.lmVehicleSearch || {};
+    const requiresPlace = (settings.requiresPlace || []).map(Number);
+
+    if (!from || !to || !fromId || !toId || !pickup || !back || !note || !place) {
       return;
     }
 
@@ -32,8 +48,15 @@
       back.value = isoDate(end);
     }
 
+    function syncIds() {
+      fromId.value = termId(from.value);
+      const delivery = termId(to.value);
+      toId.value = delivery || fromId.value;
+    }
+
     function hotelNeeded() {
-      return from.value === "hotel" || to.value === "hotel";
+      return requiresPlace.includes(Number(termId(from.value)))
+        || requiresPlace.includes(Number(termId(to.value)));
     }
 
     function syncNote() {
@@ -45,25 +68,81 @@
       }
     }
 
+    function setBusy(busy) {
+      form.setAttribute("aria-busy", busy ? "true" : "false");
+      if (submit) {
+        submit.disabled = busy;
+        submit.classList.toggle("is-busy", busy);
+      }
+      if (progress) {
+        progress.hidden = !busy;
+      }
+    }
+
     pickup.addEventListener("change", function () {
       back.min = pickup.value || min;
       if (back.value && back.value < back.min) {
         back.value = back.min;
       }
     });
-    from.addEventListener("change", syncNote);
-    to.addEventListener("change", syncNote);
+    ["change", "blur", "autocompleteclose", "autocompleteselect"].forEach(function (eventName) {
+      from.addEventListener(eventName, function () {
+        syncIds();
+        syncNote();
+      });
+      to.addEventListener(eventName, function () {
+        syncIds();
+        syncNote();
+      });
+    });
+    syncIds();
     syncNote();
 
+    if (reset) {
+      reset.addEventListener("click", function (event) {
+        if (window.location.search && settings.resetUrl) {
+          return;
+        }
+        event.preventDefault();
+        from.value = "";
+        to.value = "";
+        fromId.value = "";
+        toId.value = "";
+        place.value = "";
+        const start = new Date(today);
+        start.setDate(start.getDate() + 1);
+        pickup.value = isoDate(start);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 3);
+        back.value = isoDate(end);
+        const ptime = form.querySelector("#banner-ptime");
+        const rtime = form.querySelector("#banner-rtime");
+        if (ptime) {
+          ptime.value = "10:00";
+        }
+        if (rtime) {
+          rtime.value = "10:00";
+        }
+        setBusy(false);
+        syncNote();
+      });
+    }
+
     form.addEventListener("submit", function (event) {
+      syncIds();
+      if (!fromId.value) {
+        event.preventDefault();
+        from.focus();
+        return;
+      }
       if (back.value < pickup.value) {
         event.preventDefault();
         back.focus();
         return;
       }
-      if (to.value === "same") {
-        to.value = from.value;
-      }
+      form.querySelectorAll("[data-banner-lookup]").forEach(function (element) {
+        element.disabled = true;
+      });
       form.querySelectorAll("input, select").forEach(function (element) {
         if (!element.name || element.type === "submit" || element.required) {
           return;
@@ -72,6 +151,7 @@
           element.disabled = true;
         }
       });
+      setBusy(true);
     });
   }
 
@@ -91,4 +171,4 @@
       once("lm-vehicle-refine", ".fleet-refine", context).forEach(bindRefine);
     },
   };
-})(Drupal, once);
+})(Drupal, once, drupalSettings);

@@ -36,6 +36,7 @@ final class VehicleRefineForm extends FormBase {
     $form['#method'] = 'get';
     $form['#action'] = $action;
     $form['#theme'] = 'lm_vehicle_refine_form';
+    $form['#theme_wrappers'] = [];
     $form['#after_build'][] = [VehicleSearchForm::class, 'stripInternalElements'];
     $form['#attributes'] = [
       'class' => ['fleet-refine'],

@@ -7,6 +7,7 @@ namespace Drupal\lm_vehicle;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -31,29 +32,88 @@ final class FleetCatalog {
   ) {}
 
   /**
-   * Pickup desks from the rental mockup.
-   *
-   * @return array<string, string>
+   * Published location term, or NULL when the query value is not a location.
    */
-  public function pickupLocations(): array {
-    return [
-      'brickell' => 'Brickell desk',
-      'miami-beach' => 'Miami Beach',
-      'mia' => 'MIA arrivals',
-      'hotel' => 'Hotel / residence',
-      'hangar' => 'Private hangar',
-    ];
+  public function locationTerm(string $id): ?TermInterface {
+    if ($id === '' || !ctype_digit($id)) {
+      return NULL;
+    }
+    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load((int) $id);
+    if (!$term instanceof TermInterface || $term->bundle() !== 'location' || !$term->isPublished()) {
+      return NULL;
+    }
+
+    return $term;
   }
 
   /**
-   * Delivery desks from the rental mockup.
+   * Whether the location asks for a hotel / residence property name.
+   */
+  public function locationNeedsPlace(string $id): bool {
+    $term = $this->locationTerm($id);
+    if (!$term || !$term->hasField('field_requires_place')) {
+      return FALSE;
+    }
+
+    return (bool) $term->get('field_requires_place')->value;
+  }
+
+  /**
+   * Location term IDs that should reveal the property-name field.
+   *
+   * @return list<int>
+   */
+  public function locationPlaceTids(): array {
+    $storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    try {
+      $ids = $storage->getQuery()
+        ->accessCheck(TRUE)
+        ->condition('vid', 'location')
+        ->condition('status', 1)
+        ->condition('field_requires_place', 1)
+        ->execute();
+    }
+    catch (\Exception) {
+      return [];
+    }
+
+    return array_map('intval', array_values($ids));
+  }
+
+  /**
+   * Hourly pickup/return times in 12-hour labels, 24-hour values.
    *
    * @return array<string, string>
    */
-  public function deliveryLocations(): array {
-    return [
-      'same' => 'Same as pickup',
-    ] + $this->pickupLocations();
+  public function hourOptions(): array {
+    $options = [];
+    for ($hour = 0; $hour < 24; $hour++) {
+      $value = sprintf('%02d:00', $hour);
+      $hour12 = $hour % 12 === 0 ? 12 : $hour % 12;
+      $suffix = $hour < 12 ? 'AM' : 'PM';
+      $options[$value] = sprintf('%d:00 %s', $hour12, $suffix);
+    }
+
+    return $options;
+  }
+
+  /**
+   * Normalize a GET time to an hour key, or the default.
+   */
+  public function hourValue(string $time, string $default = '10:00'): string {
+    $options = $this->hourOptions();
+    if (isset($options[$time])) {
+      return $time;
+    }
+    $parsed = \DateTimeImmutable::createFromFormat('H:i', $time);
+    if ($parsed) {
+      $rounded = $parsed->format('H') . ':00';
+      if (isset($options[$rounded])) {
+        return $rounded;
+      }
+    }
+
+    return $default;
   }
 
   /**
@@ -192,6 +252,11 @@ final class FleetCatalog {
       'url' => $url,
       'active' => $active,
     ];
+  }
+
+  public function hasFilters(): bool {
+    $query = $this->currentQuery();
+    return !empty($query['from']) || !empty($query['to']) || !empty($query['place']) || !empty($query['pickup']) || !empty($query['ptime']) || !empty($query['return']) || !empty($query['rtime']) || !empty($query['category']) || !empty($query['brand']) || !empty($query['model']) || !empty($query['color']) || !empty($query['price']);
   }
 
 }

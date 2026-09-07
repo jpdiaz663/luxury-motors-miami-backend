@@ -102,6 +102,7 @@ final class VehicleSearchBlock extends BlockBase implements ContainerFactoryPlug
     $tags = [
       'taxonomy_term_list:brand',
       'taxonomy_term_list:vehicle_category',
+      'taxonomy_term_list:location',
     ];
     $mid = $this->configuration['background_media'] ?? NULL;
     if ($mid) {

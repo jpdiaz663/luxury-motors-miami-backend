@@ -281,8 +281,13 @@ body.is-locked { overflow: hidden; }
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 0;
+  padding: 22px 8px;
   min-width: 0;
+  outline: 1px solid transparent;
+  outline-offset: 0;
+}
+.banner-place:focus-within {
+  outline: 1px solid var(--color-bianco);
 }
 .banner-place + .banner-place {
   padding-left: 32px;
@@ -311,18 +316,34 @@ body.is-locked { overflow: hidden; }
   min-width: 0;
   flex: 1;
 }
+.banner-place .form-item {
+  margin: 0;
+  width: 100%;
+}
+.banner-place .autocomplete-throbber,
+.banner-place .ajax-progress {
+  display: none;
+}
+.banner-place input,
 .banner-place select,
 .banner-note input,
 .banner-field input,
 .banner-field select {
   width: 100%;
-  font-size: var(--text-body);
+  font-size: var(--text-title);
   letter-spacing: 0.015em;
   text-transform: uppercase;
   color: var(--color-bianco);
   background: transparent;
-  padding: 2px 0;
-  min-height: 28px;
+  padding: 6px 0;
+  min-height: 36px;
+}
+.banner-place input:focus,
+.banner-place input:focus-visible,
+.banner-place select:focus,
+.banner-place select:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 .banner-place select,
 .banner-field select {
@@ -376,10 +397,86 @@ body.is-locked { overflow: hidden; }
   opacity: 0.7;
   cursor: pointer;
 }
-.banner-submit {
+.banner-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   align-self: end;
-  margin: 16px 0 4px 32px;
+  margin: 16px 0 4px 24px;
+}
+.banner-submit,
+.banner-reset {
+  min-width: 168px;
   white-space: nowrap;
+}
+.banner-submit {
+  gap: 8px;
+}
+.banner-submit-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+.banner-submit-icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+.banner-submit-icon--spinner {
+  display: none;
+}
+.banner-submit.is-busy .banner-submit-icon--search {
+  display: none;
+}
+.banner-submit.is-busy .banner-submit-icon--spinner {
+  display: inline-flex;
+}
+.banner-submit-icon--spinner svg {
+  animation: banner-spin 0.7s linear infinite;
+}
+.search-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 400;
+  height: 3px;
+  pointer-events: none;
+}
+.search-progress[hidden] {
+  display: none;
+}
+.search-progress-bar {
+  height: 100%;
+  width: 28%;
+  background: var(--color-rosso-corsa);
+  animation: banner-progress 1.1s ease-in-out infinite;
+}
+@keyframes banner-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes banner-progress {
+  0% { width: 8%; margin-left: 0; }
+  50% { width: 42%; margin-left: 28%; }
+  100% { width: 12%; margin-left: 88%; }
+}
+.ui-autocomplete.ui-widget.ui-widget-content {
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 6px 0;
+  background: var(--color-notte);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--color-bianco);
+  z-index: 500;
+}
+.ui-autocomplete .ui-menu-item-wrapper {
+  padding: 10px 14px;
+  color: var(--color-bianco);
+}
+.ui-autocomplete .ui-menu-item-wrapper.ui-state-active {
+  background: var(--color-rosso-corsa);
+  border: 0;
+  color: var(--color-bianco);
 }
 .banner-refine {
   display: grid;
@@ -606,6 +703,14 @@ a.pill:focus-visible {
   .fleet .card:focus-within {
     transform: none;
     box-shadow: none;
+  }
+  .banner-submit-icon--spinner svg,
+  .search-progress-bar {
+    animation: none;
+  }
+  .search-progress-bar {
+    width: 100%;
+    margin-left: 0;
   }
 }
 
@@ -1281,7 +1386,7 @@ a.pill:focus-visible {
   .banner { padding: 16px 16px 24px; }
   .banner > .title { margin-bottom: 16px; }
   .banner-places { grid-template-columns: 1fr; }
-  .banner-place { padding: 10px 0; min-height: 44px; }
+  .banner-place { padding: 12px 4px; min-height: 48px; }
   .banner-place + .banner-place {
     margin-left: 0;
     padding-left: 0;
@@ -1320,6 +1425,7 @@ a.pill:focus-visible {
     border-left: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.22);
   }
+  .banner-place input,
   .banner-place select,
   .banner-note input,
   .banner-field input,
@@ -1327,7 +1433,7 @@ a.pill:focus-visible {
   .field input,
   .field select {
     font-size: 16px;
-    min-height: 28px;
+    min-height: 36px;
   }
 
   /* Search */
@@ -1336,9 +1442,14 @@ a.pill:focus-visible {
     font-size: 16px;
     min-height: 44px;
   }
+  .banner-actions,
   .banner-submit {
     margin: 12px 0 0;
     grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .banner-submit,
+  .banner-reset {
     min-height: 44px;
   }
   .search {

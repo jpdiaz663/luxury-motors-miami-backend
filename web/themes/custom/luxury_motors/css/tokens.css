@@ -90,7 +90,7 @@
   --ll-btn-padding: 0.5em 1em;
 
   /* Primary Button(s) */
-  --btn--primary-rounded: var(--spacing-2);
+  --btn--primary-rounded: var(--spacing-1);
   --btn-min-height: 44px;
   --btn-padding-block: 12px;
   --btn-padding-inline: 24px;
