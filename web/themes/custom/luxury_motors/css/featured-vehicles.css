@@ -91,7 +91,7 @@
 
 .featured-vehicles__headline {
   color: var(--color-bianco-ferrari);
-  text-shadow: 0 0 7px var(--color-carbone-nero);
+  /*text-shadow: 0 0 7px var(--color-carbone-nero);*/
 }
 
 .featured-vehicles__lede {
@@ -251,23 +251,10 @@
   backdrop-filter: blur(8px);
 }
 
-.featured-vehicles__arrow-icon {
+.featured-vehicles__arrow.btn--icon-left::before,
+.featured-vehicles__arrow.btn--icon-right::after {
   position: relative;
   z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-}
-
-.featured-vehicles__arrow-icon svg {
-  display: block;
-  width: 16px;
-  height: 16px;
-}
-
-.featured-vehicles__arrow--prev .featured-vehicles__arrow-icon {
-  transform: scaleX(-1);
 }
 
 .featured-vehicles__arrow:disabled {

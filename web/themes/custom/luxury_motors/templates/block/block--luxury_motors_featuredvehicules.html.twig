@@ -35,13 +35,11 @@
               {% endfor %}
             </div>
             <div class="featured-vehicles__controls">
-              <button type="button" class="featured-vehicles__arrow featured-vehicles__arrow--prev" data-featured-prev aria-label="{{ 'Previous featured vehicle'|t }}">
+              <button type="button" class="featured-vehicles__arrow featured-vehicles__arrow--prev btn--icon-left" data-featured-prev aria-label="{{ 'Previous featured vehicle'|t }}">
                 <span class="featured-vehicles__arrow-face" aria-hidden="true"></span>
-                <span class="featured-vehicles__arrow-icon" aria-hidden="true">{{ macros.chevron() }}</span>
               </button>
-              <button type="button" class="featured-vehicles__arrow featured-vehicles__arrow--next" data-featured-next aria-label="{{ 'Next featured vehicle'|t }}">
+              <button type="button" class="featured-vehicles__arrow featured-vehicles__arrow--next btn--icon-right" data-featured-next aria-label="{{ 'Next featured vehicle'|t }}">
                 <span class="featured-vehicles__arrow-face" aria-hidden="true"></span>
-                <span class="featured-vehicles__arrow-icon" aria-hidden="true">{{ macros.chevron() }}</span>
               </button>
             </div>
             <ul class="featured-vehicles__dots" data-featured-dots>
@@ -86,7 +84,7 @@
       <p class="featured-vehicles__lede text-xl">{{ slide.description }}</p>
     {% endif %}
     {% if cta %}
-      <a class="btn btn--primary" href="{{ href }}">{{ cta }}</a>
+      <a class="btn btn--primary btn--book" href="{{ href }}">{{ cta }}</a>
     {% endif %}
   </div>
 {% endmacro %}
@@ -104,10 +102,4 @@
     {% endif %}
     <span class="featured-vehicles__progress" aria-hidden="true"></span>
   </button>
-{% endmacro %}
-
-{% macro chevron() %}
-  <svg viewBox="0 0 16 16" focusable="false">
-    <path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4"></path>
-  </svg>
 {% endmacro %}
