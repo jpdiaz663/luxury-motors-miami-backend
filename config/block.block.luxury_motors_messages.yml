@@ -9,7 +9,7 @@ dependencies:
 id: luxury_motors_messages
 theme: luxury_motors
 region: content
-weight: -9
+weight: -7
 provider: null
 plugin: system_messages_block
 settings:

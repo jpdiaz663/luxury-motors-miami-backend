@@ -51,7 +51,7 @@ function luxury_motors_preprocess_page(array &$variables): void {
   if (in_array($route_name, ['system.403', 'system.404'], TRUE)) {
     $variables['attributes']['class'][] = 'error-page';
     $theme_path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
-    $variables['error_background_url'] = '/' . $theme_path . '/images/error-4xx-bg.jpg';
+    $variables['error_background_url'] = '/' . $theme_path . '/images/error-4xx-bsaadsadsg.jpg';
   }
 }
 
