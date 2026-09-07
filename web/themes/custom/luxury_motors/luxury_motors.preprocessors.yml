@@ -1,0 +1,6 @@
+luxury_motors.preprocessor.block.featured_vehicules:
+  class: '\Drupal\luxury_motors\Plugin\preprocessors\FeaturedVehiculesPreprocessor'
+  hooks:
+    - block__block_content__hero_slider_featured_cars
+    - block__luxury_motors_featuredvehicules
+  weight: 0

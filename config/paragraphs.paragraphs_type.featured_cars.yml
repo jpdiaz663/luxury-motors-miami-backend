@@ -1,0 +1,10 @@
+uuid: 383431e7-a072-4cf1-b54a-3dc018e9a41a
+langcode: en
+status: true
+dependencies: {  }
+id: featured_cars
+label: 'Featured cars'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

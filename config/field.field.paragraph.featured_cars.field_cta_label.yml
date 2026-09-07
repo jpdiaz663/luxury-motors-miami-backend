@@ -1,0 +1,21 @@
+uuid: f818c507-f203-480d-a0e8-9c3dc24a9dd0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cta_label
+    - paragraphs.paragraphs_type.featured_cars
+id: paragraph.featured_cars.field_cta_label
+field_name: field_cta_label
+entity_type: paragraph
+bundle: featured_cars
+label: 'CTA Label'
+description: 'Acción que hará'
+required: true
+translatable: false
+default_value:
+  -
+    value: 'Book now'
+default_value_callback: ''
+settings: {  }
+field_type: string

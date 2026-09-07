@@ -1,0 +1,393 @@
+/* Featured vehicles — hero rail */
+
+.featured-vehicles {
+  width: 100%;
+  max-width: 100%;
+}
+
+.featured-vehicles__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  min-height: 60svh;
+  width: 100%;
+  height: 100%;
+  padding: 108px var(--spacing-4) var(--spacing-8);
+  overflow: hidden;
+  background-color: var(--color-carbone-nero);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.featured-vehicles__media-stack,
+.featured-vehicles__media,
+.featured-vehicles__media picture,
+.featured-vehicles__media img {
+  position: absolute;
+  inset: 0;
+}
+
+.featured-vehicles__media-stack {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.featured-vehicles__media {
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.featured-vehicles__media.is-active {
+  opacity: 1;
+}
+
+.featured-vehicles__media img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.featured-vehicles__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 80%);
+}
+
+.featured-vehicles__copy-stack {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  max-width: 42rem;
+  margin-top: var(--spacing-6);
+  gap: var(--spacing-2);
+}
+
+.featured-vehicles__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+}
+
+.featured-vehicles__copy[hidden] {
+  display: none;
+}
+
+.featured-vehicles__category {
+  width: fit-content;
+  margin: 0;
+  padding: 2px 12px 4px;
+  color: var(--color-bianco-ferrari);
+  background: color-mix(in srgb, var(--color-carbone-nero) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-bianco-ferrari) 28%, transparent);
+}
+
+.featured-vehicles__headline {
+  color: var(--color-bianco-ferrari);
+  text-shadow: 0 0 7px var(--color-carbone-nero);
+}
+
+.featured-vehicles__lede {
+  color: var(--color-argento-chiaro);
+  text-transform: none;
+}
+
+.featured-vehicles__copy .btn {
+  align-self: flex-start;
+  margin-top: var(--spacing-2);
+}
+
+.featured-vehicles__rail {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  margin-top: auto;
+}
+
+.featured-vehicles__track {
+  display: flex;
+  justify-content: safe center;
+  align-items: stretch;
+  gap: var(--spacing-2);
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-2) 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+.featured-vehicles__track::-webkit-scrollbar {
+  display: none;
+}
+
+.featured-vehicles__thumb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 0 0 7.5rem;
+  width: 7.5rem;
+  height: 4.75rem;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-bianco-ferrari);
+  background: var(--color-notte-profonda);
+  border: 2px solid transparent;
+  cursor: pointer;
+  scroll-snap-align: center;
+}
+
+.featured-vehicles__thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.featured-vehicles__thumb-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--color-carbone-nero);
+  opacity: 0.3;
+  transition: opacity 500ms ease;
+}
+
+.featured-vehicles__thumb-label {
+  position: relative;
+  z-index: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  padding: var(--spacing-2) var(--spacing-2) var(--spacing-3);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-micro);
+  line-height: 1.3;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 0 8px var(--color-carbone-nero);
+}
+
+.featured-vehicles__progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  height: 5px;
+  width: 0;
+  background: var(--color-rosso-corsa);
+}
+
+.featured-vehicles__thumb:focus,
+.featured-vehicles__thumb:focus-visible {
+  outline: none;
+}
+
+.featured-vehicles__thumb:focus-visible,
+.featured-vehicles__thumb.is-active {
+  border-color: var(--color-bianco-ferrari);
+}
+
+.featured-vehicles__thumb.is-active .featured-vehicles__progress {
+  animation: featured-vehicles-progress 7s linear forwards;
+}
+
+.featured-vehicles__thumb.is-active:hover .featured-vehicles__progress {
+  width: 100%;
+  animation: none;
+}
+
+.featured-vehicles__controls {
+  position: absolute;
+  top: calc(var(--spacing-2) + 2.375rem);
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  width: min(100vw - 2rem, 62rem);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.featured-vehicles__arrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 9px;
+  overflow: hidden;
+  color: var(--color-bianco-ferrari);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.featured-vehicles__arrow-face {
+  position: absolute;
+  inset: 0;
+  background: var(--color-notte-profonda);
+  opacity: 0.5;
+  backdrop-filter: blur(8px);
+}
+
+.featured-vehicles__arrow-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.featured-vehicles__arrow-icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.featured-vehicles__arrow--prev .featured-vehicles__arrow-icon {
+  transform: scaleX(-1);
+}
+
+.featured-vehicles__arrow:disabled {
+  visibility: hidden;
+}
+
+.featured-vehicles__dots {
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3);
+  margin: var(--spacing-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.featured-vehicles__dots li {
+  margin: 0;
+}
+
+.featured-vehicles__dot {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: var(--color-piombo);
+  border: 0;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 1px var(--color-bianco-ferrari), 0 0 0 2px transparent;
+  cursor: pointer;
+}
+
+.featured-vehicles__dot.is-active,
+.featured-vehicles__dot:hover,
+.featured-vehicles__dot:focus-visible {
+  background: var(--color-rosso-corsa);
+  box-shadow: 0 0 0 1px var(--color-rosso-corsa), 0 0 0 2px transparent;
+}
+
+@keyframes featured-vehicles-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@media (min-width: 640px) {
+  .featured-vehicles__stage {
+    padding-inline: var(--spacing-8);
+    padding-bottom: var(--spacing-8);
+  }
+
+  .featured-vehicles__copy-stack {
+    margin-block: var(--spacing-8);
+  }
+
+  .featured-vehicles__thumb:focus-visible,
+  .featured-vehicles__thumb.is-active {
+    border-color: transparent;
+    box-shadow: 0 0 0 1px var(--color-bianco-ferrari), 0 0 0 2px transparent;
+  }
+}
+
+@media (min-width: 768px) {
+  .featured-vehicles__stage {
+    padding-inline: var(--spacing-12);
+    padding-bottom: var(--spacing-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  .featured-vehicles__stage {
+    justify-content: flex-end;
+    padding-bottom: var(--spacing-6);
+  }
+
+  .featured-vehicles__rail {
+    width: min(100%, 48rem);
+  }
+
+  .featured-vehicles__thumb {
+    flex-basis: 9.5rem;
+    width: 9.5rem;
+    height: 5.75rem;
+  }
+
+  .featured-vehicles__controls {
+    top: calc(var(--spacing-2) + 2.875rem);
+    width: min(100vw - 4rem, 56rem);
+  }
+}
+
+@media (min-width: 1600px) {
+  .featured-vehicles__rail {
+    width: min(100%, 56rem);
+    margin-block-end: var(--spacing-6);
+  }
+
+  .featured-vehicles__thumb {
+    flex-basis: 11rem;
+    width: 11rem;
+    height: 6.5rem;
+  }
+
+  .featured-vehicles__controls {
+    top: calc(var(--spacing-2) + 3.25rem);
+    width: min(100vw - 6rem, 64rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-vehicles__media,
+  .featured-vehicles__thumb-veil {
+    transition: none;
+  }
+
+  .featured-vehicles__thumb.is-active .featured-vehicles__progress {
+    width: 100%;
+    animation: none;
+  }
+}

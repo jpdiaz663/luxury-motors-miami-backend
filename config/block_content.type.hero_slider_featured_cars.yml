@@ -1,0 +1,8 @@
+uuid: b6321717-bcf3-4175-9759-2db4c10b444a
+langcode: en
+status: true
+dependencies: {  }
+id: hero_slider_featured_cars
+label: 'Hero slider featured cars'
+revision: false
+description: 'Mostrar los carros destacados '

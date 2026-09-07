@@ -1,0 +1,49 @@
+uuid: 5fbd40ff-4fd5-4985-b87f-ce0bd98138b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.featured_cars.field_cta_label
+    - field.field.paragraph.featured_cars.field_description
+    - field.field.paragraph.featured_cars.field_featured_vehicule
+    - field.field.paragraph.featured_cars.field_headline
+    - paragraphs.paragraphs_type.featured_cars
+id: paragraph.featured_cars.default
+targetEntityType: paragraph
+bundle: featured_cars
+mode: default
+content:
+  field_cta_label:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_description:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_featured_vehicule:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_headline:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden: {  }

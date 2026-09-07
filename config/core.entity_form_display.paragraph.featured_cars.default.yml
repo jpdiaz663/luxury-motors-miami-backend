@@ -1,0 +1,52 @@
+uuid: 3b793db8-71cb-4596-b1c7-96a9bd4f2172
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.featured_cars.field_cta_label
+    - field.field.paragraph.featured_cars.field_description
+    - field.field.paragraph.featured_cars.field_featured_vehicule
+    - field.field.paragraph.featured_cars.field_headline
+    - paragraphs.paragraphs_type.featured_cars
+id: paragraph.featured_cars.default
+targetEntityType: paragraph
+bundle: featured_cars
+mode: default
+content:
+  field_cta_label:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 40
+      placeholder: ''
+    third_party_settings: {  }
+  field_description:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_featured_vehicule:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: 'Start typing a vehicle title'
+    third_party_settings: {  }
+  field_headline:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

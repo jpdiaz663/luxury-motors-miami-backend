@@ -22,10 +22,13 @@
         "cweagans/composer-patches": "^1.7",
         "drush/drush": "13",
         "drupal/gin": "^5.0",
-        "drupal/admin_toolbar": "^3.6"
+        "drupal/admin_toolbar": "^3.6",
+        "drupal/paragraphs": "^1.23",
+        "drupal/preprocessors": "^3.1"
     },
     "require-dev": {
-        "drupal/core-dev": "^11"
+        "drupal/core-dev": "^11",
+        "drupal/devel": "^5.4"
     },
     "conflict": {
         "drupal/drupal": "*"

@@ -454,23 +454,23 @@ display:
                 title: 'Under 1,500'
                 operator: '<'
                 value:
-                  value: '1500'
                   min: ''
                   max: ''
+                  value: '1500'
               2:
                 title: '1,500–3,000'
                 operator: between
                 value:
-                  value: ''
                   min: '1500'
                   max: '3000'
+                  value: ''
               3:
                 title: '3,000+'
                 operator: '>='
                 value:
-                  value: '3000'
                   min: ''
                   max: ''
+                  value: '3000'
       style:
         type: default
         options:
@@ -515,9 +515,9 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      exposed_block: false
       display_extenders: {  }
       path: fleet
-      exposed_block: false
     cache_metadata:
       max-age: -1
       contexts:

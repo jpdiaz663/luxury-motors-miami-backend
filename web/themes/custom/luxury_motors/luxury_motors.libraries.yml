@@ -29,3 +29,15 @@ vehicle_search:
     - core/once
     - core/drupal.autocomplete
     - luxury_motors/global
+
+featured_vehicles:
+  version: VERSION
+  css:
+    component:
+      css/featured-vehicles.css: {}
+  js:
+    js/featured-vehicles.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - luxury_motors/global

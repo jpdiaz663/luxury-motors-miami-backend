@@ -1,0 +1,27 @@
+uuid: 97301b34-7fd6-4482-bc88-e8a6fdd807ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hero_slider.field_featured_car_sliders
+    - paragraphs.paragraphs_type.hero_slider
+  module:
+    - entity_reference_revisions
+id: paragraph.hero_slider.default
+targetEntityType: paragraph
+bundle: hero_slider
+mode: default
+content:
+  field_featured_car_sliders:
+    type: entity_reference_revisions_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

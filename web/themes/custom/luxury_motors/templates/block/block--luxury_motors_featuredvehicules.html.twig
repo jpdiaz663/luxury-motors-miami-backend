@@ -1,0 +1,113 @@
+{#
+/**
+ * @file
+ * Featured vehicles hero rail (hero_slider_featured_cars).
+ *
+ * Variables from FeaturedVehiculesPreprocessor:
+ * - slides: list of { headline, description, cta_label, image, vehicle }
+ */
+#}
+{% import _self as macros %}
+{{ attach_library('luxury_motors/featured_vehicles') }}
+<div{{ attributes }}>
+  {{ title_prefix }}{{ title_suffix }}
+  {% if slides is not empty %}
+    <section class="featured-vehicles" data-featured-vehicles aria-roledescription="{{ 'carousel'|t }}" aria-label="{{ 'Featured vehicles'|t }}">
+      <div class="featured-vehicles__stage">
+        <div class="featured-vehicles__media-stack" aria-hidden="true">
+          {% for slide in slides %}
+            {{ macros.media(slide, loop.first) }}
+          {% endfor %}
+        </div>
+        <div class="featured-vehicles__overlay" aria-hidden="true"></div>
+
+        <div class="featured-vehicles__copy-stack">
+          {% for slide in slides %}
+            {{ macros.copy(slide, loop.first) }}
+          {% endfor %}
+        </div>
+
+        {% if slides|length > 1 %}
+          <div class="featured-vehicles__rail">
+            <div class="featured-vehicles__track" data-featured-track>
+              {% for slide in slides %}
+                {{ macros.thumb(slide, loop.index0, loop.first) }}
+              {% endfor %}
+            </div>
+            <div class="featured-vehicles__controls">
+              <button type="button" class="featured-vehicles__arrow featured-vehicles__arrow--prev" data-featured-prev aria-label="{{ 'Previous featured vehicle'|t }}">
+                <span class="featured-vehicles__arrow-face" aria-hidden="true"></span>
+                <span class="featured-vehicles__arrow-icon" aria-hidden="true">{{ macros.chevron() }}</span>
+              </button>
+              <button type="button" class="featured-vehicles__arrow featured-vehicles__arrow--next" data-featured-next aria-label="{{ 'Next featured vehicle'|t }}">
+                <span class="featured-vehicles__arrow-face" aria-hidden="true"></span>
+                <span class="featured-vehicles__arrow-icon" aria-hidden="true">{{ macros.chevron() }}</span>
+              </button>
+            </div>
+            <ul class="featured-vehicles__dots" data-featured-dots>
+              {% for slide in slides %}
+                <li>
+                  <button type="button" class="featured-vehicles__dot{{ loop.first ? ' is-active' : '' }}" data-featured-dot data-index="{{ loop.index0 }}" aria-label="{{ 'Show slide @num'|t({'@num': loop.index}) }}"{% if loop.first %} aria-current="true"{% endif %}></button>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% else %}
+    {{ content }}
+  {% endif %}
+</div>
+
+{% macro media(slide, active) %}
+  {% set image = slide.image ?? slide.vehicle.image ?? null %}
+  <div class="featured-vehicles__media{{ active ? ' is-active' : '' }}" data-featured-media{% if active %} data-active{% endif %}>
+    {% if image.url %}
+      <picture>
+        <img src="{{ image.url }}" alt="" width="1920" height="1080">
+      </picture>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro copy(slide, active) %}
+  {% set vehicle = slide.vehicle ?? {} %}
+  {% set href = vehicle.url|default('#') %}
+  {% set cta = slide.cta_label|default('') %}
+  <div class="featured-vehicles__copy{{ active ? ' is-active' : '' }}" data-featured-copy{% if not active %} hidden{% endif %}>
+    {% if vehicle.category %}
+      <p class="featured-vehicles__category kicker">{{ vehicle.category }}</p>
+    {% endif %}
+    {% if slide.headline %}
+      <h2 class="featured-vehicles__headline title font--semibold text--5xl">{{ slide.headline }}</h2>
+    {% endif %}
+    {% if slide.description %}
+      <p class="featured-vehicles__lede text-xl">{{ slide.description }}</p>
+    {% endif %}
+    {% if cta %}
+      <a class="btn btn--primary" href="{{ href }}">{{ cta }}</a>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro thumb(slide, index, active) %}
+  {% set image = slide.image ?? slide.vehicle.image ?? null %}
+  {% set label = slide.headline|default(slide.vehicle.title|default('')) %}
+  <button type="button" class="featured-vehicles__thumb{{ active ? ' is-active' : '' }}" data-featured-thumb data-index="{{ index }}"{% if active %} aria-current="true"{% endif %} aria-label="{{ label }}">
+    {% if image.url %}
+      <img src="{{ image.url }}" alt="" width="320" height="180">
+    {% endif %}
+    <span class="featured-vehicles__thumb-veil" aria-hidden="true"></span>
+    {% if label %}
+      <span class="featured-vehicles__thumb-label">{{ label }}</span>
+    {% endif %}
+    <span class="featured-vehicles__progress" aria-hidden="true"></span>
+  </button>
+{% endmacro %}
+
+{% macro chevron() %}
+  <svg viewBox="0 0 16 16" focusable="false">
+    <path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4"></path>
+  </svg>
+{% endmacro %}

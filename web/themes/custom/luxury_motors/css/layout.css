@@ -24,6 +24,7 @@
   --page-max: 1440px;
 }
 
+
 /* Page */
 
 .lm-page {
@@ -66,6 +67,21 @@
   text-transform: none;
   max-width: 42rem;
 }
+
+.text-xl {
+  font-size: var(--fs-xl);
+  line-height: var(--lh-xl);
+}
+
+.text--5xl {
+  font-size: var(--fs-5xl) !important;
+  line-height: var(--lh-5xl) !important;
+}
+
+.font--semibold {
+  font-weight: var(--fw-semibold);
+}
+
 
 /* Nav */
 
@@ -181,7 +197,7 @@ body.is-locked { overflow: hidden; }
 
 .hero {
   position: relative;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background: var(--color-carbone);
   overflow: hidden;
 }

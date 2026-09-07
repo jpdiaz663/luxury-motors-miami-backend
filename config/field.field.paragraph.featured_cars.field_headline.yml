@@ -1,0 +1,19 @@
+uuid: 94e48d7f-075d-44c9-bd29-29646fbc350c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_headline
+    - paragraphs.paragraphs_type.featured_cars
+id: paragraph.featured_cars.field_headline
+field_name: field_headline
+entity_type: paragraph
+bundle: featured_cars
+label: Headline
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

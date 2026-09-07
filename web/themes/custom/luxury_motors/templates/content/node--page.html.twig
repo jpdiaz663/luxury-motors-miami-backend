@@ -21,22 +21,6 @@
         {% endif %}
       </div>
     </section>
-  {% else %}
-    <section class="void">
-      {% if is_front %}
-        <p class="title">{{ site_name|default('Luxury Motors Miami'|t) }}</p>
-      {% elseif label %}
-        <h1{{ title_attributes.addClass('title') }}>{{ label }}</h1>
-      {% endif %}
-    </section>
-  {% endif %}
-
-  {% if content.field_body_description %}
-    <section class="void">
-      <div class="wrap">
-        {{ content.field_body_description }}
-      </div>
-    </section>
   {% endif %}
 
   {% block page_extras %}

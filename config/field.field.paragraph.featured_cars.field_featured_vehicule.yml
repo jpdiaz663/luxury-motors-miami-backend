@@ -1,0 +1,29 @@
+uuid: 1d2166ba-a38e-45ba-96c0-870fb53a1351
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_featured_vehicule
+    - node.type.vehicle
+    - paragraphs.paragraphs_type.featured_cars
+id: paragraph.featured_cars.field_featured_vehicule
+field_name: field_featured_vehicule
+entity_type: paragraph
+bundle: featured_cars
+label: 'Featured vehicle'
+description: 'The catalog vehicle shown on this slide.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      vehicle: vehicle
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
