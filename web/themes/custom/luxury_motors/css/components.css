@@ -192,9 +192,155 @@ button.cta,
 
 @media (prefers-reduced-motion: reduce) {
   .btn,
-  .cta {
+  .cta,
+  input,
+  select,
+  textarea {
     transition: none;
   }
+}
+
+/* Form fields — chrome and focus live on the control, never the
+   wrapping <label>, .form-item, or .banner-place cell. */
+
+:is(
+  input:not(
+    [type="hidden"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="file"],
+    [type="image"],
+    [type="range"],
+    [type="color"],
+    [type="date"],
+    [type="time"],
+    [type="datetime-local"]
+  ),
+  select,
+  textarea
+) {
+  appearance: none;
+  border-radius: 0;
+  caret-color: var(--color-rosso-corsa);
+  transition: border-color 160ms ease;
+}
+
+select {
+  padding-right: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23666666' stroke-width='1.4'%3E%3Cpath d='M3 6l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 12px;
+  cursor: pointer;
+}
+
+.form-item {
+  margin-block: 0 1.25rem;
+}
+
+.form-item > label,
+.form-item .form-item__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--text-caption);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--color-piombo);
+}
+
+.form-element,
+.form-text,
+.form-email,
+.form-tel,
+.form-url,
+.form-search,
+.form-number,
+.form-password,
+.form-textarea,
+textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 6px 0 10px;
+  border: 0;
+  border-bottom: 1px solid var(--color-argento);
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+/* Keep native date/time and let .banner / .fleet-refine paint their selects. */
+.form:not(.banner, .fleet-refine) .form-select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 6px 0 10px;
+  border: 0;
+  border-bottom: 1px solid var(--color-argento);
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+select.form-select,
+select {
+  padding-right: 20px;
+}
+
+.notte .form-element,
+.notte .form-text,
+.banner .form-element,
+.search .form-element {
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+}
+
+:is(
+  input:not(
+    [type="hidden"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="file"],
+    [type="image"],
+    [type="range"],
+    [type="color"]
+  ),
+  select,
+  textarea
+):focus,
+:is(
+  input:not(
+    [type="hidden"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="file"],
+    [type="image"],
+    [type="range"],
+    [type="color"]
+  ),
+  select,
+  textarea
+):focus-visible {
+  border-bottom-color: var(--color-rosso-corsa);
+  box-shadow: none;
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible,
+input[type="file"]:focus-visible,
+input[type="range"]:focus-visible {
+  outline: 1px solid var(--color-rosso-corsa);
+  outline-offset: 3px;
 }
 
 /* Vehicle section */

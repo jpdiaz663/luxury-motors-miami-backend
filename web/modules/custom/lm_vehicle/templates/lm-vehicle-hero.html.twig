@@ -6,11 +6,6 @@
 #}
 {% set vehicle = vehicle|default({}) %}
 <section class="hero" data-car-hero>
-  {% if vehicle.image.url %}
-    <div class="hero-media">
-      <img src="{{ vehicle.image.url }}" alt="{{ vehicle.image.alt }}" />
-    </div>
-  {% endif %}
   <div class="hero-copy">
     {% if vehicle.brand or vehicle.category or vehicle.year %}
       <p class="kicker">{{ [vehicle.brand, vehicle.category, vehicle.year]|filter(v => v)|join(' · ') }}</p>

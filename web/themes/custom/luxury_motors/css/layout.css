@@ -34,11 +34,18 @@
   background: var(--surface-void-black);
 }
 
-/* Focus */
+/* Focus — links/buttons. Form controls are handled in components.css
+   on the real input/select/textarea, not on labels or .form-item wrappers. */
 
 :focus-visible {
   outline: 1px solid var(--color-rosso-corsa);
   outline-offset: 3px;
+}
+
+:is(input, select, textarea):focus,
+:is(input, select, textarea):focus-visible {
+  outline: none;
+  outline-offset: 0;
 }
 
 /* Type */
@@ -197,16 +204,20 @@ body.is-locked { overflow: hidden; }
 
 .hero {
   position: relative;
-  /* min-height: 100vh; */
   background: var(--color-carbone);
   overflow: hidden;
 }
-.hero--search {
-  min-height: 70vh;
+.hero[data-car-hero] {
+  min-height: 30svh;
+}
+.hero--search,
+.hero:has(.banner) {
+  min-height: 30vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   background-image: none;
+  overflow: visible;
 }
 .hero-media {
   position: absolute;
@@ -299,11 +310,6 @@ body.is-locked { overflow: hidden; }
   gap: 14px;
   padding: 22px 8px;
   min-width: 0;
-  outline: 1px solid transparent;
-  outline-offset: 0;
-}
-.banner-place:focus-within {
-  outline: 1px solid var(--color-bianco);
 }
 .banner-place + .banner-place {
   padding-left: 32px;
@@ -353,13 +359,8 @@ body.is-locked { overflow: hidden; }
   background: transparent;
   padding: 6px 0;
   min-height: 36px;
-}
-.banner-place input:focus,
-.banner-place input:focus-visible,
-.banner-place select:focus,
-.banner-place select:focus-visible {
-  outline: none;
-  box-shadow: none;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
 }
 .banner-place select,
 .banner-field select {
@@ -721,7 +722,8 @@ a.pill:focus-visible {
     box-shadow: none;
   }
   .banner-submit-icon--spinner svg,
-  .search-progress-bar {
+  .search-progress-bar,
+  .studio-book {
     animation: none;
   }
   .search-progress-bar {
@@ -876,20 +878,24 @@ a.pill:focus-visible {
 .field {
   display: grid;
   gap: 6px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-argento);
 }
-.field label {
+.field label,
+.field > span {
   font-size: var(--text-caption);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
   color: var(--color-piombo);
 }
-.field input, .field select {
+.field input,
+.field select,
+.field textarea {
   font-size: var(--text-body);
   letter-spacing: 0.015em;
-  padding: 6px 0;
+  padding: 6px 0 10px;
   color: var(--color-carbone);
+  border: 0;
+  border-bottom: 1px solid var(--color-argento);
+  background: transparent;
 }
 
 /* Lab */
@@ -1099,8 +1105,6 @@ a.pill:focus-visible {
   display: flex;
   align-items: center;
   gap: 16px;
-  border-bottom: 1px solid var(--color-grafite);
-  padding-bottom: 16px;
 }
 .search-row input {
   flex: 1;
@@ -1108,6 +1112,11 @@ a.pill:focus-visible {
   font-weight: 500;
   letter-spacing: var(--track-display);
   text-transform: uppercase;
+  padding: 0 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--color-grafite);
+  background: transparent;
+  color: var(--color-bianco);
 }
 .search-hint {
   margin-top: 16px;
@@ -1170,6 +1179,59 @@ a.pill:focus-visible {
   flex-wrap: wrap;
 }
 .studio-pills { margin: 0; }
+.studio-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.studio-identity .title { margin: 0; }
+.studio-book {
+  --studio-book-hot: #ff2a1a;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.studio .btn.studio-book {
+  isolation: isolate;
+  background-color: var(--studio-book-hot);
+  border-color: color-mix(in srgb, var(--color-bianco) 72%, var(--studio-book-hot));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--studio-book-hot) 70%, transparent),
+    0 0 18px color-mix(in srgb, var(--studio-book-hot) 42%, transparent);
+  animation: studio-book-pulse 1.7s ease-in-out infinite;
+}
+
+.studio .btn.studio-book:hover,
+.studio .btn.studio-book:focus-visible {
+  background-color: var(--color-rosso-scuro);
+  border-color: var(--color-bianco);
+  box-shadow:
+    0 0 0 1px var(--color-rosso-scuro),
+    0 0 14px color-mix(in srgb, var(--studio-book-hot) 28%, transparent);
+  animation: none;
+}
+
+.studio .btn.studio-book:active:not(:disabled) {
+  background-color: var(--color-rosso-scuro);
+  animation: none;
+}
+
+@keyframes studio-book-pulse {
+  0%,
+  100% {
+    border-color: color-mix(in srgb, var(--color-bianco) 28%, var(--studio-book-hot));
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--studio-book-hot) 0%, transparent),
+      0 0 10px color-mix(in srgb, var(--studio-book-hot) 22%, transparent);
+  }
+  50% {
+    border-color: var(--color-bianco);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--studio-book-hot) 38%, transparent),
+      0 0 26px color-mix(in srgb, var(--studio-book-hot) 55%, transparent);
+  }
+}
 .studio-row--controls { margin-top: 20px; align-items: center; }
 .film {
   display: flex;

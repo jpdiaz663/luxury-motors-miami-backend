@@ -1,5 +1,7 @@
 global:
   version: VERSION
+  js:
+    js/page-progress.js: {}
   css:
     base:
       '//fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap':

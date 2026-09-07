@@ -63,7 +63,7 @@ final class VehicleRefineForm extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#name' => '',
+      '#name' => 'apply',
       '#value' => $this->t('Apply'),
       '#attributes' => [
         'class' => ['btn', 'btn--secondary', 'btn--arrow', 'fleet-refine-submit'],

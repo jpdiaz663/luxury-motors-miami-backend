@@ -25,7 +25,6 @@
     const place = form.querySelector("#banner-place");
     const submit = form.querySelector("[data-banner-submit]");
     const reset = form.querySelector("[data-banner-reset]");
-    const progress = form.querySelector("[data-search-progress]");
     const settings = drupalSettings.lmVehicleSearch || {};
     const requiresPlace = (settings.requiresPlace || []).map(Number);
 
@@ -73,9 +72,6 @@
       if (submit) {
         submit.disabled = busy;
         submit.classList.toggle("is-busy", busy);
-      }
-      if (progress) {
-        progress.hidden = !busy;
       }
     }
 

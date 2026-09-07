@@ -17,8 +17,11 @@
   </div>
   <div class="studio-dock">
     <div class="studio-row">
-      <p class="kicker studio-pills">{{ 'Studio'|t }}</p>
-      <p class="title">{{ vehicle.title }}</p>
+      <div class="studio-identity">
+        <p class="kicker studio-pills">{{ 'Studio'|t }}</p>
+        <p class="title">{{ vehicle.title }}</p>
+      </div>
+      <a class="btn btn--primary btn--book studio-book" href="#reserve">{{ 'Reserve now!'|t }}</a>
     </div>
     {% if slides|length > 1 %}
       <div class="film" role="tablist" aria-label="{{ 'Vehicle photographs'|t }}">
