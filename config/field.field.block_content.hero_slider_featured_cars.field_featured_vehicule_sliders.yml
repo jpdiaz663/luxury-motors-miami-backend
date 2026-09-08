@@ -25,12 +25,12 @@ settings:
       featured_cars: featured_cars
     negate: 0
     target_bundles_drag_drop:
-      featured_cars:
-        weight: 0
-        enabled: true
       faq_item:
         weight: 1
         enabled: false
+      featured_cars:
+        weight: 0
+        enabled: true
       hero_slider:
         weight: 2
         enabled: false

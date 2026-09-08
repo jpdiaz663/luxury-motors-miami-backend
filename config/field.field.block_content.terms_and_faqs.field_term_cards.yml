@@ -25,11 +25,11 @@ settings:
       term_card: term_card
     negate: 0
     target_bundles_drag_drop:
-      featured_cars:
-        weight: 0
-        enabled: false
       faq_item:
         weight: 1
+        enabled: false
+      featured_cars:
+        weight: 0
         enabled: false
       hero_slider:
         weight: 2
