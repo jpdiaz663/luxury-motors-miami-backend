@@ -43,3 +43,12 @@ featured_vehicles:
     - core/drupal
     - core/once
     - luxury_motors/global
+
+popular_collection:
+  version: VERSION
+  js:
+    js/popular-collection.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - luxury_motors/global

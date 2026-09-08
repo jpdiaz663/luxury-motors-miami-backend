@@ -8,3 +8,7 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@request_stack'
+  lm_vehicle.popular_collection:
+    class: Drupal\lm_vehicle\PopularCollection
+    arguments:
+      - '@database'

@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Popular collection rail. Markup matches renta-car.html section.chooser.
+ *
+ * - general_title: kicker
+ * - heading: section title
+ * - vehicles: list of presenter cards plus reservation_count
+ */
+#}
+{% if vehicles|length > 0 %}
+<section class="chooser" id="searched" aria-roledescription="{{ 'carousel'|t }}" aria-label="{{ heading|default('Popular collection'|t) }}">
+  <div class="chooser-head wrap">
+    <div>
+      {% if general_title %}
+        <p class="kicker">{{ general_title }}</p>
+      {% endif %}
+      {% if heading %}
+        <h2 class="title">{{ heading }}</h2>
+      {% endif %}
+    </div>
+    {% if vehicles|length > 1 %}
+      <div class="cta-row">
+        <button class="cta" type="button" data-chooser-prev>{{ 'Prev ←'|t }}</button>
+        <button class="cta" type="button" data-chooser-next>{{ 'Next →'|t }}</button>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if vehicles %}
+    <div class="chooser-track" data-chooser>
+      {% for vehicle in vehicles %}
+        <a class="chooser-slide{{ loop.first ? ' is-active' }}" href="{{ vehicle.url }}"{% if loop.first %} data-active{% endif %}>
+          <figure>
+            {% if vehicle.image.url %}
+              <img src="{{ vehicle.image.url }}" alt="{{ vehicle.image.alt }}" width="1120" height="630" />
+            {% endif %}
+          </figure>
+          <h3 class="title">{{ vehicle.title }}</h3>
+          {% if vehicle.daily_price %}
+            <p class="muted track-ui">{{ 'From @price / day'|t({'@price': vehicle.daily_price}) }}</p>
+          {% elseif vehicle.category %}
+            <p class="muted track-ui">{{ vehicle.category }}</p>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+    {% if vehicles|length > 1 %}
+      <div class="chooser-pips" data-chooser-pips>
+        {% for vehicle in vehicles %}
+          <button class="chooser-pip{{ loop.first ? ' is-active' }}" type="button" data-chooser-pip data-index="{{ loop.index0 }}" aria-label="{{ 'Show @title'|t({'@title': vehicle.title}) }}"{% if loop.first %} aria-current="true"{% endif %}></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+</section>
+{% endif %}

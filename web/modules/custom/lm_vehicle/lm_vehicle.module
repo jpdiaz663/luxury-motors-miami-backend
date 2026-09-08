@@ -49,6 +49,13 @@ function lm_vehicle_theme(): array {
     'lm_vehicle_refine_form' => [
       'render element' => 'form',
     ],
+    'lm_vehicle_popular_collection' => [
+      'variables' => [
+        'general_title' => '',
+        'heading' => '',
+        'vehicles' => [],
+      ],
+    ],
   ];
 }
 
