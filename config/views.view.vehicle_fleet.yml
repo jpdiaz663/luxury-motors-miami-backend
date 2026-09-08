@@ -4,12 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.storage.node.field_brand
-    - field.storage.node.field_category
-    - field.storage.node.field_color
-    - field.storage.node.field_daily_price
-    - field.storage.node.field_model
-    - field.storage.node.field_vehicle_status
     - node.type.vehicle
     - taxonomy.vocabulary.brand
     - taxonomy.vocabulary.vehicle_category
@@ -50,7 +44,7 @@ display:
             items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '9, 18, 27'
-            items_per_page_options_all: false
+            items_per_page_options_all: true
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
@@ -497,18 +491,44 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
+        - 'url.query_args:pickup'
+        - 'url.query_args:return'
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_brand'
-        - 'config:field.storage.node.field_category'
-        - 'config:field.storage.node.field_color'
-        - 'config:field.storage.node.field_daily_price'
-        - 'config:field.storage.node.field_model'
-        - 'config:field.storage.node.field_vehicle_status'
+        - 'node_list:booking'
+  block_1:
+    id: block_1
+    display_title: 'Quick view fleet'
+    display_plugin: block
+    position: 2
+    display_options:
+      title: 'Quick view fleet'
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 6
+      defaults:
+        title: false
+        pager: false
+      display_extenders: {  }
+      block_description: 'Quick view fleet'
+      block_hide_empty: true
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'url.query_args:pickup'
+        - 'url.query_args:return'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'node_list:booking'
   page_1:
     id: page_1
     display_title: Page
@@ -521,15 +541,12 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
+        - 'url.query_args:pickup'
+        - 'url.query_args:return'
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_brand'
-        - 'config:field.storage.node.field_category'
-        - 'config:field.storage.node.field_color'
-        - 'config:field.storage.node.field_daily_price'
-        - 'config:field.storage.node.field_model'
-        - 'config:field.storage.node.field_vehicle_status'
+        - 'node_list:booking'

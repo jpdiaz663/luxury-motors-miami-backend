@@ -1,0 +1,69 @@
+uuid: 7ed1813a-c1d1-4023-89bc-92372e1ec94c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_and_faqs
+    - field.field.block_content.terms_and_faqs.field_faqs
+    - field.field.block_content.terms_and_faqs.field_headline
+    - field.field.block_content.terms_and_faqs.field_term_cards
+  module:
+    - paragraphs
+id: block_content.terms_and_faqs.default
+targetEntityType: block_content
+bundle: terms_and_faqs
+mode: default
+content:
+  field_faqs:
+    type: paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: FAQ
+      title_plural: FAQs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: faq_item
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_headline:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_term_cards:
+    type: paragraphs
+    weight: 2
+    region: content
+    settings:
+      title: Card
+      title_plural: Cards
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: term_card
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

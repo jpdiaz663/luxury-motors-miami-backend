@@ -1,0 +1,19 @@
+uuid: 14e9de67-c422-4c98-9d07-42a26b7f4ac6
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_and_faqs
+    - field.storage.block_content.field_headline
+id: block_content.terms_and_faqs.field_headline
+field_name: field_headline
+entity_type: block_content
+bundle: terms_and_faqs
+label: Headline
+description: 'Section title shown above the terms and FAQ panels.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

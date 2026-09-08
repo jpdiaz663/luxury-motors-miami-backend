@@ -1,0 +1,30 @@
+uuid: b480ce95-8227-4f62-9b92-586070dac706
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.term_card.field_headline
+    - field.field.paragraph.term_card.field_term_items
+    - paragraphs.paragraphs_type.term_card
+id: paragraph.term_card.default
+targetEntityType: paragraph
+bundle: term_card
+mode: default
+content:
+  field_headline:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_term_items:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden: {  }

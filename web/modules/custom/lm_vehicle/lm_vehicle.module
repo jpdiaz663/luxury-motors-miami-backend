@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\lm_vehicle\Form\VehicleRefineForm;
 
 /**
@@ -60,15 +61,28 @@ function lm_vehicle_theme(): array {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for the fleet Views page.
+ * Implements hook_preprocess_HOOK() for the fleet Views page and home preview.
  */
 function lm_vehicle_preprocess_views_view(array &$variables): void {
   $view = $variables['view'] ?? NULL;
   if (!$view || $view->id() !== 'vehicle_fleet') {
     return;
   }
+  /** @var \Drupal\lm_vehicle\FleetCatalog $catalog */
   $catalog = \Drupal::service('lm_vehicle.fleet_catalog');
-  $variables['pills'] = $catalog->categoryPills();
+  $pills = $catalog->categoryPills();
+
+  if ($view->current_display === 'block_1') {
+    foreach ($pills as &$pill) {
+      $pill['active'] = FALSE;
+    }
+    unset($pill);
+    $variables['pills'] = $pills;
+    $variables['fleet_url'] = FleetCatalog::PATH;
+    return;
+  }
+
+  $variables['pills'] = $pills;
   $variables['window'] = $catalog->windowLabel();
   $variables['refine'] = \Drupal::formBuilder()->getForm(VehicleRefineForm::class);
   $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';

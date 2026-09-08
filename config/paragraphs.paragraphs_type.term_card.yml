@@ -1,0 +1,10 @@
+uuid: 37484f6a-9f81-47b5-86eb-b60590ca4e42
+langcode: en
+status: true
+dependencies: {  }
+id: term_card
+label: 'Term card'
+icon_uuid: null
+icon_default: null
+description: 'A titled group of rental conditions shown as a card.'
+behavior_plugins: {  }

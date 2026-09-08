@@ -24,6 +24,11 @@
         <span>{{ card.color }}</span>
       {% endif %}
     </div>
-    <a class="btn btn--secondary btn--arrow" href="{{ card.url }}">{{ 'Details'|t }}</a>
+    <div class="card-actions">
+      <a class="btn btn--secondary btn--arrow" href="{{ card.url }}">{{ 'Details'|t }}</a>
+      {% if card.book_url %}
+        <a class="btn btn--primary btn--book" href="{{ card.book_url }}">{{ 'Book now!'|t }}</a>
+      {% endif %}
+    </div>
   </div>
 </article>

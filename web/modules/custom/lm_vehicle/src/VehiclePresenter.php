@@ -36,6 +36,7 @@ final class VehiclePresenter {
     return [
       'title' => $node->label(),
       'url' => $node->toUrl()->toString(),
+     // 'book_url' => $node->toUrl()->setOption('fragment', 'reserve')->toString(),
       'category' => $this->termName($node, 'field_category'),
       'color' => $color,
       'chip' => $chip,

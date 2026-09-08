@@ -1,0 +1,30 @@
+uuid: 2284247e-bc3e-4dc8-9406-611104c10d1a
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:terms_and_faqs:a8571c69-c4f1-48b8-a4c6-97f267c529bb'
+  module:
+    - block_content
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_termsandfaqs
+theme: luxury_motors
+region: content
+weight: -6
+provider: null
+plugin: 'block_content:a8571c69-c4f1-48b8-a4c6-97f267c529bb'
+settings:
+  id: 'block_content:a8571c69-c4f1-48b8-a4c6-97f267c529bb'
+  label: 'Terms and FAQs'
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: |-
+      /home
+      <front>

@@ -28,7 +28,13 @@ settings:
       featured_cars:
         weight: 0
         enabled: true
-      hero_slider:
+      faq_item:
         weight: 1
+        enabled: false
+      hero_slider:
+        weight: 2
+        enabled: false
+      term_card:
+        weight: 3
         enabled: false
 field_type: entity_reference_revisions

@@ -1,0 +1,44 @@
+uuid: 9a27f004-c1cc-4ad0-9872-252e1edd32fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_and_faqs
+    - field.field.block_content.terms_and_faqs.field_faqs
+    - field.field.block_content.terms_and_faqs.field_headline
+    - field.field.block_content.terms_and_faqs.field_term_cards
+  module:
+    - entity_reference_revisions
+id: block_content.terms_and_faqs.default
+targetEntityType: block_content
+bundle: terms_and_faqs
+mode: default
+content:
+  field_faqs:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_headline:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_term_cards:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden: {  }

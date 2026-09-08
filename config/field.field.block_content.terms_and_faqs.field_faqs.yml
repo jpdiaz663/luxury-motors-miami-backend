@@ -1,0 +1,40 @@
+uuid: 24872cdf-ae9c-4500-a943-2130ba549057
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_and_faqs
+    - field.storage.block_content.field_faqs
+    - paragraphs.paragraphs_type.faq_item
+  module:
+    - entity_reference_revisions
+id: block_content.terms_and_faqs.field_faqs
+field_name: field_faqs
+entity_type: block_content
+bundle: terms_and_faqs
+label: FAQs
+description: 'Question and answer pairs for the accordion.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      faq_item: faq_item
+    negate: 0
+    target_bundles_drag_drop:
+      featured_cars:
+        weight: 0
+        enabled: false
+      faq_item:
+        weight: 1
+        enabled: true
+      hero_slider:
+        weight: 2
+        enabled: false
+      term_card:
+        weight: 3
+        enabled: false
+field_type: entity_reference_revisions

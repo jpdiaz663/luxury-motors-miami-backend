@@ -13,13 +13,12 @@ global:
       css/layout.css: {}
     component:
       css/components.css: {}
+      css/terms-and-faqs.css: {}
 
 vehicle:
   version: VERSION
   js:
     js/vehicle-studio.js: {}
-  dependencies:
-    - luxury_motors/global
 
 vehicle_search:
   version: VERSION
@@ -30,7 +29,6 @@ vehicle_search:
     - core/drupalSettings
     - core/once
     - core/drupal.autocomplete
-    - luxury_motors/global
 
 featured_vehicles:
   version: VERSION
@@ -42,7 +40,6 @@ featured_vehicles:
   dependencies:
     - core/drupal
     - core/once
-    - luxury_motors/global
 
 popular_collection:
   version: VERSION
@@ -51,4 +48,14 @@ popular_collection:
   dependencies:
     - core/drupal
     - core/once
-    - luxury_motors/global
+
+terms_and_faqs:
+  version: VERSION
+  css:
+    component:
+      css/terms-and-faqs.css: {}
+  js:
+    js/terms-and-faqs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

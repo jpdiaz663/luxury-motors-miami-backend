@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Terms and FAQs custom block: condition cards + FAQ accordion.
+ *
+ * Variables from TermsAndFaqsPreprocessor:
+ * - headline: string
+ * - term_cards: list of { title, items }
+ * - faqs: list of { question, answer }
+ */
+#}
+{{ attach_library('luxury_motors/terms_and_faqs') }}
+<div{{ attributes.addClass('lm-terms-faqs') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  {% if term_cards is not empty or faqs is not empty %}
+    <section class="lm-terms" aria-labelledby="lm-terms-heading">
+      <div class="lm-terms__frame">
+        <header class="lm-terms__mast">
+          <p class="kicker">{{ 'Rental desk'|t }}</p>
+          <h2 id="lm-terms-heading" class="lm-terms__title title">{{ headline|default('Important information'|t) }}</h2>
+          <p class="lm-terms__lede">{{ 'Conditions before you take the keys, and the questions we answer at pickup.'|t }}</p>
+        </header>
+
+        {% if term_cards is not empty and faqs is not empty %}
+          <div class="lm-terms__tabs" data-lm-terms-tabs>
+            <div class="lm-terms__tablist" role="tablist" aria-label="{{ 'Important information'|t }}">
+              <button type="button" class="lm-terms__tab is-active" role="tab" id="lm-terms-tab-conditions" aria-controls="lm-terms-panel-conditions" aria-selected="true" data-lm-terms-tab="conditions">{{ 'Conditions'|t }}</button>
+              <button type="button" class="lm-terms__tab" role="tab" id="lm-terms-tab-faq" aria-controls="lm-terms-panel-faq" aria-selected="false" data-lm-terms-tab="faq">{{ 'FAQ'|t }}</button>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if term_cards is not empty %}
+          <div class="lm-terms__panel" id="lm-terms-panel-conditions" role="tabpanel" aria-labelledby="lm-terms-tab-conditions" data-lm-terms-panel="conditions">
+            <ul class="lm-terms__cards">
+              {% for card in term_cards %}
+                <li class="lm-terms__card">
+                  <article>
+                    <h3 class="lm-terms__card-title">{{ card.title }}</h3>
+                    {% if card.items %}
+                      <ul class="lm-terms__clauses">
+                        {% for item in card.items %}
+                          <li>{{ item }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </article>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if faqs is not empty %}
+          <div class="lm-terms__panel" id="lm-terms-panel-faq" role="tabpanel" aria-labelledby="lm-terms-tab-faq" data-lm-terms-panel="faq">
+            <div class="lm-terms__accordion">
+              {% for faq in faqs %}
+                <details class="lm-terms__item"{% if loop.first and term_cards is empty %} open{% endif %}>
+                  <summary class="lm-terms__question">
+                    <span>{{ faq.question }}</span>
+                  </summary>
+                  <div class="lm-terms__answer">
+                    <p>{{ faq.answer }}</p>
+                  </div>
+                </details>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% else %}
+    {{ content }}
+  {% endif %}
+</div>

@@ -1,0 +1,13 @@
+{#
+/**
+ * @file
+ * Terms and FAQs custom block: condition cards + FAQ accordion.
+ *
+ * Variables from TermsAndFaqsPreprocessor:
+ * - headline: string
+ * - term_cards: list of { title, items }
+ * - faqs: list of { question, answer }
+ */
+#}
+{{ attach_library('luxury_motors/terms_and_faqs') }}
+{% include '@luxury_motors/block/block--block-content--type--terms-and-faqs.html.twig' %}

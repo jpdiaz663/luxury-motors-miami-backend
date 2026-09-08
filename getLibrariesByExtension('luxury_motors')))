@@ -1,0 +1,1 @@
+ParseError: syntax error, unexpected token ";" in Drush\Commands\core\PhpCommands->evaluate() (line 1 of /app/vendor/drush/drush/src/Commands/core/PhpCommands.php(33) : eval()'d code).

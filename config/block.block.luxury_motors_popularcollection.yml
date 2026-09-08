@@ -1,4 +1,4 @@
-uuid: 7c4e1b8a-2f09-4d6a-9c3e-1a8b5d0e4f21
+uuid: e2d907ed-178f-409e-8c49-81782f8d7838
 langcode: en
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
     - system
   theme:
     - luxury_motors
-id: luxury_motors_popular_collection
+id: luxury_motors_popularcollection
 theme: luxury_motors
 region: content
 weight: -7
@@ -16,7 +16,7 @@ plugin: lm_vehicle_popular_collection
 settings:
   id: lm_vehicle_popular_collection
   label: 'Popular collection'
-  label_display: '0'
+  label_display: visible
   provider: lm_vehicle
   general_title: 'Most searched'
   heading: 'The cars people ask for first'
@@ -25,6 +25,4 @@ visibility:
   request_path:
     id: request_path
     negate: false
-    pages: |-
-      <front>
-      /home
+    pages: /home

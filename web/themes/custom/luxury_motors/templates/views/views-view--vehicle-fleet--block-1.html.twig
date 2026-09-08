@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Home fleet preview. Category pills jump to /fleet; grid is unfiltered.
+ */
+#}
+{%
+  set classes = [
+    'view-vehicle-fleet',
+    'view-vehicle-fleet--preview',
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<section{{ attributes.addClass(classes, 'notte').setAttribute('id', 'fleet-preview') }}>
+  <div class="wrap">
+    {{ title_prefix }}
+    <p class="kicker">{{ 'Inventory on the floor tonight'|t }}</p>
+    <h2 class="title">{{ 'Quick view fleet'|t }}</h2>
+    {{ title_suffix }}
+
+    {% if pills %}
+      <div class="pills" role="group" aria-label="{{ 'Fleet filters'|t }}">
+        {% for pill in pills %}
+          <a class="pill{{ pill.active ? ' is-active' }}" href="{{ pill.url }}">{{ pill.label }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {{ header }}
+    {{ attachment_before }}
+
+    {% if rows %}
+      <div class="fleet">
+        {{ rows }}
+      </div>
+    {% elseif empty %}
+      <p class="muted track-ui">{{ empty }}</p>
+    {% endif %}
+
+    {{ attachment_after }}
+    {% if fleet_url %}
+      <p class="cta-row fleet-preview-more">
+        <a class="btn btn--secondary btn--arrow" href="{{ fleet_url }}">{{ 'View all cars'|t }}</a>
+      </p>
+    {% endif %}
+    {{ footer }}
+  </div>
+</section>

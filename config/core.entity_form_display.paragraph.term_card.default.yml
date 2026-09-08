@@ -1,0 +1,32 @@
+uuid: bf0b0689-b9e8-4502-96fb-82df8b7fa614
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.term_card.field_headline
+    - field.field.paragraph.term_card.field_term_items
+    - paragraphs.paragraphs_type.term_card
+id: paragraph.term_card.default
+targetEntityType: paragraph
+bundle: term_card
+mode: default
+content:
+  field_headline:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_term_items:
+    type: string_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,8 @@
+uuid: 1a8f5db7-5b73-4263-aaad-f6436550aecb
+langcode: en
+status: true
+dependencies: {  }
+id: terms_and_faqs
+label: 'Terms and FAQs'
+revision: false
+description: 'Reusable rental conditions (cards) and frequently asked questions (accordion).'

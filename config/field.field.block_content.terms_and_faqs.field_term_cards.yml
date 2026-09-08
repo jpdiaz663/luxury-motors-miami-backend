@@ -1,0 +1,40 @@
+uuid: bd52abaa-466c-42bf-b01b-57e70e9a8887
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_and_faqs
+    - field.storage.block_content.field_term_cards
+    - paragraphs.paragraphs_type.term_card
+  module:
+    - entity_reference_revisions
+id: block_content.terms_and_faqs.field_term_cards
+field_name: field_term_cards
+entity_type: block_content
+bundle: terms_and_faqs
+label: 'Term cards'
+description: 'Each card is a group of rental conditions.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      term_card: term_card
+    negate: 0
+    target_bundles_drag_drop:
+      featured_cars:
+        weight: 0
+        enabled: false
+      faq_item:
+        weight: 1
+        enabled: false
+      hero_slider:
+        weight: 2
+        enabled: false
+      term_card:
+        weight: 3
+        enabled: true
+field_type: entity_reference_revisions

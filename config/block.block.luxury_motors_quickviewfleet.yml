@@ -1,0 +1,31 @@
+uuid: 79be455e-d99d-4165-a5d1-6922cff6012e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.vehicle_fleet
+  module:
+    - system
+    - views
+  theme:
+    - luxury_motors
+id: luxury_motors_quickviewfleet
+theme: luxury_motors
+region: content
+weight: -8
+provider: null
+plugin: 'views_block:vehicle_fleet-block_1'
+settings:
+  id: 'views_block:vehicle_fleet-block_1'
+  label: 'Quick view fleet'
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: |-
+      /home
+      <front>

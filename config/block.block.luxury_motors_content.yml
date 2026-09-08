@@ -9,7 +9,7 @@ dependencies:
 id: luxury_motors_content
 theme: luxury_motors
 region: content
-weight: -2
+weight: -1
 provider: null
 plugin: system_main_block
 settings:

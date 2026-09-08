@@ -4,17 +4,17 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html.lm-theme,
+body.lm-theme {
   margin: 0;
   padding: 0;
 }
 
-html {
+html.lm-theme {
   background: var(--surface-void-black);
 }
 
-body {
+body.lm-theme {
   background: var(--surface-void-black);
   color: var(--color-bianco-ferrari);
   font-family: var(--font-display);
@@ -24,21 +24,20 @@ body {
   min-height: 100%;
 }
 
-img {
+.lm-theme img {
   display: block;
   max-width: 100%;
   height: auto;
   border-radius: 0;
 }
 
-a {
+.lm-theme a {
   color: var(--color-bianco-ferrari);
   text-decoration: none;
 }
-  
 
-a:hover,
-a:focus-visible {
+.lm-theme a:hover,
+.lm-theme a:focus-visible {
   color: var(--color-rosso-corsa);
   text-decoration: underline;
 }
@@ -48,23 +47,22 @@ a.btn:focus-visible {
   text-decoration: none;
 }
 
-h1,
-h3,
-h4,
-p {
+.lm-theme h1,
+.lm-theme h3,
+.lm-theme h4,
+.lm-theme p {
   margin: 0;
 }
 
-
-h2 {
-display: block;
-font-size: 1.5em;
-margin-block-start: 0.50em;
-margin-block-end: 0.50em;
-margin-inline-start: 0px;
-margin-inline-end: 0px;
-font-weight: bold;
-unicode-bidi: isolate;
+.lm-theme h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.50em;
+  margin-block-end: 0.50em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: bold;
+  unicode-bidi: isolate;
 }
 
 .visually-hidden.focusable:focus {

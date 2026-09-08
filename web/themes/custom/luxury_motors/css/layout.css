@@ -292,7 +292,7 @@ body.is-locked { overflow: hidden; }
   position: relative;
   z-index: 2;
   width: 100%;
-  padding: 28px 32px 32px;
+  padding: 38px 32px 32px;
   background: transparent;
   color-scheme: dark;
 }
@@ -522,6 +522,10 @@ body.is-locked { overflow: hidden; }
 .view-vehicle-fleet .muted {
   margin-top: 16px;
 }
+.view-vehicle-fleet--preview .fleet-preview-more {
+  justify-content: flex-start;
+  margin: 36px 0 0;
+}
 
 /* CTA row */
 
@@ -635,6 +639,9 @@ a.pill:focus-visible {
 }
 .card {
   --card-glow: var(--color-grafite);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: var(--color-carbone);
   border-radius: 0;
   box-shadow: none;
@@ -651,7 +658,12 @@ a.pill:focus-visible {
     0 16px 32px rgba(0, 0, 0, 0.45);
 }
 .card-photo { aspect-ratio: 4 / 3; overflow: hidden; display: block; }
-.card-body { padding: 24px; }
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 24px;
+}
 .fleet .card .body-copy {
   margin: 10px 0 0;
   color: var(--color-fumo);
@@ -665,6 +677,14 @@ a.pill:focus-visible {
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
   color: var(--color-fumo);
+}
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
 }
 .fleet-refine {
   display: grid;
@@ -1060,12 +1080,13 @@ a.pill:focus-visible {
 /* Footer */
 
 .footer {
-  background: var(--color-notte);
+  background: var(--color-cemento);
   border-top: 1px solid var(--color-grafite);
   padding: 54px 32px 44px;
 }
 .footer-grid {
   display: grid;
+  color: var(--color-carbone);
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 60px;
   max-width: var(--page-max);
@@ -1084,8 +1105,9 @@ a.pill:focus-visible {
   font-size: var(--text-caption);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
+  color: var(--color-rosso-corsa);
 }
-.footer a:hover { color: var(--color-rosso-corsa); }
+.footer a:hover { color: var(--color-rosso-scuro); }
 .social { display: flex; gap: 16px; margin-top: 20px; }
 .social a { width: 16px; height: 16px; display: grid; place-items: center; }
 .social svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.4; }

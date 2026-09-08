@@ -10,7 +10,7 @@ dependencies:
 id: luxury_motors_vehicle_reserve
 theme: luxury_motors
 region: content
-weight: -3
+weight: -2
 provider: null
 plugin: lm_vehicle_reserve
 settings:

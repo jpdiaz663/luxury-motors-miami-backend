@@ -4,3 +4,11 @@ luxury_motors.preprocessor.block.featured_vehicules:
     - block__block_content__hero_slider_featured_cars
     - block__luxury_motors_featuredvehicules
   weight: 0
+
+luxury_motors.preprocessor.block.terms_and_faqs:
+  class: '\Drupal\luxury_motors\Plugin\preprocessors\TermsAndFaqsPreprocessor'
+  hooks:
+    - block__block_content__type__terms_and_faqs
+    - block__block_content__terms_and_faqs
+    - block__luxury_motors_termsandfaqs
+  weight: 0

@@ -1,0 +1,19 @@
+uuid: 32c3d797-18a6-4576-b3fb-f7b81d5573ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_term_items
+    - paragraphs.paragraphs_type.term_card
+id: paragraph.term_card.field_term_items
+field_name: field_term_items
+entity_type: paragraph
+bundle: term_card
+label: Clauses
+description: 'One clause per item.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
