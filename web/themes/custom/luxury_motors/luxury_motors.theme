@@ -81,6 +81,8 @@ function luxury_motors_preprocess_node(array &$variables): void {
     $variables['attributes']['class'][] = 'vehicle-node';
     if (($variables['view_mode'] ?? '') === 'teaser') {
       $variables['card'] = \Drupal::service('lm_vehicle.presenter')->card($node);
+      $theme_path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
+      $variables['icon_path'] = '/' . $theme_path . '/images/icons';
     }
     return;
   }

@@ -1,0 +1,23 @@
+uuid: c3e5a7b9-4d60-4f82-9a34-0b2c5e7f9d31
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_luggage_large
+    - taxonomy.vocabulary.vehicle_category
+id: taxonomy_term.vehicle_category.field_luggage_large
+field_name: field_luggage_large
+entity_type: taxonomy_term
+bundle: vehicle_category
+label: 'Large luggage'
+description: 'Guaranteed large luggage pieces for this rental category.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 20
+  prefix: ''
+  suffix: ''
+field_type: integer

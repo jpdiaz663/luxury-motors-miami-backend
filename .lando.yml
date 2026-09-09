@@ -4,8 +4,20 @@ config:
   framework: drupal8
   site: luxury-miami
   id: 80fb1ccc-32e0-4e04-a782-c95c6eda82c8
+  # Full Pantheon replica is unnecessary locally and is what made
+  # `lando start` look "hung": Varnish + Solr add containers and extra
+  # URL scans. Drupal on a Windows bind mount already takes ~8–10s per
+  # request, which matches Lando's default 10s scanner timeout.
+  edge: false
+  index: false
+  cache: true
 services:
-  # wodby/varnish starts as user "varnish", but varnishd -j unix requires root.
-  edge:
-    overrides:
-      user: root
+  appserver_nginx:
+    scanner:
+      timeout: 30000
+      max: 8
+tooling:
+  # Prefer site-local Drush 13 from composer.json over Pantheon global Drush.
+  drush:
+    service: appserver
+    cmd: /app/vendor/bin/drush --root=/app/web

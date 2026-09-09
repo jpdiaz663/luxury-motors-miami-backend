@@ -5,18 +5,23 @@ declare(strict_types=1);
 namespace Drupal\lm_vehicle;
 
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Builds structured arrays for vehicle detail sections.
  */
 final class VehiclePresenter {
 
+  use StringTranslationTrait;
+
   public function __construct(
     private readonly FileUrlGeneratorInterface $fileUrlGenerator,
+    private readonly FleetCatalog $catalog,
   ) {}
 
   /**
@@ -32,17 +37,28 @@ final class VehiclePresenter {
   public function card(NodeInterface $node): array {
     $color = $this->plain($node, 'field_color');
     $chip = $this->colorChip($color) ?? '#303030';
+    $category = $this->categoryTerm($node);
+    $code = $this->termPlain($category, 'field_category_code');
+    $category_name = $category?->label() ?? $this->termName($node, 'field_category');
+    $book = $node->toUrl();
+    $book->setOption('query', $this->catalog->bookingQuery());
+    $book->setOption('fragment', 'reserve');
 
     return [
       'title' => $node->label(),
+      'display_title' => $this->similarTitle((string) $node->label()),
       'url' => $node->toUrl()->toString(),
-     // 'book_url' => $node->toUrl()->setOption('fragment', 'reserve')->toString(),
-      'category' => $this->termName($node, 'field_category'),
+      'book_url' => $book->toString(),
+      'category' => $category_name,
+      'category_code' => $code,
+      'category_label' => $this->categoryLabel($category_name, $code),
       'color' => $color,
       'chip' => $chip,
       'glow' => $color ? $this->visibleOnDark($chip) : '#5c6370',
       'short_description' => $this->plain($node, 'field_short_description'),
       'daily_price' => $this->money($node, 'field_daily_price'),
+      'total_price' => $this->totalPrice($node),
+      'specs' => $this->cardSpecs($node, $category),
       'image' => $this->mediaImage($this->referencedMedia($node, 'field_main_image')),
     ];
   }
@@ -164,6 +180,141 @@ final class VehiclePresenter {
       'monthly' => $this->money($node, 'field_monthly_price'),
       'status' => $this->listLabel($node, 'field_vehicle_status'),
     ];
+  }
+
+  /**
+   * @return list<array{id: string, label: string, value: string|int}>
+   */
+  private function cardSpecs(NodeInterface $node, ?TermInterface $category): array {
+    $specs = [];
+    $passengers = $this->termInt($category, 'field_passengers')
+      ?? $this->intValue($node, 'field_seats');
+    if ($passengers !== NULL) {
+      $specs[] = [
+        'id' => 'people',
+        'value' => $passengers,
+        'label' => (string) $this->t('@count People', ['@count' => $passengers]),
+      ];
+    }
+    $large = $this->termInt($category, 'field_luggage_large');
+    if ($large !== NULL) {
+      $specs[] = [
+        'id' => 'luggage_large',
+        'value' => $large,
+        'label' => (string) $this->t('@count Big luggage', ['@count' => $large]),
+      ];
+    }
+    $small = $this->termInt($category, 'field_luggage_small');
+    if ($small !== NULL) {
+      $specs[] = [
+        'id' => 'luggage_small',
+        'value' => $small,
+        'label' => (string) $this->t('@count Small luggage', ['@count' => $small]),
+      ];
+    }
+    $transmission = $this->transmissionAbbrev($node);
+    if ($transmission !== NULL) {
+      $specs[] = [
+        'id' => 'transmission',
+        'value' => $transmission['key'],
+        'label' => $transmission['label'],
+      ];
+    }
+    $miles = $this->termPlain($category, 'field_mileage_policy') ?? 'unlimited';
+    $specs[] = [
+      'id' => 'miles',
+      'value' => $miles,
+      'label' => $miles === 'limited'
+        ? (string) $this->t('Limited Miles')
+        : (string) $this->t('Unlimited Miles'),
+    ];
+
+    return $specs;
+  }
+
+  /**
+   * @return array{key: string, label: string}|null
+   */
+  private function transmissionAbbrev(NodeInterface $node): ?array {
+    if (!$node->hasField('field_transmission') || $node->get('field_transmission')->isEmpty()) {
+      return NULL;
+    }
+    $key = (string) $node->get('field_transmission')->value;
+    $label = match ($key) {
+      'automatic', 'cvt', 'dual_clutch' => (string) $this->t('Aut.'),
+      'manual' => (string) $this->t('Man.'),
+      default => $this->listLabel($node, 'field_transmission'),
+    };
+    if ($label === NULL || $label === '') {
+      return NULL;
+    }
+
+    return ['key' => $key, 'label' => $label];
+  }
+
+  private function categoryLabel(?string $name, ?string $code): ?string {
+    if ($name === NULL || $name === '') {
+      return $code;
+    }
+    if ($code === NULL || $code === '') {
+      return $name;
+    }
+
+    return $name . ' (' . $code . ')';
+  }
+
+  private function similarTitle(string $title): string {
+    if (preg_match('/\bor similar\b/i', $title)) {
+      return $title;
+    }
+
+    return (string) $this->t('@title or similar', ['@title' => $title]);
+  }
+
+  private function totalPrice(NodeInterface $node): ?string {
+    $amount = $this->plain($node, 'field_daily_price');
+    if ($amount === NULL) {
+      return NULL;
+    }
+    $total = (float) $amount * $this->catalog->rentalDays();
+
+    return 'USD ' . number_format($total, 0);
+  }
+
+  private function categoryTerm(NodeInterface $node): ?TermInterface {
+    if (!$node->hasField('field_category') || $node->get('field_category')->isEmpty()) {
+      return NULL;
+    }
+    $term = $node->get('field_category')->entity;
+
+    return $term instanceof TermInterface ? $term : NULL;
+  }
+
+  private function termPlain(?TermInterface $term, string $field_name): ?string {
+    if (!$term || !$term->hasField($field_name) || $term->get($field_name)->isEmpty()) {
+      return NULL;
+    }
+    $value = $term->get($field_name)->value;
+
+    return $value === NULL || $value === '' ? NULL : (string) $value;
+  }
+
+  private function termInt(?TermInterface $term, string $field_name): ?int {
+    $value = $this->termPlain($term, $field_name);
+    if ($value === NULL || (int) $value < 1) {
+      return NULL;
+    }
+
+    return (int) $value;
+  }
+
+  private function intValue(NodeInterface $node, string $field_name): ?int {
+    $value = $this->plain($node, $field_name);
+    if ($value === NULL || (int) $value < 1) {
+      return NULL;
+    }
+
+    return (int) $value;
   }
 
   private function referencedMedia(NodeInterface $node, string $field_name): ?MediaInterface {

@@ -11,6 +11,19 @@ use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\lm_vehicle\Form\VehicleRefineForm;
 
 /**
+ * Implements hook_views_data_alter().
+ */
+function lm_vehicle_views_data_alter(array &$data): void {
+  $data['node_field_data']['lm_vehicle_one_per_category'] = [
+    'title' => t('One vehicle per category'),
+    'help' => t('Keeps a single fleet card for each vehicle category.'),
+    'filter' => [
+      'id' => 'lm_vehicle_one_per_category',
+    ],
+  ];
+}
+
+/**
  * Implements hook_theme().
  */
 function lm_vehicle_theme(): array {

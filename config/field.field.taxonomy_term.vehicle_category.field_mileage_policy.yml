@@ -1,0 +1,23 @@
+uuid: e5a7c9d1-6f82-4194-bc56-2d4e7a9b1f53
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_mileage_policy
+    - taxonomy.vocabulary.vehicle_category
+  module:
+    - options
+id: taxonomy_term.vehicle_category.field_mileage_policy
+field_name: field_mileage_policy
+entity_type: taxonomy_term
+bundle: vehicle_category
+label: 'Mileage policy'
+description: 'Mileage guaranteed to the customer for this rental category.'
+required: false
+translatable: false
+default_value:
+  -
+    value: unlimited
+default_value_callback: ''
+settings: {  }
+field_type: list_string

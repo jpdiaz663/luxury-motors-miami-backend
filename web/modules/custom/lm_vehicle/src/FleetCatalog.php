@@ -197,6 +197,42 @@ final class FleetCatalog {
   }
 
   /**
+   * Billable rental days from the current search window.
+   *
+   * Missing or invalid dates count as one day so the fleet card still
+   * has a total.
+   */
+  public function rentalDays(): int {
+    $query = $this->currentQuery();
+    if ($query['pickup'] === '' || $query['return'] === '') {
+      return 1;
+    }
+    $start = \DateTimeImmutable::createFromFormat('Y-m-d', $query['pickup']);
+    $end = \DateTimeImmutable::createFromFormat('Y-m-d', $query['return']);
+    if (!$start || !$end) {
+      return 1;
+    }
+    $days = (int) $start->diff($end)->format('%r%a');
+    return max(1, $days);
+  }
+
+  /**
+   * Search query values that should follow a vehicle reserve link.
+   *
+   * @return array<string, string>
+   */
+  public function bookingQuery(): array {
+    $clean = [];
+    foreach ($this->currentQuery() as $key => $value) {
+      if ($value !== '') {
+        $clean[$key] = $value;
+      }
+    }
+
+    return $clean;
+  }
+
+  /**
    * Human window for the fleet heading, or NULL if dates are missing.
    */
   public function windowLabel(): ?string {

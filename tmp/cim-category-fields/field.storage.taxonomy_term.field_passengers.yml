@@ -1,0 +1,20 @@
+uuid: 2a8f1c45-9d70-4e3b-b6a1-8c0e4d7f2b19
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.field_passengers
+field_name: field_passengers
+entity_type: taxonomy_term
+type: integer
+settings:
+  unsigned: true
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

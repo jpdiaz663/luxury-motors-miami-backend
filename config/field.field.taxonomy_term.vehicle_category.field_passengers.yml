@@ -1,0 +1,23 @@
+uuid: b2d4f6a8-3c59-4e71-8f23-9a1b4d6e8c20
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_passengers
+    - taxonomy.vocabulary.vehicle_category
+id: taxonomy_term.vehicle_category.field_passengers
+field_name: field_passengers
+entity_type: taxonomy_term
+bundle: vehicle_category
+label: Passengers
+description: 'Guaranteed passenger capacity for this rental category.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 20
+  prefix: ''
+  suffix: ''
+field_type: integer

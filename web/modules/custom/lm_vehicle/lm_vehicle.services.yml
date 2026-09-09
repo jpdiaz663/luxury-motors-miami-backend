@@ -3,6 +3,7 @@ services:
     class: Drupal\lm_vehicle\VehiclePresenter
     arguments:
       - '@file_url_generator'
+      - '@lm_vehicle.fleet_catalog'
   lm_vehicle.fleet_catalog:
     class: Drupal\lm_vehicle\FleetCatalog
     arguments:
@@ -12,3 +13,9 @@ services:
     class: Drupal\lm_vehicle\PopularCollection
     arguments:
       - '@database'
+  lm_vehicle.fleet_category_representatives:
+    class: Drupal\lm_vehicle\FleetCategoryRepresentatives
+    arguments:
+      - '@entity_type.manager'
+      - '@lm_vehicle.fleet_catalog'
+      - '@?lm_booking.availability'

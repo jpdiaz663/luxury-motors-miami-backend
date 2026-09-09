@@ -1,0 +1,19 @@
+uuid: a1c3e5f7-2b48-4d60-9e12-8f0a3c5d7b19
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_category_code
+    - taxonomy.vocabulary.vehicle_category
+id: taxonomy_term.vehicle_category.field_category_code
+field_name: field_category_code
+entity_type: taxonomy_term
+bundle: vehicle_category
+label: 'Category code'
+description: 'Industry category code shown to customers, for example ICAR.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

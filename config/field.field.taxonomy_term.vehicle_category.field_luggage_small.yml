@@ -1,0 +1,23 @@
+uuid: d4f6b8c0-5e71-4083-ab45-1c3d6f8a0e42
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_luggage_small
+    - taxonomy.vocabulary.vehicle_category
+id: taxonomy_term.vehicle_category.field_luggage_small
+field_name: field_luggage_small
+entity_type: taxonomy_term
+bundle: vehicle_category
+label: 'Small luggage'
+description: 'Guaranteed small luggage pieces for this rental category.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 20
+  prefix: ''
+  suffix: ''
+field_type: integer

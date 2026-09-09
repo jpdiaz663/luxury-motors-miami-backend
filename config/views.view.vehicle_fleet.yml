@@ -9,6 +9,7 @@ dependencies:
     - taxonomy.vocabulary.vehicle_category
   module:
     - lm_booking
+    - lm_vehicle
     - node
     - options
     - taxonomy
@@ -194,6 +195,44 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
+        lm_vehicle_one_per_category:
+          id: lm_vehicle_one_per_category
+          table: node_field_data
+          field: lm_vehicle_one_per_category
+          relationship: none
+          group_type: group
+          admin_label: 'One vehicle per category'
+          plugin_id: lm_vehicle_one_per_category
+          operator: '='
+          value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
         lm_booking_available_window:
           id: lm_booking_available_window
           table: node_field_data
@@ -500,6 +539,7 @@ display:
         - user.permissions
       tags:
         - 'node_list:booking'
+        - 'node_list:vehicle'
   block_1:
     id: block_1
     display_title: 'Quick view fleet'
@@ -529,6 +569,7 @@ display:
         - user.permissions
       tags:
         - 'node_list:booking'
+        - 'node_list:vehicle'
   page_1:
     id: page_1
     display_title: Page
@@ -550,3 +591,4 @@ display:
         - user.permissions
       tags:
         - 'node_list:booking'
+        - 'node_list:vehicle'

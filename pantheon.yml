@@ -1,3 +1,8 @@
 # Put overrides to your pantheon.upstream.yml file here.
 # For more information, see: https://pantheon.io/docs/pantheon-yml/
 api_version: 1
+# Global Drush on Pantheon is only a launcher. Site-local Drush 13 in
+# composer.json is what actually runs. Keep the global pin at 8 (the
+# highest Pantheon allows besides 10) so Lando does not composer-install
+# Drush 10, which Composer 2.10+ rejects due to security advisories.
+drush_version: 8

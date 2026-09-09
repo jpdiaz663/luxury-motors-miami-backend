@@ -1,10 +1,10 @@
 {#
 /**
  * @file
- * Vehicle card in the fleet grid. Matches the rental mockup card.
+ * Category vehicle card in the fleet listing.
  */
 #}
-<article{{ attributes.addClass('card').setAttribute('style', '--card-glow: ' ~ (card.glow|default(card.chip)|default('#8a8f94'))) }}>
+<article{{ attributes.addClass('card', 'card--fleet').setAttribute('style', '--card-glow: ' ~ (card.glow|default(card.chip)|default('#8a8f94'))) }}>
   {{ title_prefix }}{{ title_suffix }}
   {% if card.image.url %}
     <a class="card-photo" href="{{ card.url }}">
@@ -12,23 +12,30 @@
     </a>
   {% endif %}
   <div class="card-body">
-    <h3 class="title">{{ card.title }}</h3>
-    {% if card.short_description %}
-      <p class="body-copy">{{ card.short_description }}</p>
+    <h3 class="title">{{ card.display_title|default(card.title) }}</h3>
+    {% if card.category_label %}
+      <p class="card-category">{{ 'Category @label'|t({'@label': card.category_label}) }}</p>
     {% endif %}
-    <div class="card-meta">
-      {% if card.daily_price %}
-        <span>{{ 'From @price / day'|t({'@price': card.daily_price}) }}</span>
-      {% endif %}
-      {% if card.color %}
-        <span>{{ card.color }}</span>
-      {% endif %}
-    </div>
-    <div class="card-actions">
-      <a class="btn btn--secondary btn--arrow" href="{{ card.url }}">{{ 'Details'|t }}</a>
-      {% if card.book_url %}
-        <a class="btn btn--primary btn--book" href="{{ card.book_url }}">{{ 'Book now!'|t }}</a>
-      {% endif %}
-    </div>
+    {% if card.specs %}
+      <ul class="card-specs">
+        {% for spec in card.specs %}
+          <li class="card-spec">
+            {% if icon_path %}
+              <img class="card-spec-icon" src="{{ icon_path }}/spec-{{ spec.id }}.svg" alt="" width="16" height="16" />
+            {% endif %}
+            <span>{{ spec.label }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
+  <aside class="card-quote">
+    <p class="card-quote-kicker">{{ 'Total price'|t }}</p>
+    {% if card.total_price %}
+      <p class="card-quote-price">{{ card.total_price }}</p>
+    {% endif %}
+    {% if card.book_url %}
+      <a class="btn btn--primary card-quote-cta" href="{{ card.book_url }}">{{ 'Reserve on Counter'|t }}</a>
+    {% endif %}
+  </aside>
 </article>
