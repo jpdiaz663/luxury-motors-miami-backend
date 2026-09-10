@@ -88,7 +88,7 @@ final class FeaturedVehiculesPreprocessor extends PreprocessorPluginBase {
       $slides[] = [
         'headline' => (string) ($paragraph->get('field_headline')->value ?? ''),
         'description' => (string) ($paragraph->get('field_description')->value ?? ''),
-        'cta_label' => (string) ($paragraph->get('field_cta_label')->value ?? ''),
+        'cta_label' => '',
         'image' => $hero['image'] ?? NULL,
         'vehicle' => $this->presenter->card($vehicle),
       ];

@@ -95,7 +95,7 @@ final class PopularCollectionBlock extends BlockBase implements ContainerFactory
   }
 
   public function build(): array {
-    $vehicles = $this->vehicles(debug: true);
+    $vehicles = $this->vehicles();
     if (count($vehicles) < PopularCollection::MIN_VEHICLES) {
       return [];
     }
@@ -125,20 +125,13 @@ final class PopularCollectionBlock extends BlockBase implements ContainerFactory
   /**
    * @return list<array<string, mixed>>
    */
-  private function vehicles(bool $debug = false): array {
-
-    if ($debug) {
-      $ranked = [2 => 1, 3 => 1];
-      $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple([2,3]);
-    }else {
-      $ranked = $this->popularCollection->rankedVehicleIds((int) ($this->configuration['limit'] ?? 8));
-      if ($ranked === []) {
-        return [];  
-      }
-      $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple(array_keys($ranked));
+  private function vehicles(): array {
+    $ranked = $this->popularCollection->rankedVehicleIds((int) ($this->configuration['limit'] ?? 8));
+    if ($ranked === []) {
+      return [];
     }
+    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple(array_keys($ranked));
 
-  
     $vehicles = [];
     foreach ($ranked as $nid => $count) {
       $node = $nodes[$nid] ?? NULL;

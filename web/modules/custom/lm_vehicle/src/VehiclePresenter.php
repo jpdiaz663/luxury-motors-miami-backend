@@ -38,18 +38,24 @@ final class VehiclePresenter {
     $color = $this->plain($node, 'field_color');
     $chip = $this->colorChip($color) ?? '#303030';
     $category = $this->categoryTerm($node);
+    $category_id = $category ? (string) $category->id() : '';
     $code = $this->termPlain($category, 'field_category_code');
     $category_name = $category?->label() ?? $this->termName($node, 'field_category');
     $book = $node->toUrl();
     $book->setOption('query', $this->catalog->bookingQuery());
     $book->setOption('fragment', 'reserve');
+    $fleet_url = $category_id !== ''
+      ? $this->catalog->fleetUrl(['category' => $category_id])
+      : $this->catalog->fleetUrl([]);
 
     return [
       'title' => $node->label(),
       'display_title' => $this->similarTitle((string) $node->label()),
       'url' => $node->toUrl()->toString(),
       'book_url' => $book->toString(),
+      'fleet_url' => $fleet_url,
       'category' => $category_name,
+      'category_id' => $category_id,
       'category_code' => $code,
       'category_label' => $this->categoryLabel($category_name, $code),
       'color' => $color,

@@ -71,8 +71,8 @@
 
 {% macro copy(slide, active) %}
   {% set vehicle = slide.vehicle ?? {} %}
-  {% set href = vehicle.url|default('#') %}
-  {% set cta = slide.cta_label|default('') %}
+  {% set href = vehicle.fleet_url|default(vehicle.url)|default('#') %}
+  {% set cta = 'Check availability'|t %}
   <div class="featured-vehicles__copy{{ active ? ' is-active' : '' }}" data-featured-copy{% if not active %} hidden{% endif %}>
     {% if vehicle.category %}
       <p class="featured-vehicles__category kicker">{{ vehicle.category }}</p>

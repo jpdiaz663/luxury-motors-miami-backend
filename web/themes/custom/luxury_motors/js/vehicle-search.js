@@ -94,6 +94,12 @@
     syncIds();
     syncNote();
 
+    if (form.classList.contains("is-need-dates") && pickup) {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      form.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      pickup.focus();
+    }
+
     if (reset) {
       reset.addEventListener("click", function (event) {
         if (window.location.search && settings.resetUrl) {

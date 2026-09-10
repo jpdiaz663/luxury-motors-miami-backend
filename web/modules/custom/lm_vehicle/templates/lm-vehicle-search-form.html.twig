@@ -46,8 +46,16 @@
     </label>
   </div>
 
+  {% if form['#need_dates'] %}
+    <p class="banner-dates-hint" role="status">
+      <span class="banner-dates-hint__kicker">{{ 'Confirm dates'|t }}</span>
+      <strong>{{ 'Confirm pickup and return, then search.'|t }}</strong>
+      <span>{{ 'Availability for this category updates after you submit.'|t }}</span>
+    </p>
+  {% endif %}
+
   <div class="banner-window">
-    <label class="banner-field">
+    <label class="banner-field"{% if form['#need_dates'] %} data-banner-date{% endif %}>
       <span>{{ 'Pickup'|t }}</span>
       {{ form.pickup }}
     </label>
@@ -55,7 +63,7 @@
       <span>{{ 'Time'|t }}</span>
       {{ form.ptime }}
     </label>
-    <label class="banner-field">
+    <label class="banner-field"{% if form['#need_dates'] %} data-banner-date{% endif %}>
       <span>{{ 'Return'|t }}</span>
       {{ form.return }}
     </label>

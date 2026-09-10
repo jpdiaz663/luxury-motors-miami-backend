@@ -30,13 +30,13 @@
   {% if vehicles %}
     <div class="chooser-track" data-chooser>
       {% for vehicle in vehicles %}
-        <a class="chooser-slide{{ loop.first ? ' is-active' }}" href="{{ vehicle.url }}"{% if loop.first %} data-active{% endif %}>
+        <a class="chooser-slide{{ loop.first ? ' is-active' }}" href="{{ vehicle.fleet_url|default(vehicle.url) }}"{% if loop.first %} data-active{% endif %}>
           <figure>
             {% if vehicle.image.url %}
               <img src="{{ vehicle.image.url }}" alt="{{ vehicle.image.alt }}" width="1120" height="630" />
             {% endif %}
           </figure>
-          <h3 class="title">{{ vehicle.title }}</h3>
+          <h3 class="title">{{ vehicle.display_title|default(vehicle.title) }}</h3>
           {% if vehicle.daily_price %}
             <p class="muted track-ui">{{ 'From @price / day'|t({'@price': vehicle.daily_price}) }}</p>
           {% elseif vehicle.category %}

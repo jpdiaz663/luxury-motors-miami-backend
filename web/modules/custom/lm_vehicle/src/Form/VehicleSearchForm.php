@@ -44,8 +44,10 @@ final class VehicleSearchForm extends FormBase {
     $form['#theme'] = 'lm_vehicle_search_form';
     $form['#theme_wrappers'] = [];
     $form['#after_build'][] = [static::class, 'stripInternalElements'];
+    $need_dates = $this->needsDateConfirmation($query);
+    $form['#need_dates'] = $need_dates;
     $form['#attributes'] = [
-      'class' => ['banner'],
+      'class' => array_values(array_filter(['banner', $need_dates ? 'is-need-dates' : ''])),
       'data-banner' => TRUE,
       'method' => 'get',
       'action' => $action,
@@ -55,6 +57,7 @@ final class VehicleSearchForm extends FormBase {
       || $this->fleetCatalog->locationNeedsPlace($query['to']);
     $form['#reset_url'] = $action;
     $form['#cache']['contexts'][] = 'url.query_args';
+    $form['#cache']['contexts'][] = 'url.path';
     $form['#cache']['tags'][] = 'taxonomy_term_list:location';
     $form['#attached']['library'][] = 'luxury_motors/vehicle_search';
     $form['#attached']['drupalSettings']['lmVehicleSearch'] = [
@@ -103,6 +106,16 @@ final class VehicleSearchForm extends FormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     // GET form: the browser query string is the submission.
+  }
+
+  /**
+   * @param array<string, string> $query
+   */
+  private function needsDateConfirmation(array $query): bool {
+    $path = '/' . trim((string) $this->getRequest()->getPathInfo(), '/');
+    $on_fleet = $path === FleetCatalog::PATH || str_ends_with($path, FleetCatalog::PATH);
+
+    return $on_fleet && $query['category'] !== '' && $query['pickup'] === '' && $query['return'] === '';
   }
 
   /**
