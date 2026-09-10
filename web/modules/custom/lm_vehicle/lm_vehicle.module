@@ -16,7 +16,7 @@ use Drupal\lm_vehicle\Form\VehicleRefineForm;
 function lm_vehicle_views_data_alter(array &$data): void {
   $data['node_field_data']['lm_vehicle_one_per_category'] = [
     'title' => t('One vehicle per category'),
-    'help' => t('Keeps a single fleet card for each vehicle category.'),
+    'help' => t('Keeps a single fleet card for each vehicle category when no rental dates are in the request.'),
     'filter' => [
       'id' => 'lm_vehicle_one_per_category',
     ],

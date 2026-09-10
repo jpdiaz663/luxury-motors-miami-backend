@@ -86,11 +86,7 @@ final class VehicleSearchForm extends FormBase {
     $form['return'] = $this->dateField('return', $return, $today, 'banner-return', TRUE);
     $form['rtime'] = $this->hourSelect('rtime', $this->fleetCatalog->hourValue($query['rtime']), 'banner-rtime', TRUE);
 
-    $form['category'] = [
-      '#type' => 'hidden',
-      '#default_value' => $query['category'],
-    ];
-    foreach (['brand', 'color', 'price'] as $name) {
+    foreach (['category', 'brand', 'color', 'price'] as $name) {
       if ($query[$name] !== '') {
         $form[$name] = [
           '#type' => 'hidden',
@@ -100,7 +96,8 @@ final class VehicleSearchForm extends FormBase {
     }
 
     $form['#filtered'] = $this->fleetCatalog->hasFilters();
-    
+    $this->hydrateGetInput($form_state, $query, $from_term, $to_term, $pickup, $return);
+
     return $form;
   }
 
@@ -119,12 +116,55 @@ final class VehicleSearchForm extends FormBase {
   }
 
   /**
+   * GET landing pages treat the query string as user input, which blanks
+   * fields that were omitted on submit (autocomplete twins, empty optionals).
+   *
+   * @param array<string, string> $query
+   */
+  private function hydrateGetInput(FormStateInterface $form_state, array $query, ?TermInterface $from_term, ?TermInterface $to_term, string $pickup, string $return): void {
+    $input = $form_state->getUserInput();
+    if (!is_array($input)) {
+      $input = [];
+    }
+
+    // entity_autocomplete only paints labels when input is FALSE. A GET
+    // from_q string is not a valid callback value and would blank the fields.
+    unset($input['from_q'], $input['to_q']);
+
+    $values = [
+      'from' => $from_term ? (string) $from_term->id() : '',
+      'to' => $to_term ? (string) $to_term->id() : '',
+      'place' => $query['place'],
+      'pickup' => $pickup,
+      'ptime' => $this->fleetCatalog->hourValue($query['ptime']),
+      'return' => $return,
+      'rtime' => $this->fleetCatalog->hourValue($query['rtime']),
+      'category' => $query['category'],
+      'brand' => $query['brand'],
+      'color' => $query['color'],
+      'price' => $query['price'],
+    ];
+    foreach ($values as $key => $value) {
+      if ($value === '' || (isset($input[$key]) && $input[$key] !== '' && $input[$key] !== [])) {
+        continue;
+      }
+      $input[$key] = $value;
+    }
+    $form_state->setUserInput($input);
+  }
+
+  /**
    * @param array<string, mixed> $form
    *
    * @return array<string, mixed>
    */
   public static function stripInternalElements(array $form, FormStateInterface $form_state): array {
     unset($form['form_token'], $form['form_build_id'], $form['form_id']);
+    foreach (['from', 'to'] as $name) {
+      if (!empty($form[$name]['#id'])) {
+        $form[$name]['#attributes']['id'] = $form[$name]['#id'];
+      }
+    }
     return $form;
   }
 
@@ -136,6 +176,9 @@ final class VehicleSearchForm extends FormBase {
       '#type' => 'hidden',
       '#default_value' => $term ? (string) $term->id() : '',
       '#id' => $id,
+      '#attributes' => [
+        'id' => $id,
+      ],
     ];
   }
 

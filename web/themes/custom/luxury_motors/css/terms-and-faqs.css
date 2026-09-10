@@ -99,7 +99,8 @@
 .lm-terms__card {
   margin: 0;
   padding: 24px 32px;
-  border: 1px solid var(--color-grafite);
+  border: 0;
+  border-radius: var(--radius-cards);
   background: var(--color-carbone);
 }
 

@@ -148,6 +148,7 @@
   color: var(--color-bianco-ferrari);
   background: var(--color-notte-profonda);
   border: 2px solid transparent;
+  border-radius: var(--radius-cards);
   cursor: pointer;
   scroll-snap-align: center;
 }

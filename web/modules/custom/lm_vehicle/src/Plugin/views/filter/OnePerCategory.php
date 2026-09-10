@@ -7,13 +7,17 @@ namespace Drupal\lm_vehicle\Plugin\views\filter;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\lm_vehicle\FleetCategoryRepresentatives;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Limits the fleet listing to one vehicle card per category.
+ * Limits the undated catalog to one vehicle card per category.
+ *
+ * Dated searches list every available vehicle, optionally narrowed by
+ * the category query argument.
  */
 #[ViewsFilter('lm_vehicle_one_per_category')]
 final class OnePerCategory extends FilterPluginBase implements ContainerFactoryPluginInterface {
@@ -23,6 +27,7 @@ final class OnePerCategory extends FilterPluginBase implements ContainerFactoryP
     $plugin_id,
     $plugin_definition,
     private readonly FleetCategoryRepresentatives $representatives,
+    private readonly FleetCatalog $catalog,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -33,11 +38,12 @@ final class OnePerCategory extends FilterPluginBase implements ContainerFactoryP
       $plugin_id,
       $plugin_definition,
       $container->get('lm_vehicle.fleet_category_representatives'),
+      $container->get('lm_vehicle.fleet_catalog'),
     );
   }
 
   public function adminSummary() {
-    return (string) $this->t('One vehicle per category');
+    return (string) $this->t('One vehicle per category unless dates are set');
   }
 
   public function canExpose() {
@@ -65,7 +71,7 @@ final class OnePerCategory extends FilterPluginBase implements ContainerFactoryP
   }
 
   public function query(): void {
-    if (!$this->query) {
+    if (!$this->query || $this->catalog->hasRentalWindow()) {
       return;
     }
     $nids = $this->representatives->nids();

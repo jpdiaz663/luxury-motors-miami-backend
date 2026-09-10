@@ -129,8 +129,27 @@ final class FleetCatalog {
       $value = $query?->get($key);
       $values[$key] = is_scalar($value) ? trim((string) $value) : '';
     }
+    $values['from'] = $this->locationIdFromParam($values['from'], $query?->get('from_q'));
+    $values['to'] = $this->locationIdFromParam($values['to'], $query?->get('to_q'));
+    if ($values['to'] === '') {
+      $values['to'] = $values['from'];
+    }
 
     return $values;
+  }
+
+  /**
+   * Prefer a submitted tid; fall back to entity-autocomplete "Label (tid)".
+   */
+  private function locationIdFromParam(string $id, mixed $lookup): string {
+    if ($id !== '' && ctype_digit($id)) {
+      return $id;
+    }
+    $label = is_scalar($lookup) ? trim((string) $lookup) : '';
+    if ($label !== '' && preg_match('/\((\d+)\)\s*$/', $label, $match)) {
+      return $match[1];
+    }
+    return ctype_digit($label) ? $label : '';
   }
 
   /**
@@ -288,6 +307,14 @@ final class FleetCatalog {
       'url' => $url,
       'active' => $active,
     ];
+  }
+
+  /**
+   * Whether the request includes a pickup and return date.
+   */
+  public function hasRentalWindow(): bool {
+    $query = $this->currentQuery();
+    return $query['pickup'] !== '' && $query['return'] !== '';
   }
 
   public function hasFilters(): bool {

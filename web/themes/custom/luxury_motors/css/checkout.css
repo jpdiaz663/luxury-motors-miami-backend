@@ -12,15 +12,22 @@
   align-items: start;
 }
 
+.checkout-trip,
+.checkout-main,
+.checkout-aside {
+  padding: var(--spacing-6);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-bianco);
+  box-shadow: var(--shadow-cards);
+}
+
 .checkout-trip { grid-area: trip; }
 .checkout-main { grid-area: form; }
 .checkout-aside {
   grid-area: price;
   position: sticky;
   top: var(--spacing-8);
-  padding: var(--spacing-6);
-  border: 1px solid var(--color-argento);
-  background: var(--color-bianco);
 }
 
 .checkout-section-title,
@@ -44,6 +51,7 @@
   margin: 0;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: var(--radius-cards);
   background: var(--color-cemento);
 }
 
@@ -215,14 +223,18 @@
 
 .confirm-layout {
   display: grid;
-  gap: var(--spacing-10);
+  gap: var(--spacing-8);
   max-width: 52rem;
+  padding: var(--spacing-8);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-bianco);
+  box-shadow: var(--shadow-cards);
 }
 
 .confirm-hero {
   text-align: center;
   padding-bottom: var(--spacing-6);
-  border-bottom: 1px solid var(--color-argento);
 }
 
 .confirm-lead {
@@ -241,18 +253,28 @@
 .confirm-itinerary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem);
-  border: 1px solid var(--color-argento);
-  overflow: hidden;
+  gap: var(--spacing-6);
+  align-items: stretch;
+}
+
+.confirm-itinerary-copy,
+.confirm-receipt {
+  padding: var(--spacing-6);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-velo-di-luce);
+  box-shadow: var(--shadow-cards);
 }
 
 .confirm-itinerary-copy {
-  padding: var(--spacing-6);
   display: grid;
   gap: var(--spacing-5);
 }
 
 .confirm-photo {
   margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-cards);
   background: var(--color-cemento);
 }
 
@@ -285,11 +307,6 @@
 .confirm-totals {
   border-top: 1px solid var(--color-argento);
   padding-top: var(--spacing-4);
-}
-
-.confirm-receipt {
-  padding: var(--spacing-6);
-  border: 1px solid var(--color-argento);
 }
 
 .confirm-actions {

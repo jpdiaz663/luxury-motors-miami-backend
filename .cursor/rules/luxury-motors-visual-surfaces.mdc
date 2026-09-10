@@ -1,0 +1,56 @@
+---
+description: Visual card surfaces — radius, depth, no borders; tokens for Luxury Motors UI
+globs: web/themes/custom/luxury_motors/**/*.{css,twig}
+alwaysApply: true
+---
+
+# Luxury Motors — visual surfaces
+
+Cards are **elevated surfaces**, not outlined boxes. Buttons keep their existing borders.
+
+## Tokens (`css/tokens.css`)
+
+- `--radius-cards` — all card-like surfaces (not buttons; buttons use `--btn--primary-rounded` / `--radius-buttons`).
+- `--shadow-cards` — light backgrounds (white, velo, checkout).
+- `--shadow-cards-dark` — dark backgrounds (notte, grafite, carbone, hero banner).
+
+Do not invent new radius/shadow values. Change the token if the look must shift globally.
+
+## Card chrome
+
+```css
+/* ✅ card */
+border: 0;
+border-radius: var(--radius-cards);
+box-shadow: var(--shadow-cards); /* or --shadow-cards-dark */
+
+/* ❌ card */
+border: 1px solid …;
+box-shadow: none; /* rest state */
+```
+
+- No 1px ring, no `border-color` hover as the card outline.
+- Hairlines **inside** a card (quote divider, totals) are fine.
+- Rest state already has depth. Hover may add lift/glow; do not rely on hover for the only shadow.
+- `overflow: hidden` when children (photos) must clip to the radius.
+
+## Independent cards
+
+A wrap that groups content is a card. Nested blocks that are their own panels are **separate** cards (own padding, radius, shadow, distinct surface). Do not fuse copy + photo + receipt into one outlined slab.
+
+| Surface | Shadow | Notes |
+|---|---|---|
+| `.checkout-trip`, `.checkout-main`, `.checkout-aside` | `--shadow-cards` | Independent checkout cards; aside is sticky |
+| `.confirm-layout` | `--shadow-cards` | Outer confirmation wrap |
+| `.confirm-itinerary-copy`, `.confirm-receipt` | `--shadow-cards` | Inner cards on `--color-velo-di-luce` |
+| `.view-vehicle-fleet > .wrap` | `--shadow-cards-dark` | Grafite wrap on notte |
+| `.banner`, `.fleet-refine` | `--shadow-cards-dark` | Filter banners |
+| `.card--fleet` | `--shadow-cards-dark` | Depth at rest |
+
+New listing/checkout panels follow the same pattern: outer wrap card + inner item cards, nested surfaces that contrast (white/velo or grafite/notte).
+
+## Do not
+
+- Strip borders from `.btn` / form controls when restyling cards.
+- Put card radius on pills, dots, or full-bleed heroes.
+- Duplicate shadow literals in component CSS.

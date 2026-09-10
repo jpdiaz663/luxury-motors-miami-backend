@@ -1,5 +1,25 @@
 # Luxury Motors — design notes
 
+## Visual surfaces (cards)
+
+Cards are elevated surfaces: **radius + shadow, no outline border**. Buttons keep their borders.
+
+Tokens in `css/tokens.css`:
+
+- `--radius-cards` — every card-like panel (not buttons).
+- `--shadow-cards` — light surfaces (white, velo, checkout).
+- `--shadow-cards-dark` — dark surfaces (notte, grafite, hero, fleet).
+
+Nested layout: a grouping wrap is its own card; inner panels (itinerary copy, receipt, fleet item, filter strip) are **independent** cards with a contrasting fill. Do not merge them into one bordered slab. Hairlines inside a card are OK; 1px chrome around the card is not. Depth is present at rest, not only on hover.
+
+Current map:
+
+- Checkout: `.checkout-trip`, `.checkout-main`, `.checkout-aside` (independent light cards; aside sticky)
+- Confirmation: `.confirm-layout` (outer), `.confirm-itinerary-copy` + `.confirm-receipt` (inner, `--color-velo-di-luce`)
+- Fleet: `.view-vehicle-fleet > .wrap`, `.banner`, `.fleet-refine`, `.card--fleet`
+
+Agent rule: `.cursor/rules/luxury-motors-visual-surfaces.mdc`
+
 ## Checkout (`/reserve/{vehicle}`)
 
 Inspiration (Refero, adapted — not cloned): TravelPerk “Review and pay” two-column review, TravelPerk booking overview (compact car image in the summary, not a hero), Uber Rent review (terms + total + primary action grouped).
@@ -32,5 +52,5 @@ Not a Vehicle node and not `entity.node.canonical`. The `{booking}` parameter lo
 
 Inspiration (Refero, adapted): [Onefinestay confirmation](https://refero.design/pages/37f3be25-059c-4422-8c04-6d33973bd857) — centered success copy, then a two-column itinerary (details + image); [Understory receipt](https://refero.design/pages/41572f71-5be5-47b1-86f0-aa31d37fd835) — line items then a booking-details card; [time2book](https://refero.design/pages/1d55c82f-97d0-469c-b036-433906e52d82) — “Booking confirmed” + compact total.
 
-Layout: success header + confirmation number → itinerary card (pickup/drop-off, guest, total, vehicle photo) → Price Summary → Back to fleet. No hero/studio/vehicle blocks.
+Layout: success header + confirmation number inside `.confirm-layout` (outer card) → independent `.confirm-itinerary-copy` card (pickup/drop-off, guest, total) beside the vehicle photo → independent `.confirm-receipt` (Price Summary) → Back to fleet. No hero/studio/vehicle blocks.
 

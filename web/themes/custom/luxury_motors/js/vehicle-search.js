@@ -17,8 +17,8 @@
   function bindBanner(form) {
     const from = form.querySelector("#banner-from");
     const to = form.querySelector("#banner-to");
-    const fromId = form.querySelector("#banner-from-id");
-    const toId = form.querySelector("#banner-to-id");
+    const fromId = form.querySelector("#banner-from-id") || form.querySelector('input[name="from"]');
+    const toId = form.querySelector("#banner-to-id") || form.querySelector('input[name="to"]');
     const pickup = form.querySelector("#banner-pickup");
     const back = form.querySelector("#banner-return");
     const note = form.querySelector("[data-banner-note]");
@@ -48,21 +48,29 @@
     }
 
     function syncIds() {
-      fromId.value = termId(from.value);
+      const pickupId = termId(from.value);
+      if (pickupId) {
+        fromId.value = pickupId;
+      }
       const delivery = termId(to.value);
-      toId.value = delivery || fromId.value;
+      if (delivery) {
+        toId.value = delivery;
+      }
+      else if (!toId.value) {
+        toId.value = fromId.value;
+      }
     }
 
     function hotelNeeded() {
-      return requiresPlace.includes(Number(termId(from.value)))
-        || requiresPlace.includes(Number(termId(to.value)));
+      return requiresPlace.includes(Number(termId(from.value) || fromId.value))
+        || requiresPlace.includes(Number(termId(to.value) || toId.value));
     }
 
-    function syncNote() {
+    function syncNote(clearPlace) {
       const show = hotelNeeded();
       note.hidden = !show;
       place.required = show;
-      if (!show) {
+      if (!show && clearPlace) {
         place.value = "";
       }
     }
@@ -84,15 +92,15 @@
     ["change", "blur", "autocompleteclose", "autocompleteselect"].forEach(function (eventName) {
       from.addEventListener(eventName, function () {
         syncIds();
-        syncNote();
+        syncNote(true);
       });
       to.addEventListener(eventName, function () {
         syncIds();
-        syncNote();
+        syncNote(true);
       });
     });
     syncIds();
-    syncNote();
+    syncNote(false);
 
     if (form.classList.contains("is-need-dates") && pickup) {
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

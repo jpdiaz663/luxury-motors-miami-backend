@@ -293,7 +293,10 @@ body.is-locked { overflow: hidden; }
   z-index: 2;
   width: 100%;
   padding: 38px 32px 32px;
-  background: transparent;
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: color-mix(in srgb, var(--color-notte) 92%, transparent);
+  box-shadow: var(--shadow-cards-dark);
   color-scheme: dark;
 }
 .banner > .kicker { margin-bottom: 8px; }
@@ -568,6 +571,13 @@ body.is-locked { overflow: hidden; }
 .is-fleet .block-system-main-block {
   background: var(--color-notte);
 }
+.view-vehicle-fleet > .wrap {
+  padding: var(--spacing-8);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-grafite);
+  box-shadow: var(--shadow-cards-dark);
+}
 .view-vehicle-fleet .muted {
   margin-top: 16px;
 }
@@ -692,17 +702,16 @@ a.pill:focus-visible {
   flex-direction: column;
   height: 100%;
   background: var(--color-carbone);
-  border-radius: 0;
+  border-radius: var(--radius-cards);
+  overflow: hidden;
   box-shadow: none;
-  border: 1px solid transparent;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  border: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .fleet .card:not(.card--skeleton):hover,
 .fleet .card:not(.card--skeleton):focus-within {
   transform: translateY(-4px);
-  border-color: var(--card-glow);
   box-shadow:
-    0 0 0 1px var(--card-glow),
     0 0 28px color-mix(in srgb, var(--card-glow) 42%, transparent),
     0 16px 32px rgba(0, 0, 0, 0.45);
 }
@@ -712,6 +721,7 @@ a.pill:focus-visible {
   grid-template-columns: minmax(176px, 240px) minmax(0, 1fr) minmax(200px, 240px);
   align-items: stretch;
   height: auto;
+  box-shadow: var(--shadow-cards-dark);
 }
 .card--fleet .card-photo {
   aspect-ratio: auto;
@@ -819,7 +829,11 @@ a.pill:focus-visible {
   align-items: end;
   gap: 0;
   margin: 0 0 44px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: var(--spacing-5) var(--spacing-6);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-notte);
+  box-shadow: var(--shadow-cards-dark);
 }
 .fleet-refine .banner-field {
   padding-top: 16px;
@@ -916,7 +930,7 @@ a.pill:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   .card {
-    transition: border-color 0.2s ease;
+    transition: none;
   }
   .fleet .card:not(.card--skeleton):hover,
   .fleet .card:not(.card--skeleton):focus-within {
@@ -986,6 +1000,7 @@ a.pill:focus-visible {
   min-height: 240px;
   margin: 0 0 28px;
   overflow: hidden;
+  border-radius: var(--radius-cards);
   background: var(--color-carbone);
 }
 .chooser-slide img {
@@ -1457,7 +1472,9 @@ a.pill:focus-visible {
   flex: 0 0 96px;
   height: 64px;
   padding: 0;
+  overflow: hidden;
   border: 1px solid var(--color-grafite);
+  border-radius: var(--radius-cards);
   opacity: 0.4;
 }
 .film button.is-active {
