@@ -6,11 +6,13 @@ namespace Drupal\lm_vehicle;
 
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Builds structured arrays for vehicle detail sections.
@@ -41,9 +43,9 @@ final class VehiclePresenter {
     $category_id = $category ? (string) $category->id() : '';
     $code = $this->termPlain($category, 'field_category_code');
     $category_name = $category?->label() ?? $this->termName($node, 'field_category');
-    $book = $node->toUrl();
-    $book->setOption('query', $this->catalog->bookingQuery());
-    $book->setOption('fragment', 'reserve');
+    $book = Url::fromRoute('lm_booking.checkout', ['vehicle' => $node->id()], [
+      'query' => $this->catalog->bookingQuery(),
+    ]);
     $fleet_url = $category_id !== ''
       ? $this->catalog->fleetUrl(['category' => $category_id])
       : $this->catalog->fleetUrl([]);
@@ -84,6 +86,7 @@ final class VehiclePresenter {
       'status' => $this->listLabel($node, 'field_vehicle_status'),
       'daily_price' => $this->money($node, 'field_daily_price'),
       'image' => $image,
+      'checkout_url' => $this->checkoutUrl($node),
     ];
   }
 
@@ -106,6 +109,7 @@ final class VehiclePresenter {
     return [
       'title' => $node->label(),
       'slides' => $slides,
+      'checkout_url' => $this->checkoutUrl($node),
     ];
   }
 
@@ -185,7 +189,19 @@ final class VehiclePresenter {
       'weekly' => $this->money($node, 'field_weekly_price'),
       'monthly' => $this->money($node, 'field_monthly_price'),
       'status' => $this->listLabel($node, 'field_vehicle_status'),
+      'checkout_url' => $this->checkoutUrl($node),
     ];
+  }
+
+  public function checkoutUrl(NodeInterface $node): string {
+    try {
+      return Url::fromRoute('lm_booking.checkout', ['vehicle' => $node->id()], [
+        'query' => $this->catalog->bookingQuery(),
+      ])->toString();
+    }
+    catch (RouteNotFoundException) {
+      return $node->toUrl()->toString();
+    }
   }
 
   /**

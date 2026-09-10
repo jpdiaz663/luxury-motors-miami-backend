@@ -3,3 +3,5 @@ services:
     class: Drupal\lm_booking\AvailabilityManager
     arguments:
       - '@entity_type.manager'
+  lm_booking.quote:
+    class: Drupal\lm_booking\Quote\QuoteCalculator

@@ -1,0 +1,90 @@
+{#
+/**
+ * @file
+ * Checkout: trip card, customer form, price summary.
+ */
+#}
+{% set trip = trip|default({}) %}
+{% set quote = quote|default({}) %}
+<form{{ create_attribute(form['#attributes']) }}>
+<section class="checkout light">
+  <div class="wrap checkout-layout">
+    <div class="checkout-trip">
+      <p class="kicker">{{ 'Checkout'|t }}</p>
+      <h1 class="title">{{ 'Confirm your booking'|t }}</h1>
+      <article class="checkout-vehicle">
+        {% if trip.image.url %}
+          <figure class="checkout-vehicle-photo">
+            <img src="{{ trip.image.url }}" alt="{{ trip.image.alt }}" />
+          </figure>
+        {% endif %}
+        <div class="checkout-vehicle-copy">
+          <h2 class="checkout-vehicle-title">{{ trip.title }}</h2>
+          <div class="checkout-legs">
+            <div class="checkout-leg">
+              <p class="checkout-leg-label">{{ 'Pick up'|t }}</p>
+              <p class="checkout-leg-place">{{ trip.pickup_place }}</p>
+              <p class="checkout-leg-when">{{ trip.pickup_when }}</p>
+            </div>
+            <div class="checkout-leg">
+              <p class="checkout-leg-label">{{ 'Drop off'|t }}</p>
+              <p class="checkout-leg-place">{{ trip.dropoff_place }}</p>
+              <p class="checkout-leg-when">{{ trip.dropoff_when }}</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="checkout-main">
+      <h2 class="checkout-section-title">{{ 'Customer information'|t }}</h2>
+      {{ form.name }}
+      {{ form.email }}
+      {{ form.phone }}
+      <div class="checkout-dates">
+        {{ form.pickup }}
+        {{ form.return }}
+      </div>
+      {{ form.note }}
+      <div class="checkout-legal">
+        {{ form.terms }}
+        {{ form.marketing }}
+      </div>
+      {{ form.actions }}
+    </div>
+
+    <aside class="checkout-aside" aria-labelledby="checkout-price-heading">
+      <h2 id="checkout-price-heading" class="checkout-section-title">{{ 'Price Summary'|t }}</h2>
+      {% if quote.groups %}
+        {% for group, lines in quote.groups %}
+          <ul class="checkout-lines">
+            {% for line in lines %}
+              <li class="checkout-line">
+                <div class="checkout-line-copy">
+                  <span class="checkout-line-label">{{ line.label }}</span>
+                  {% if line.detail %}
+                    <span class="checkout-line-detail">{{ line.detail }}</span>
+                  {% endif %}
+                </div>
+                <span class="checkout-line-amount">{{ line.amount_formatted }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      {% endif %}
+      <div class="checkout-total">
+        <p class="checkout-total-kicker">{{ 'Total payment'|t }}</p>
+        <p class="checkout-total-days">{{ 'For @days rented days'|t({'@days': quote.days|default(1)}) }}</p>
+        <p class="checkout-total-amount">{{ quote.total_formatted }}</p>
+        <p class="checkout-effective">
+          <span>{{ 'Daily price'|t }}</span>
+          <strong>{{ quote.effective_daily_formatted }}</strong>
+        </p>
+      </div>
+    </aside>
+  </div>
+</section>
+  {{ form.form_build_id }}
+  {{ form.form_token }}
+  {{ form.form_id }}
+</form>

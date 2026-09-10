@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Reserve desk — rates and request form.
+ * Vehicle rates with checkout CTA (no mailto).
  */
 #}
 <section class="light" id="reserve">
@@ -34,29 +34,11 @@
           {% endif %}
         </dl>
       </div>
-      <form class="form" action="mailto:info@luxurymotorsmiami.com" method="post" enctype="text/plain">
-        <label class="field">
-          <span>{{ 'Name'|t }}</span>
-          <input type="text" name="name" required autocomplete="name" />
-        </label>
-        <label class="field">
-          <span>{{ 'Phone'|t }}</span>
-          <input type="tel" name="phone" required autocomplete="tel" />
-        </label>
-        <label class="field">
-          <span>{{ 'Start'|t }}</span>
-          <input type="date" name="start" required />
-        </label>
-        <label class="field">
-          <span>{{ 'End'|t }}</span>
-          <input type="date" name="end" required />
-        </label>
-        <label class="field">
-          <span>{{ 'Note'|t }}</span>
-          <input type="text" name="note" placeholder="{{ 'Hotel, airport, or desk'|t }}" />
-        </label>
-        <button class="btn btn--primary" type="submit">{{ 'Send to desk'|t }}</button>
-      </form>
+      {% if vehicle.checkout_url %}
+        <p>
+          <a class="btn btn--primary" href="{{ vehicle.checkout_url }}">{{ 'Continue to checkout'|t }}</a>
+        </p>
+      {% endif %}
     </div>
   </div>
 </section>

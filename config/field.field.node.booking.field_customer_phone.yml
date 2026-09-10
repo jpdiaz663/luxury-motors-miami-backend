@@ -1,0 +1,19 @@
+uuid: f62d1837-409c-426f-d1b3-7e5246f90c26
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_customer_phone
+    - node.type.booking
+id: node.booking.field_customer_phone
+field_name: field_customer_phone
+entity_type: node
+bundle: booking
+label: Phone
+description: 'Contact phone from checkout.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

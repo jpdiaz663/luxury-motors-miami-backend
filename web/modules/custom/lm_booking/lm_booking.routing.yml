@@ -1,0 +1,25 @@
+lm_booking.checkout:
+  path: '/reserve/{vehicle}'
+  defaults:
+    _form: '\Drupal\lm_booking\Form\CheckoutForm'
+    _title_callback: '\Drupal\lm_booking\Controller\CheckoutController::title'
+  requirements:
+    _custom_access: '\Drupal\lm_booking\Controller\CheckoutController::access'
+    vehicle: \d+
+  options:
+    parameters:
+      vehicle:
+        type: entity:node
+
+lm_booking.confirmation:
+  path: '/reserve/confirmed/{booking}'
+  defaults:
+    _controller: '\Drupal\lm_booking\Controller\ConfirmationController::view'
+    _title: 'Reservation confirmed'
+  requirements:
+    _custom_access: '\Drupal\lm_booking\Controller\ConfirmationController::access'
+    booking: \d+
+  options:
+    parameters:
+      booking:
+        type: entity:node

@@ -7,6 +7,11 @@ dependencies:
     - field.field.node.booking.field_booking_start
     - field.field.node.booking.field_booking_status
     - field.field.node.booking.field_booking_vehicle
+    - field.field.node.booking.field_customer_email
+    - field.field.node.booking.field_customer_name
+    - field.field.node.booking.field_customer_note
+    - field.field.node.booking.field_customer_phone
+    - field.field.node.booking.field_marketing_opt_in
     - node.type.booking
   module:
     - datetime
@@ -49,6 +54,46 @@ content:
       link: true
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_customer_email:
+    type: email_mailto
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_customer_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_customer_note:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_customer_phone:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_marketing_opt_in:
+    type: boolean
+    label: above
+    settings:
+      format: yes-no
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 9
     region: content
 hidden:
   links: true

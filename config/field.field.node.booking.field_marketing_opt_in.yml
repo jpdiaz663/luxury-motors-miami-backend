@@ -1,0 +1,23 @@
+uuid: 3a615c7b-84d0-46a3-15f7-b2968a3d406a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_marketing_opt_in
+    - node.type.booking
+id: node.booking.field_marketing_opt_in
+field_name: field_marketing_opt_in
+entity_type: node
+bundle: booking
+label: Marketing emails
+description: 'Optional promotional email consent from checkout.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

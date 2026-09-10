@@ -1,0 +1,102 @@
+{#
+/**
+ * @file
+ * Reservation confirmation itinerary (not a vehicle node).
+ */
+#}
+{% set trip = trip|default({}) %}
+{% set quote = quote|default({}) %}
+{% set guest = guest|default({}) %}
+<section class="checkout confirm light">
+  <div class="wrap confirm-layout">
+    <header class="confirm-hero">
+      <p class="kicker">{{ 'Reservation'|t }}</p>
+      <h1 class="title">{{ 'Your reservation is confirmed'|t }}</h1>
+      <p class="confirm-lead">{{ 'A copy of this itinerary is ready for your records. Our desk will be in touch if anything else is needed.'|t }}</p>
+      {% if reference %}
+        <p class="confirm-ref">{{ 'Confirmation @id'|t({'@id': reference}) }}</p>
+      {% endif %}
+    </header>
+
+    <article class="confirm-itinerary">
+      <div class="confirm-itinerary-copy">
+        <h2 class="checkout-vehicle-title">{{ trip.title }}</h2>
+        <div class="checkout-legs">
+          <div class="checkout-leg">
+            <p class="checkout-leg-label">{{ 'Pick up'|t }}</p>
+            <p class="checkout-leg-place">{{ trip.pickup_place }}</p>
+            <p class="checkout-leg-when">{{ trip.pickup_when }}</p>
+          </div>
+          <div class="checkout-leg">
+            <p class="checkout-leg-label">{{ 'Drop off'|t }}</p>
+            <p class="checkout-leg-place">{{ trip.dropoff_place }}</p>
+            <p class="checkout-leg-when">{{ trip.dropoff_when }}</p>
+          </div>
+        </div>
+        {% if guest.name or guest.email or guest.phone %}
+          <dl class="confirm-guest">
+            {% if guest.name %}
+              <div>
+                <dt>{{ 'Name'|t }}</dt>
+                <dd>{{ guest.name }}</dd>
+              </div>
+            {% endif %}
+            {% if guest.email %}
+              <div>
+                <dt>{{ 'Email'|t }}</dt>
+                <dd>{{ guest.email }}</dd>
+              </div>
+            {% endif %}
+            {% if guest.phone %}
+              <div>
+                <dt>{{ 'Phone'|t }}</dt>
+                <dd>{{ guest.phone }}</dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% endif %}
+        <div class="confirm-totals">
+          <p class="checkout-total-kicker">{{ 'Total payment'|t }}</p>
+          <p class="checkout-total-days">{{ 'For @days rented days'|t({'@days': quote.days|default(1)}) }}</p>
+          <p class="checkout-total-amount">{{ quote.total_formatted }}</p>
+          <p class="checkout-effective">
+            <span>{{ 'Daily price'|t }}</span>
+            <strong>{{ quote.effective_daily_formatted }}</strong>
+          </p>
+        </div>
+      </div>
+      {% if trip.image.url %}
+        <figure class="confirm-photo">
+          <img src="{{ trip.image.url }}" alt="{{ trip.image.alt }}" />
+        </figure>
+      {% endif %}
+    </article>
+
+    {% if quote.groups %}
+      <aside class="confirm-receipt" aria-labelledby="confirm-price-heading">
+        <h2 id="confirm-price-heading" class="checkout-section-title">{{ 'Price Summary'|t }}</h2>
+        {% for group, lines in quote.groups %}
+          <ul class="checkout-lines">
+            {% for line in lines %}
+              <li class="checkout-line">
+                <div class="checkout-line-copy">
+                  <span class="checkout-line-label">{{ line.label }}</span>
+                  {% if line.detail %}
+                    <span class="checkout-line-detail">{{ line.detail }}</span>
+                  {% endif %}
+                </div>
+                <span class="checkout-line-amount">{{ line.amount_formatted }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </aside>
+    {% endif %}
+
+    {% if fleet_url %}
+      <p class="confirm-actions">
+        <a class="btn btn--primary" href="{{ fleet_url }}">{{ 'Back to fleet'|t }}</a>
+      </p>
+    {% endif %}
+  </div>
+</section>

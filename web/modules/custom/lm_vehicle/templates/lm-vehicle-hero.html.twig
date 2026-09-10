@@ -18,7 +18,7 @@
       {% if vehicle.daily_price %}
         <span class="ghost-link">{{ vehicle.daily_price }}{{ ' / day'|t }}</span>
       {% endif %}
-      <a class="btn btn--primary" href="#reserve">{{ 'Reserve'|t }}</a>
+      <a class="btn btn--primary" href="{{ vehicle.checkout_url }}">{{ 'Reserve'|t }}</a>
       <a class="ghost-link" href="#studio">{{ 'Photos'|t }}</a>
     </div>
   </div>

@@ -59,3 +59,10 @@ terms_and_faqs:
   dependencies:
     - core/drupal
     - core/once
+
+checkout:
+  version: VERSION
+  css:
+    component:
+      css/checkout.css: {}
+

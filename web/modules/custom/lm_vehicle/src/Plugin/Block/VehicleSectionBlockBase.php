@@ -66,6 +66,9 @@ abstract class VehicleSectionBlockBase extends BlockBase implements ContainerFac
   }
 
   protected function currentVehicle(): ?NodeInterface {
+    if ($this->routeMatch->getRouteName() !== 'entity.node.canonical') {
+      return NULL;
+    }
     $node = $this->routeMatch->getParameter('node');
     if (!$node instanceof NodeInterface || $node->bundle() !== 'vehicle') {
       return NULL;

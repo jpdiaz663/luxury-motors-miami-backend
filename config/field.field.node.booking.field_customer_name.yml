@@ -1,0 +1,19 @@
+uuid: b2e9d4f3-0c58-4e2b-9d7f-3a1e02b5c802
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_customer_name
+    - node.type.booking
+id: node.booking.field_customer_name
+field_name: field_customer_name
+entity_type: node
+bundle: booking
+label: Name
+description: 'Primary driver or guest name from checkout.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

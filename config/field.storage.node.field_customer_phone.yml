@@ -1,0 +1,21 @@
+uuid: e51c0726-3f8b-415e-c0a2-6d4135e8fb15
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_customer_phone
+field_name: field_customer_phone
+entity_type: node
+type: string
+settings:
+  max_length: 64
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

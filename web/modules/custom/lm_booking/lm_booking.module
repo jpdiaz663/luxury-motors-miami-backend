@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Views integration for fleet availability.
+ * Views integration and checkout theme hooks.
  */
 
 declare(strict_types=1);
@@ -18,4 +18,34 @@ function lm_booking_views_data_alter(array &$data): void {
       'id' => 'lm_booking_available_window',
     ],
   ];
+}
+
+/**
+ * Implements hook_theme().
+ */
+function lm_booking_theme(): array {
+  return [
+    'lm_booking_checkout_form' => [
+      'render element' => 'form',
+    ],
+    'lm_booking_confirmation' => [
+      'variables' => [
+        'reference' => '',
+        'guest' => [],
+        'trip' => [],
+        'quote' => [],
+        'fleet_url' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for checkout.
+ */
+function lm_booking_preprocess_lm_booking_checkout_form(array &$variables): void {
+  $form = $variables['form'] ?? [];
+  $variables['trip'] = $form['#trip'] ?? [];
+  $variables['quote'] = $form['#quote'] ?? [];
+  $variables['#attached']['library'][] = 'luxury_motors/checkout';
 }
