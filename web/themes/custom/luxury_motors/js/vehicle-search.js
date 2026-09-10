@@ -154,7 +154,51 @@
         }
       });
       setBusy(true);
+      showFleetSkeleton({ scroll: true });
     });
+  }
+
+  function fleetView() {
+    return document.querySelector("#fleet.view-vehicle-fleet");
+  }
+
+  function showFleetSkeleton(options) {
+    const view = fleetView();
+    if (!view) {
+      return;
+    }
+    const grid = view.querySelector("[data-fleet-grid]");
+    const empty = view.querySelector("[data-fleet-empty]");
+    const skeleton = view.querySelector("[data-fleet-skeleton]");
+    const pager = view.querySelector(".fleet-pager");
+    const progress = document.querySelector("[data-search-progress]");
+    if (!skeleton) {
+      return;
+    }
+    const available = skeleton.querySelectorAll(".card").length;
+    const current = grid ? grid.querySelectorAll(".card").length : 0;
+    const count = Math.min(available, Math.max(3, current || available));
+    skeleton.querySelectorAll(".card").forEach(function (card, index) {
+      card.hidden = index >= count;
+    });
+    skeleton.hidden = false;
+    if (grid) {
+      grid.hidden = true;
+    }
+    if (empty) {
+      empty.hidden = true;
+    }
+    if (pager) {
+      pager.hidden = true;
+    }
+    view.setAttribute("aria-busy", "true");
+    if (progress) {
+      progress.hidden = false;
+    }
+    if (options && options.scroll) {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      view.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    }
   }
 
   function bindRefine(form) {
@@ -164,6 +208,28 @@
           element.disabled = true;
         }
       });
+      showFleetSkeleton();
+    });
+  }
+
+  function bindFleetPills(view) {
+    once("lm-fleet-pills", ".pills a.pill", view).forEach(function (pill) {
+      pill.addEventListener("click", function (event) {
+        if (
+          event.defaultPrevented
+          || event.metaKey
+          || event.ctrlKey
+          || event.shiftKey
+          || event.altKey
+          || event.button !== 0
+        ) {
+          return;
+        }
+        if (pill.classList.contains("is-active")) {
+          return;
+        }
+        showFleetSkeleton();
+      });
     });
   }
 
@@ -171,6 +237,7 @@
     attach: function (context) {
       once("lm-vehicle-search", "[data-banner]", context).forEach(bindBanner);
       once("lm-vehicle-refine", ".fleet-refine", context).forEach(bindRefine);
+      once("lm-fleet-filters", "#fleet.view-vehicle-fleet", context).forEach(bindFleetPills);
     },
   };
 })(Drupal, once, drupalSettings);

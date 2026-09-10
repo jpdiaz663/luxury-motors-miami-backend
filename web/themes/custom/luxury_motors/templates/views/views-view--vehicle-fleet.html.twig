@@ -35,13 +35,37 @@
     {{ header }}
     {{ attachment_before }}
 
-    {% if rows %}
-      <div class="fleet">
-        {{ rows }}
+    <div class="fleet-results" data-fleet-results>
+      {% if rows %}
+        <div class="fleet" data-fleet-grid>
+          {{ rows }}
+        </div>
+      {% elseif empty %}
+        <p class="muted track-ui" data-fleet-empty>{{ empty }}</p>
+      {% endif %}
+
+      <div class="fleet fleet--skeleton" data-fleet-skeleton hidden aria-hidden="true">
+        {% for i in 1..6 %}
+          <article class="card card--fleet card--skeleton" aria-hidden="true">
+            <div class="card-photo skeleton-bone"></div>
+            <div class="card-body">
+              <span class="skeleton-bone skeleton-bone--title"></span>
+              <span class="skeleton-bone skeleton-bone--meta"></span>
+              <ul class="card-specs">
+                <li class="skeleton-bone skeleton-bone--spec"></li>
+                <li class="skeleton-bone skeleton-bone--spec"></li>
+                <li class="skeleton-bone skeleton-bone--spec"></li>
+              </ul>
+            </div>
+            <aside class="card-quote">
+              <span class="skeleton-bone skeleton-bone--kicker"></span>
+              <span class="skeleton-bone skeleton-bone--price"></span>
+              <span class="skeleton-bone skeleton-bone--cta"></span>
+            </aside>
+          </article>
+        {% endfor %}
       </div>
-    {% elseif empty %}
-      <p class="muted track-ui">{{ empty }}</p>
-    {% endif %}
+    </div>
 
     {{ pager }}
     {{ attachment_after }}

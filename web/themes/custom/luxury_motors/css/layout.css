@@ -697,8 +697,8 @@ a.pill:focus-visible {
   border: 1px solid transparent;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
-.fleet .card:hover,
-.fleet .card:focus-within {
+.fleet .card:not(.card--skeleton):hover,
+.fleet .card:not(.card--skeleton):focus-within {
   transform: translateY(-4px);
   border-color: var(--card-glow);
   box-shadow:
@@ -838,6 +838,61 @@ a.pill:focus-visible {
   margin: 16px 0 4px 24px;
   white-space: nowrap;
 }
+.fleet[hidden],
+.fleet--skeleton[hidden],
+.card--skeleton[hidden],
+.fleet-pager[hidden],
+[data-fleet-empty][hidden] {
+  display: none;
+}
+.card--skeleton {
+  pointer-events: none;
+  min-height: 160px;
+}
+.skeleton-bone {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--color-grafite) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    var(--color-grafite) 100%
+  );
+  background-size: 200% 100%;
+  animation: fleet-skeleton 1.2s ease-in-out infinite;
+}
+.card--skeleton .card-photo {
+  min-height: 160px;
+}
+.skeleton-bone--title {
+  height: 18px;
+  width: 58%;
+}
+.skeleton-bone--meta {
+  height: 11px;
+  width: 28%;
+  margin-top: 10px;
+}
+.skeleton-bone--spec {
+  width: 88px;
+  height: 14px;
+}
+.skeleton-bone--kicker {
+  height: 11px;
+  width: 72px;
+}
+.skeleton-bone--price {
+  height: 22px;
+  width: 96px;
+  margin: 4px 0 8px;
+}
+.skeleton-bone--cta {
+  height: 44px;
+  width: 168px;
+}
+@keyframes fleet-skeleton {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
 .fleet-pager {
   display: flex;
   justify-content: space-between;
@@ -863,15 +918,19 @@ a.pill:focus-visible {
   .card {
     transition: border-color 0.2s ease;
   }
-  .fleet .card:hover,
-  .fleet .card:focus-within {
+  .fleet .card:not(.card--skeleton):hover,
+  .fleet .card:not(.card--skeleton):focus-within {
     transform: none;
     box-shadow: none;
   }
   .banner-submit-icon--spinner svg,
   .search-progress-bar,
-  .studio-book {
+  .studio-book,
+  .skeleton-bone {
     animation: none;
+  }
+  .skeleton-bone {
+    background: var(--color-grafite);
   }
   .search-progress-bar {
     width: 100%;
@@ -1713,6 +1772,9 @@ a.pill:focus-visible {
   .card-quote-cta {
     width: 100%;
     text-align: center;
+  }
+  .skeleton-bone--cta {
+    width: 100%;
   }
 
   /* Studio */
