@@ -87,13 +87,15 @@
   gap: var(--spacing-4);
 }
 
-.checkout-main .form-item {
+.checkout-main .form-item,
+.reservation-lookup-card .form-item {
   display: grid;
   gap: 6px;
   margin: 0 0 var(--spacing-6);
 }
 
 .checkout-main .form-item label,
+.reservation-lookup-card .form-item label,
 .checkout-legal .form-item label {
   font-size: var(--text-caption);
   letter-spacing: var(--track-micro);
@@ -114,7 +116,9 @@
 .checkout-main input[type="text"],
 .checkout-main input[type="email"],
 .checkout-main input[type="tel"],
-.checkout-main input[type="date"] {
+.checkout-main input[type="date"],
+.reservation-lookup-card input[type="text"],
+.reservation-lookup-card input[type="email"] {
   font-size: var(--text-body);
   letter-spacing: 0.015em;
   padding: 6px 0 10px;
@@ -239,19 +243,11 @@
   .checkout-main input[type="text"],
   .checkout-main input[type="email"],
   .checkout-main input[type="tel"],
-  .checkout-main input[type="date"] {
+  .checkout-main input[type="date"],
+  .reservation-lookup-card input[type="text"],
+  .reservation-lookup-card input[type="email"] {
     min-width: 0;
     max-width: 100%;
-  }
-
-  .confirm-layout {
-    padding: var(--spacing-4);
-  }
-
-  .confirm-ref-code {
-    margin-left: 0;
-    min-width: 0;
-    overflow-wrap: anywhere;
   }
 
   .confirm-ref-copy img,
@@ -263,15 +259,29 @@
 
 /* Confirmation itinerary — Onefinestay-style card, not a vehicle node. */
 
+.reservation-form {
+  width: 100%;
+}
+
 .confirm-layout {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
   gap: var(--spacing-8);
+  width: 100%;
   max-width: 52rem;
+  margin-inline: auto;
   padding: var(--spacing-8);
   border: 0;
   border-radius: var(--radius-cards);
   background: var(--color-bianco);
   box-shadow: var(--shadow-cards);
+}
+
+.confirm-layout > * {
+  grid-column: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .confirm-hero {
@@ -422,6 +432,12 @@
   box-shadow: var(--shadow-cards);
 }
 
+.reservation-lookup-card .form-actions {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
 .reservation-status {
   display: inline-block;
   margin: var(--spacing-4) 0 0;
@@ -439,8 +455,9 @@
 }
 
 .reservation-status[data-status="confirmed"] {
-  background: var(--color-rosso-scuro);
+  background: var(--color-green-success);
   color: var(--color-bianco-ferrari);
+  font-size: 1em;
 }
 
 .reservation-disclaimer {
@@ -458,6 +475,7 @@
 
 .reservation-disclaimer-cta {
   margin: var(--spacing-5) 0 0;
+  text-align: center;
 }
 
 .reservation-cancel-confirm {
@@ -477,3 +495,39 @@
   gap: var(--spacing-3);
   margin: 0;
 }
+
+@media (max-width: 900px) {
+  .checkout.confirm.light {
+    padding: var(--spacing-8) var(--spacing-4);
+  }
+
+  .confirm-layout {
+    padding: var(--spacing-4);
+    width: 100%;
+  }
+
+  .confirm-hero,
+  .confirm-hero .title,
+  .confirm-hero .kicker,
+  .confirm-hero .confirm-lead {
+    text-align: center;
+  }
+
+  .confirm-ref {
+    margin: var(--spacing-4) 0 0;
+    width: 100%;
+  }
+
+  .confirm-ref-code {
+    margin-left: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .reservation-lookup-card .form-actions,
+  .reservation-disclaimer-cta {
+    display: flex;
+    justify-content: center;
+  }
+}
+
