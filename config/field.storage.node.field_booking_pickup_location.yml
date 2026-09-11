@@ -1,0 +1,22 @@
+uuid: a4c1e8b2-7d35-4f91-9e06-2b8c4d0a5f17
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_booking_pickup_location
+field_name: field_booking_pickup_location
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes:
+  target_id:
+    - target_id
+persist_with_no_fields: false
+custom_storage: false

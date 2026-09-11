@@ -408,4 +408,72 @@
 .confirm-actions {
   margin: 0;
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3);
+}
+
+.reservation-lookup-card {
+  padding: var(--spacing-6);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-velo-di-luce);
+  box-shadow: var(--shadow-cards);
+}
+
+.reservation-status {
+  display: inline-block;
+  margin: var(--spacing-4) 0 0;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-cards);
+  background: var(--color-velo-di-luce);
+  color: var(--color-carbone);
+  font-size: var(--text-caption);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.reservation-status[data-status="cancelled"] {
+  background: var(--color-cemento);
+}
+
+.reservation-status[data-status="confirmed"] {
+  background: var(--color-rosso-scuro);
+  color: var(--color-bianco-ferrari);
+}
+
+.reservation-disclaimer {
+  padding: var(--spacing-6);
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: var(--color-velo-di-luce);
+  box-shadow: var(--shadow-cards);
+}
+
+.reservation-disclaimer p {
+  margin: 0;
+  color: var(--color-piombo);
+}
+
+.reservation-disclaimer-cta {
+  margin: var(--spacing-5) 0 0;
+}
+
+.reservation-cancel-confirm {
+  margin: 0;
+}
+
+.reservation-cancelled-note {
+  margin: 0;
+  color: var(--color-piombo);
+  text-align: center;
+}
+
+.reservation-actions .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3);
+  margin: 0;
 }

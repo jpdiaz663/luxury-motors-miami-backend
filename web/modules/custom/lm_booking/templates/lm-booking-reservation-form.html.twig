@@ -1,0 +1,151 @@
+{#
+/**
+ * @file
+ * Public reservation lookup, itinerary, cancel, and modification disclaimer.
+ */
+#}
+{% set trip = trip|default({}) %}
+{% set quote = quote|default({}) %}
+{% set guest = guest|default({}) %}
+<form{{ create_attribute(form['#attributes']) }}>
+<section class="checkout confirm light reservation">
+  <div class="wrap confirm-layout">
+    {% if not reference %}
+      <header class="confirm-hero">
+        <p class="kicker">{{ 'Reservation'|t }}</p>
+        <h1 class="title">{{ 'Find your reservation'|t }}</h1>
+        <p class="confirm-lead">{{ 'Enter the confirmation code and the email used at checkout to view details or cancel.'|t }}</p>
+      </header>
+      <div class="checkout-main reservation-lookup-card">
+        {{ form.lookup }}
+        {{ form.actions }}
+      </div>
+    {% else %}
+      <header class="confirm-hero">
+        <p class="kicker">{{ 'Reservation'|t }}</p>
+        <h1 class="title">{{ 'Your reservation'|t }}</h1>
+        {% if status_label %}
+          <p class="reservation-status" data-status="{{ status }}">{{ status_label }}</p>
+        {% endif %}
+        {% if reference %}
+          <div class="confirm-ref">
+            <p class="confirm-ref-code">{{ 'Confirmation code: @id'|t({'@id': reference}) }}</p>
+          </div>
+        {% endif %}
+      </header>
+
+      <article class="confirm-itinerary">
+        <div class="confirm-itinerary-copy">
+          <h2 class="checkout-vehicle-title">{{ trip.title }}</h2>
+          <div class="checkout-legs">
+            <div class="checkout-leg">
+              <p class="checkout-leg-label">{{ 'Pick up'|t }}</p>
+              {% if trip.pickup_place %}
+                <p class="checkout-leg-place">{{ trip.pickup_place }}</p>
+              {% endif %}
+              <p class="checkout-leg-when">{{ trip.pickup_when }}</p>
+            </div>
+            <div class="checkout-leg">
+              <p class="checkout-leg-label">{{ 'Drop off'|t }}</p>
+              {% if trip.dropoff_place %}
+                <p class="checkout-leg-place">{{ trip.dropoff_place }}</p>
+              {% endif %}
+              <p class="checkout-leg-when">{{ trip.dropoff_when }}</p>
+            </div>
+          </div>
+          {% if guest.name or guest.email or guest.phone or guest.note %}
+            <dl class="confirm-guest">
+              {% if guest.name %}
+                <div>
+                  <dt>{{ 'Name'|t }}</dt>
+                  <dd>{{ guest.name }}</dd>
+                </div>
+              {% endif %}
+              {% if guest.email %}
+                <div>
+                  <dt>{{ 'Email'|t }}</dt>
+                  <dd>{{ guest.email }}</dd>
+                </div>
+              {% endif %}
+              {% if guest.phone %}
+                <div>
+                  <dt>{{ 'Phone'|t }}</dt>
+                  <dd>{{ guest.phone }}</dd>
+                </div>
+              {% endif %}
+              {% if guest.note %}
+                <div>
+                  <dt>{{ 'Note'|t }}</dt>
+                  <dd>{{ guest.note }}</dd>
+                </div>
+              {% endif %}
+            </dl>
+          {% endif %}
+          <div class="confirm-totals">
+            <p class="checkout-total-kicker">{{ 'Total payment'|t }}</p>
+            <p class="checkout-total-days">{{ 'For @days rented days'|t({'@days': quote.days|default(1)}) }}</p>
+            <p class="checkout-total-amount">{{ quote.total_formatted }}</p>
+            <p class="checkout-effective">
+              <span>{{ 'Daily price'|t }}</span>
+              <strong>{{ quote.effective_daily_formatted }}</strong>
+            </p>
+          </div>
+        </div>
+        {% if trip.image.url %}
+          <figure class="confirm-photo">
+            <img src="{{ trip.image.url }}" alt="{{ trip.image.alt }}" />
+          </figure>
+        {% endif %}
+      </article>
+
+      {% if quote.groups %}
+        <aside class="confirm-receipt" aria-labelledby="reservation-price-heading">
+          <h2 id="reservation-price-heading" class="checkout-section-title">{{ 'Price Summary'|t }}</h2>
+          {% for group, lines in quote.groups %}
+            <ul class="checkout-lines">
+              {% for line in lines %}
+                <li class="checkout-line">
+                  <div class="checkout-line-copy">
+                    <span class="checkout-line-label">{{ line.label }}</span>
+                    {% if line.detail %}
+                      <span class="checkout-line-detail">{{ line.detail }}</span>
+                    {% endif %}
+                  </div>
+                  <span class="checkout-line-amount">{{ line.amount_formatted }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        </aside>
+      {% endif %}
+
+      {% if disclaimer %}
+        <aside class="reservation-disclaimer" aria-labelledby="reservation-modify-heading">
+          <h2 id="reservation-modify-heading" class="checkout-section-title">{{ 'Modificación de reservas'|t }}</h2>
+          <p>{{ disclaimer }}</p>
+          {% if fleet_url %}
+            <p class="reservation-disclaimer-cta">
+              <a class="btn btn--primary" href="{{ fleet_url }}">{{ 'Make a new reservation'|t }}</a>
+            </p>
+          {% endif %}
+        </aside>
+      {% endif %}
+
+      {% if cancellable %}
+        <div class="checkout-legal reservation-cancel-confirm">
+          {{ form.confirm_cancel }}
+        </div>
+      {% elseif status == 'cancelled' %}
+        <p class="reservation-cancelled-note">{{ 'This reservation is cancelled. Inventory for these dates is released.'|t }}</p>
+      {% endif %}
+
+      <div class="confirm-actions reservation-actions">
+        {{ form.actions }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+  {{ form.form_build_id }}
+  {{ form.form_token }}
+  {{ form.form_id }}
+</form>

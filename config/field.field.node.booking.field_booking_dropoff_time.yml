@@ -1,0 +1,19 @@
+uuid: 1bd8f5c9-4e0c-4608-057d-92f3be71c684
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_dropoff_time
+    - node.type.booking
+id: node.booking.field_booking_dropoff_time
+field_name: field_booking_dropoff_time
+entity_type: node
+bundle: booking
+label: 'Drop-off time'
+description: 'Hour key in 24-hour form (HH:00).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

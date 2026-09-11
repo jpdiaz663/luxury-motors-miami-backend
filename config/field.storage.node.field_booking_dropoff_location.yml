@@ -1,0 +1,22 @@
+uuid: c6e3a0d4-9f57-41b3-b028-4dae6f2c7139
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_booking_dropoff_location
+field_name: field_booking_dropoff_location
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes:
+  target_id:
+    - target_id
+persist_with_no_fields: false
+custom_storage: false

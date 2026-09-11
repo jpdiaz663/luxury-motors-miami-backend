@@ -196,6 +196,24 @@ final class CheckoutForm extends FormBase {
       $booking->set('field_booking_start', $window['pickup']);
       $booking->set('field_booking_end', $window['return']);
       $booking->set('field_booking_status', 'confirmed');
+      $query = $this->fleetCatalog->currentQuery();
+      $from = $this->fleetCatalog->locationTerm($query['from']);
+      $to = $this->fleetCatalog->locationTerm($query['to']) ?: $from;
+      if ($booking->hasField('field_booking_pickup_location') && $from) {
+        $booking->set('field_booking_pickup_location', (int) $from->id());
+      }
+      if ($booking->hasField('field_booking_dropoff_location') && $to) {
+        $booking->set('field_booking_dropoff_location', (int) $to->id());
+      }
+      if ($booking->hasField('field_booking_pickup_time')) {
+        $booking->set('field_booking_pickup_time', $this->fleetCatalog->hourValue($query['ptime']));
+      }
+      if ($booking->hasField('field_booking_dropoff_time')) {
+        $booking->set('field_booking_dropoff_time', $this->fleetCatalog->hourValue($query['rtime']));
+      }
+      if ($booking->hasField('field_booking_place')) {
+        $booking->set('field_booking_place', trim($query['place']));
+      }
       if ($booking->hasField('field_customer_name')) {
         $booking->set('field_customer_name', $name);
       }

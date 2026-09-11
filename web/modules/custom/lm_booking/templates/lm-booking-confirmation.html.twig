@@ -98,9 +98,14 @@
       </aside>
     {% endif %}
 
-    {% if fleet_url %}
+    {% if fleet_url or manage_url %}
       <p class="confirm-actions">
-        <a class="btn btn--primary" href="{{ fleet_url }}">{{ 'Back to fleet'|t }}</a>
+        {% if manage_url %}
+          <a class="btn btn--secondary" href="{{ manage_url }}">{{ 'View or cancel reservation'|t }}</a>
+        {% endif %}
+        {% if fleet_url %}
+          <a class="btn btn--primary" href="{{ fleet_url }}">{{ 'Back to fleet'|t }}</a>
+        {% endif %}
       </p>
     {% endif %}
   </div>

@@ -1,0 +1,29 @@
+uuid: d7f4b1e5-0a68-42c4-c139-5ebf7a3d8240
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_dropoff_location
+    - node.type.booking
+    - taxonomy.vocabulary.location
+id: node.booking.field_booking_dropoff_location
+field_name: field_booking_dropoff_location
+entity_type: node
+bundle: booking
+label: 'Drop-off location'
+description: 'Desk or area where the rental ends.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      location: location
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -54,16 +54,25 @@ final class ReservationCode {
     return hash_equals($this->digest($code), $digest);
   }
 
-  public function fromBooking(NodeInterface $booking): string {
-    if ($booking->hasField('field_booking_code') && !$booking->get('field_booking_code')->isEmpty()) {
-      return strtoupper(trim((string) $booking->get('field_booking_code')->value));
+  public function normalize(string $code): string {
+    $code = strtoupper(trim($code));
+    $code = preg_replace('/[^A-Z0-9\-]/', '', $code) ?? '';
+    if ($code !== '' && !str_starts_with($code, self::PREFIX) && strlen($code) === self::BODY_LENGTH) {
+      $code = self::PREFIX . $code;
     }
-    $title = strtoupper(trim((string) $booking->getTitle()));
-    if (str_starts_with($title, self::PREFIX) && strlen($title) === strlen(self::PREFIX) + self::BODY_LENGTH) {
-      return $title;
+    $pattern = '/^' . preg_quote(self::PREFIX, '/') . '[A-Z0-9]{' . self::BODY_LENGTH . '}$/';
+    if (!preg_match($pattern, $code)) {
+      return '';
     }
 
-    return '';
+    return $code;
+  }
+
+  public function fromBooking(NodeInterface $booking): string {
+    if ($booking->hasField('field_booking_code') && !$booking->get('field_booking_code')->isEmpty()) {
+      return $this->normalize((string) $booking->get('field_booking_code')->value);
+    }
+    return $this->normalize((string) $booking->getTitle());
   }
 
   public function exists(string $code): bool {

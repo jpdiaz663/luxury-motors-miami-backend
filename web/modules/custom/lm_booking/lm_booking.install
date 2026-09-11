@@ -17,6 +17,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 function lm_booking_install(): void {
   lm_booking_ensure_booking_code_field();
+  lm_booking_ensure_booking_trip_fields();
 }
 
 /**
@@ -25,6 +26,14 @@ function lm_booking_install(): void {
 function lm_booking_update_11001(): string {
   lm_booking_ensure_booking_code_field();
   return 'Added reservation code field (LM- plus six alphanumeric characters).';
+}
+
+/**
+ * Persist pickup/drop-off location, time, and property name on bookings.
+ */
+function lm_booking_update_11002(): string {
+  lm_booking_ensure_booking_trip_fields();
+  return 'Added booking pickup/drop-off location, time, and place fields.';
 }
 
 function lm_booking_ensure_booking_code_field(): void {
@@ -80,5 +89,189 @@ function lm_booking_ensure_booking_code_field(): void {
         'link_to_entity' => FALSE,
       ],
     ])->save();
+  }
+}
+
+/**
+ * Pickup/drop-off location, hour, and optional property name on bookings.
+ */
+function lm_booking_ensure_booking_trip_fields(): void {
+  $references = [
+    'field_booking_pickup_location' => [
+      'storage_uuid' => 'a4c1e8b2-7d35-4f91-9e06-2b8c4d0a5f17',
+      'field_uuid' => 'b5d2f9c3-8e46-40a2-af17-3c9d5e1b6028',
+      'label' => 'Pickup location',
+      'description' => 'Desk or area where the rental starts.',
+      'form_weight' => 3,
+      'view_weight' => 3,
+    ],
+    'field_booking_dropoff_location' => [
+      'storage_uuid' => 'c6e3a0d4-9f57-41b3-b028-4dae6f2c7139',
+      'field_uuid' => 'd7f4b1e5-0a68-42c4-c139-5ebf7a3d8240',
+      'label' => 'Drop-off location',
+      'description' => 'Desk or area where the rental ends.',
+      'form_weight' => 6,
+      'view_weight' => 6,
+    ],
+  ];
+  foreach ($references as $name => $info) {
+    if (!FieldStorageConfig::loadByName('node', $name)) {
+      FieldStorageConfig::create([
+        'uuid' => $info['storage_uuid'],
+        'field_name' => $name,
+        'entity_type' => 'node',
+        'type' => 'entity_reference',
+        'settings' => ['target_type' => 'taxonomy_term'],
+        'translatable' => FALSE,
+        'cardinality' => 1,
+        'indexes' => ['target_id' => ['target_id']],
+      ])->save();
+    }
+    if (!FieldConfig::loadByName('node', 'booking', $name)) {
+      FieldConfig::create([
+        'uuid' => $info['field_uuid'],
+        'field_name' => $name,
+        'entity_type' => 'node',
+        'bundle' => 'booking',
+        'label' => $info['label'],
+        'description' => $info['description'],
+        'required' => FALSE,
+        'translatable' => FALSE,
+        'settings' => [
+          'handler' => 'default:taxonomy_term',
+          'handler_settings' => [
+            'target_bundles' => ['location' => 'location'],
+            'sort' => ['field' => 'name', 'direction' => 'asc'],
+            'auto_create' => FALSE,
+            'auto_create_bundle' => '',
+          ],
+        ],
+      ])->save();
+    }
+  }
+
+  $strings = [
+    'field_booking_pickup_time' => [
+      'storage_uuid' => 'e8a5c2f6-1b79-43d5-d24a-6fc08b4e9351',
+      'field_uuid' => 'f9b6d3a7-2c8a-44e6-e35b-70d19c5fa462',
+      'label' => 'Pickup time',
+      'description' => 'Hour key in 24-hour form (HH:00).',
+      'max_length' => 8,
+      'is_ascii' => TRUE,
+      'form_weight' => 4,
+      'view_weight' => 4,
+      'placeholder' => '10:00',
+    ],
+    'field_booking_dropoff_time' => [
+      'storage_uuid' => '0ac7e4b8-3d9b-45f7-f46c-81e2ad60b573',
+      'field_uuid' => '1bd8f5c9-4e0c-4608-057d-92f3be71c684',
+      'label' => 'Drop-off time',
+      'description' => 'Hour key in 24-hour form (HH:00).',
+      'max_length' => 8,
+      'is_ascii' => TRUE,
+      'form_weight' => 7,
+      'view_weight' => 7,
+      'placeholder' => '10:00',
+    ],
+    'field_booking_place' => [
+      'storage_uuid' => '2ce9a6d0-5f1d-4719-168e-a304cf82d795',
+      'field_uuid' => '3dfa7be1-602e-482a-279f-b415d093e8a6',
+      'label' => 'Property / place',
+      'description' => 'Hotel, residence, or other property name from search when the location requires it.',
+      'max_length' => 255,
+      'is_ascii' => FALSE,
+      'form_weight' => 8,
+      'view_weight' => 8,
+      'placeholder' => '',
+    ],
+  ];
+  foreach ($strings as $name => $info) {
+    if (!FieldStorageConfig::loadByName('node', $name)) {
+      FieldStorageConfig::create([
+        'uuid' => $info['storage_uuid'],
+        'field_name' => $name,
+        'entity_type' => 'node',
+        'type' => 'string',
+        'settings' => [
+          'max_length' => $info['max_length'],
+          'case_sensitive' => FALSE,
+          'is_ascii' => $info['is_ascii'],
+        ],
+        'translatable' => FALSE,
+        'cardinality' => 1,
+      ])->save();
+    }
+    if (!FieldConfig::loadByName('node', 'booking', $name)) {
+      FieldConfig::create([
+        'uuid' => $info['field_uuid'],
+        'field_name' => $name,
+        'entity_type' => 'node',
+        'bundle' => 'booking',
+        'label' => $info['label'],
+        'description' => $info['description'],
+        'required' => FALSE,
+        'translatable' => FALSE,
+      ])->save();
+    }
+  }
+
+  $form = EntityFormDisplay::load('node.booking.default');
+  if ($form) {
+    foreach ($references as $name => $info) {
+      if (!$form->getComponent($name)) {
+        $form->setComponent($name, [
+          'type' => 'entity_reference_autocomplete',
+          'weight' => $info['form_weight'],
+          'region' => 'content',
+          'settings' => [
+            'match_operator' => 'CONTAINS',
+            'match_limit' => 10,
+            'size' => 60,
+            'placeholder' => '',
+          ],
+        ]);
+      }
+    }
+    foreach ($strings as $name => $info) {
+      if (!$form->getComponent($name)) {
+        $form->setComponent($name, [
+          'type' => 'string_textfield',
+          'weight' => $info['form_weight'],
+          'region' => 'content',
+          'settings' => [
+            'size' => $info['max_length'] > 8 ? 60 : 8,
+            'placeholder' => $info['placeholder'],
+          ],
+        ]);
+      }
+    }
+    $form->save();
+  }
+
+  $view = EntityViewDisplay::load('node.booking.default');
+  if ($view) {
+    foreach ($references as $name => $info) {
+      if (!$view->getComponent($name)) {
+        $view->setComponent($name, [
+          'type' => 'entity_reference_label',
+          'label' => 'above',
+          'weight' => $info['view_weight'],
+          'region' => 'content',
+          'settings' => ['link' => TRUE],
+        ]);
+      }
+    }
+    foreach ($strings as $name => $info) {
+      if (!$view->getComponent($name)) {
+        $view->setComponent($name, [
+          'type' => 'string',
+          'label' => 'above',
+          'weight' => $info['view_weight'],
+          'region' => 'content',
+          'settings' => ['link_to_entity' => FALSE],
+        ]);
+      }
+    }
+    $view->save();
   }
 }

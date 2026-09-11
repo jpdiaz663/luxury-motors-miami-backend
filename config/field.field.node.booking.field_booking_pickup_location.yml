@@ -1,0 +1,29 @@
+uuid: b5d2f9c3-8e46-40a2-af17-3c9d5e1b6028
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_pickup_location
+    - node.type.booking
+    - taxonomy.vocabulary.location
+id: node.booking.field_booking_pickup_location
+field_name: field_booking_pickup_location
+entity_type: node
+bundle: booking
+label: 'Pickup location'
+description: 'Desk or area where the rental starts.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      location: location
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

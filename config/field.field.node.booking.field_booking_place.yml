@@ -1,0 +1,19 @@
+uuid: 3dfa7be1-602e-482a-279f-b415d093e8a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_place
+    - node.type.booking
+id: node.booking.field_booking_place
+field_name: field_booking_place
+entity_type: node
+bundle: booking
+label: 'Property / place'
+description: 'Hotel, residence, or other property name from search when the location requires it.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

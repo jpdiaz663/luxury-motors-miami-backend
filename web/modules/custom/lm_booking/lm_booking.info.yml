@@ -7,5 +7,6 @@ dependencies:
   - drupal:node
   - drupal:datetime
   - drupal:options
+  - drupal:taxonomy
   - drupal:views
   - lm_vehicle:lm_vehicle

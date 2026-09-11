@@ -1,0 +1,6 @@
+lm_booking.reservation:
+  title: 'Find reservation'
+  description: 'View or cancel a reservation with your confirmation code and email.'
+  route_name: lm_booking.reservation
+  menu_name: footer
+  weight: 20

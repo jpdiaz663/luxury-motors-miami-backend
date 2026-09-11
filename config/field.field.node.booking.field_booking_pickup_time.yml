@@ -1,0 +1,19 @@
+uuid: f9b6d3a7-2c8a-44e6-e35b-70d19c5fa462
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_pickup_time
+    - node.type.booking
+id: node.booking.field_booking_pickup_time
+field_name: field_booking_pickup_time
+entity_type: node
+bundle: booking
+label: 'Pickup time'
+description: 'Hour key in 24-hour form (HH:00).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

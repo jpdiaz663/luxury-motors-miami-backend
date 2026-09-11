@@ -37,3 +37,13 @@ lm_booking.confirmation:
     parameters:
       booking:
         type: entity:node
+
+lm_booking.reservation:
+  path: '/reservation'
+  defaults:
+    _form: '\Drupal\lm_booking\Form\ReservationManageForm'
+    _title: 'Find your reservation'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
