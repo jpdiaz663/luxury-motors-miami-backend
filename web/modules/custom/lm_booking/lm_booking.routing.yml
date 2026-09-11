@@ -1,7 +1,21 @@
+lm_booking.availability_check:
+  path: '/reserve/{vehicle}/available'
+  defaults:
+    _controller: '\Drupal\lm_booking\Controller\AvailabilityCheckController::check'
+  methods: [GET]
+  requirements:
+    _custom_access: '\Drupal\lm_booking\Controller\CheckoutController::access'
+    vehicle: \d+
+  options:
+    no_cache: TRUE
+    parameters:
+      vehicle:
+        type: entity:node
+
 lm_booking.checkout:
   path: '/reserve/{vehicle}'
   defaults:
-    _form: '\Drupal\lm_booking\Form\CheckoutForm'
+    _controller: '\Drupal\lm_booking\Controller\CheckoutController::form'
     _title_callback: '\Drupal\lm_booking\Controller\CheckoutController::title'
   requirements:
     _custom_access: '\Drupal\lm_booking\Controller\CheckoutController::access'

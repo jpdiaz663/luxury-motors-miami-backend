@@ -14,7 +14,12 @@
       <h1 class="title">{{ 'Your reservation is confirmed'|t }}</h1>
       <p class="confirm-lead">{{ 'A copy of this itinerary is ready for your records. Our desk will be in touch if anything else is needed.'|t }}</p>
       {% if reference %}
-        <p class="confirm-ref">{{ 'Confirmation @id'|t({'@id': reference}) }}</p>
+        <div class="confirm-ref">
+          <p class="confirm-ref-code">{{ 'Confirmation code: @id'|t({'@id': reference}) }}</p>
+          <button type="button" class="confirm-ref-copy" data-confirm-copy="{{ reference }}" aria-label="{{ 'Copy confirmation code'|t }}">
+            <img class="confirm-ref-copy__icon confirm-ref-copy__icon--copy" src="{{ copy_icon }}" alt="" width="16" height="16" />
+          </button>
+        </div>
       {% endif %}
     </header>
 

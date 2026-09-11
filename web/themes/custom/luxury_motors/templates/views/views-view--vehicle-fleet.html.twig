@@ -28,14 +28,12 @@
       </div>
     {% endif %}
 
-    {% if refine %}
-      {{ refine }}
-    {% endif %}
-
     {{ header }}
     {{ attachment_before }}
 
     <div class="fleet-results" data-fleet-results>
+      <p class="fleet-stale-msg" data-fleet-stale hidden role="status">{{ 'Confirm your dates to see available vehicles.'|t }}</p>
+      <p class="fleet-reserve-error" data-fleet-reserve-error hidden role="alert"></p>
       {% if rows %}
         <div class="fleet" data-fleet-grid>
           {{ rows }}

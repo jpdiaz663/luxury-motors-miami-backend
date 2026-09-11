@@ -47,10 +47,8 @@ a.btn:focus-visible {
   text-decoration: none;
 }
 
-.lm-theme h1,
 .lm-theme h3,
-.lm-theme h4,
-.lm-theme p {
+.lm-theme h4 {
   margin: 0;
 }
 

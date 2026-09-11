@@ -15,11 +15,22 @@
   {{ form.from }}
   {{ form.to }}
 
+  {% if form['#on_fleet'] %}
+    <div class="banner-desk">
+      <p class="banner-desk-kicker">{{ 'Trip'|t }}</p>
+      <p class="banner-desk-slip" data-banner-summary></p>
+      <button type="button" class="banner-desk-toggle" data-banner-collapse aria-expanded="true" aria-controls="lm-banner-panel">
+        <span data-banner-collapse-label>{{ 'Reduce'|t }}</span>
+      </button>
+    </div>
+  {% endif %}
+
+  <div class="banner-panel" id="lm-banner-panel" data-banner-panel>
   <p class="kicker">{{ 'Night desk · Brickell · MIA'|t }}</p>
   <h1 class="title">{{ 'The keys are already in Brickell'|t }}</h1>
 
   <div class="banner-places">
-    <label class="banner-place" for="banner-from">
+    <label class="banner-place" data-banner-place for="banner-from">
       <span class="banner-place-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 00-4.5 4.5c0 3.4 4.5 8.5 4.5 8.5s4.5-5.1 4.5-8.5A4.5 4.5 0 008 1.5z"/><circle cx="8" cy="6" r="1.6"/></svg>
       </span>
@@ -46,16 +57,16 @@
     </label>
   </div>
 
-  {% if form['#need_dates'] %}
+  {% if form['#need_trip'] %}
     <p class="banner-dates-hint" role="status">
-      <span class="banner-dates-hint__kicker">{{ 'Confirm dates'|t }}</span>
-      <strong>{{ 'Confirm pickup and return, then search.'|t }}</strong>
-      <span>{{ 'Availability for this category updates after you submit.'|t }}</span>
+      <span class="banner-dates-hint__kicker">{{ 'Pickup location'|t }}</span>
+      <strong>{{ 'Add a pickup location, then search.'|t }}</strong>
+      <span>{{ 'Dates are set. Checkout waits until you choose where to collect the car.'|t }}</span>
     </p>
   {% endif %}
 
   <div class="banner-window">
-    <label class="banner-field"{% if form['#need_dates'] %} data-banner-date{% endif %}>
+    <label class="banner-field">
       <span>{{ 'Pickup'|t }}</span>
       {{ form.pickup }}
     </label>
@@ -63,7 +74,7 @@
       <span>{{ 'Time'|t }}</span>
       {{ form.ptime }}
     </label>
-    <label class="banner-field"{% if form['#need_dates'] %} data-banner-date{% endif %}>
+    <label class="banner-field">
       <span>{{ 'Return'|t }}</span>
       {{ form.return }}
     </label>
@@ -88,10 +99,8 @@
         </span>
         {{ 'Search'|t }}
       </button>
-      {% if form['#filtered'] %}
-      <a class="btn btn--secondary banner-reset" href="{{ form['#reset_url'] }}" data-banner-reset>{{ 'Reset filters'|t }}</a>
-      {% endif %}
     </div>
+  </div>
   </div>
 
 </form>

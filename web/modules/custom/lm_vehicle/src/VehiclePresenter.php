@@ -43,18 +43,22 @@ final class VehiclePresenter {
     $category_id = $category ? (string) $category->id() : '';
     $code = $this->termPlain($category, 'field_category_code');
     $category_name = $category?->label() ?? $this->termName($node, 'field_category');
-    $book = Url::fromRoute('lm_booking.checkout', ['vehicle' => $node->id()], [
-      'query' => $this->catalog->bookingQuery(),
-    ]);
+    $window = $this->catalog->defaultWindow();
     $fleet_url = $category_id !== ''
-      ? $this->catalog->fleetUrl(['category' => $category_id])
+      ? $this->catalog->fleetUrl([
+        'category' => $category_id,
+        'pickup' => $window['pickup'],
+        'return' => $window['return'],
+        'ptime' => '10:00',
+        'rtime' => '10:00',
+      ])
       : $this->catalog->fleetUrl([]);
 
     return [
       'title' => $node->label(),
       'display_title' => $this->similarTitle((string) $node->label()),
       'url' => $node->toUrl()->toString(),
-      'book_url' => $book->toString(),
+      'book_url' => $this->checkoutUrl($node),
       'fleet_url' => $fleet_url,
       'category' => $category_name,
       'category_id' => $category_id,
@@ -194,6 +198,9 @@ final class VehiclePresenter {
   }
 
   public function checkoutUrl(NodeInterface $node): string {
+    if (!$this->catalog->tripIsComplete()) {
+      return $this->catalog->fleetUrl($this->catalog->incompleteTripQuery($this->categoryId($node)));
+    }
     try {
       return Url::fromRoute('lm_booking.checkout', ['vehicle' => $node->id()], [
         'query' => $this->catalog->bookingQuery(),
@@ -202,6 +209,12 @@ final class VehiclePresenter {
     catch (RouteNotFoundException) {
       return $node->toUrl()->toString();
     }
+  }
+
+  private function categoryId(NodeInterface $node): string {
+    $term = $this->categoryTerm($node);
+
+    return $term ? (string) $term->id() : '';
   }
 
   /**

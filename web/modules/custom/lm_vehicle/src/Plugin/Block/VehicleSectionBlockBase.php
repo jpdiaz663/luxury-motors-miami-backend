@@ -56,7 +56,7 @@ abstract class VehicleSectionBlockBase extends BlockBase implements ContainerFac
   }
 
   public function getCacheContexts(): array {
-    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route', 'url.query_args']);
   }
 
   public function getCacheTags(): array {

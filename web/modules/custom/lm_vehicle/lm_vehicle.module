@@ -8,7 +8,6 @@
 declare(strict_types=1);
 
 use Drupal\lm_vehicle\FleetCatalog;
-use Drupal\lm_vehicle\Form\VehicleRefineForm;
 
 /**
  * Implements hook_views_data_alter().
@@ -97,7 +96,6 @@ function lm_vehicle_preprocess_views_view(array &$variables): void {
 
   $variables['pills'] = $pills;
   $variables['window'] = $catalog->windowLabel();
-  $variables['refine'] = \Drupal::formBuilder()->getForm(VehicleRefineForm::class);
   $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';
 }
 
@@ -114,6 +112,19 @@ function lm_vehicle_preprocess_lm_vehicle_refine_form(array &$variables): void {
  */
 function lm_vehicle_preprocess_lm_vehicle_search(array &$variables): void {
   $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';
+  $path = '/' . trim(\Drupal::request()->getPathInfo(), '/');
+  $variables['is_fleet'] = $path === FleetCatalog::PATH || str_ends_with($path, FleetCatalog::PATH);
+}
+
+/**
+ * Attaches the search library and whether the current query can go to checkout.
+ */
+function lm_vehicle_attach_trip_gate(array &$variables): void {
+  $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';
+  $variables['#attached']['drupalSettings']['lmVehicleSearch'] = array_merge(
+    $variables['#attached']['drupalSettings']['lmVehicleSearch'] ?? [],
+    \Drupal::service('lm_vehicle.fleet_catalog')->searchClientSettings(),
+  );
 }
 
 /**
@@ -121,6 +132,7 @@ function lm_vehicle_preprocess_lm_vehicle_search(array &$variables): void {
  */
 function lm_vehicle_preprocess_lm_vehicle_hero(array &$variables): void {
   $variables['#attached']['library'][] = 'luxury_motors/vehicle';
+  lm_vehicle_attach_trip_gate($variables);
 }
 
 /**
@@ -128,4 +140,12 @@ function lm_vehicle_preprocess_lm_vehicle_hero(array &$variables): void {
  */
 function lm_vehicle_preprocess_lm_vehicle_studio(array &$variables): void {
   $variables['#attached']['library'][] = 'luxury_motors/vehicle';
+  lm_vehicle_attach_trip_gate($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for the reserve desk.
+ */
+function lm_vehicle_preprocess_lm_vehicle_reserve(array &$variables): void {
+  lm_vehicle_attach_trip_gate($variables);
 }

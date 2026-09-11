@@ -1,0 +1,19 @@
+uuid: d8e2f9b5-4a37-4c01-af26-7b3d9e5a1c28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_code
+    - node.type.booking
+id: node.booking.field_booking_code
+field_name: field_booking_code
+entity_type: node
+bundle: booking
+label: Reservation code
+description: 'Public desk reference in the form LM- plus six alphanumeric characters.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

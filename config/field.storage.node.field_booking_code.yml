@@ -1,0 +1,21 @@
+uuid: c7d1e8a4-3f26-4b90-9e15-6a2c8d4f0b17
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_booking_code
+field_name: field_booking_code
+entity_type: node
+type: string
+settings:
+  max_length: 16
+  case_sensitive: false
+  is_ascii: true
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

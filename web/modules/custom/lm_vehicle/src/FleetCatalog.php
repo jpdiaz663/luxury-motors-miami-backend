@@ -129,27 +129,21 @@ final class FleetCatalog {
       $value = $query?->get($key);
       $values[$key] = is_scalar($value) ? trim((string) $value) : '';
     }
-    $values['from'] = $this->locationIdFromParam($values['from'], $query?->get('from_q'));
-    $values['to'] = $this->locationIdFromParam($values['to'], $query?->get('to_q'));
+    if ($values['pickup'] === '') {
+      $alias = $query?->get('date_from');
+      $values['pickup'] = is_scalar($alias) ? trim((string) $alias) : '';
+    }
+    if ($values['return'] === '') {
+      $alias = $query?->get('date_to');
+      $values['return'] = is_scalar($alias) ? trim((string) $alias) : '';
+    }
+    $values['from'] = ctype_digit($values['from']) ? $values['from'] : '';
+    $values['to'] = ctype_digit($values['to']) ? $values['to'] : '';
     if ($values['to'] === '') {
       $values['to'] = $values['from'];
     }
 
     return $values;
-  }
-
-  /**
-   * Prefer a submitted tid; fall back to entity-autocomplete "Label (tid)".
-   */
-  private function locationIdFromParam(string $id, mixed $lookup): string {
-    if ($id !== '' && ctype_digit($id)) {
-      return $id;
-    }
-    $label = is_scalar($lookup) ? trim((string) $lookup) : '';
-    if ($label !== '' && preg_match('/\((\d+)\)\s*$/', $label, $match)) {
-      return $match[1];
-    }
-    return ctype_digit($label) ? $label : '';
   }
 
   /**
@@ -238,6 +232,8 @@ final class FleetCatalog {
   /**
    * Search query values that should follow a vehicle reserve link.
    *
+   * Dates omitted from the URL use the same banner defaults as the form.
+   *
    * @return array<string, string>
    */
   public function bookingQuery(): array {
@@ -247,8 +243,42 @@ final class FleetCatalog {
         $clean[$key] = $value;
       }
     }
+    $window = $this->resolvedWindow();
+    $clean['pickup'] = $window['pickup'];
+    $clean['return'] = $window['return'];
+    $clean['ptime'] = $this->hourValue($clean['ptime'] ?? '');
+    $clean['rtime'] = $this->hourValue($clean['rtime'] ?? '');
 
     return $clean;
+  }
+
+  /**
+   * Banner default pickup/return when the query omits dates.
+   *
+   * @return array{pickup: string, return: string}
+   */
+  public function defaultWindow(): array {
+    return [
+      'pickup' => (new \DateTimeImmutable('tomorrow'))->format('Y-m-d'),
+      'return' => (new \DateTimeImmutable('tomorrow +3 days'))->format('Y-m-d'),
+    ];
+  }
+
+  /**
+   * Query dates, or the banner defaults when those keys are empty.
+   *
+   * @return array{pickup: string, return: string}
+   */
+  public function resolvedWindow(): array {
+    $query = $this->currentQuery();
+    $defaults = $this->defaultWindow();
+    $pickup = $query['pickup'] !== '' ? $query['pickup'] : $defaults['pickup'];
+    $return = $query['return'] !== '' ? $query['return'] : $defaults['return'];
+
+    return [
+      'pickup' => $pickup,
+      'return' => $return,
+    ];
   }
 
   /**
@@ -314,12 +344,107 @@ final class FleetCatalog {
    */
   public function hasRentalWindow(): bool {
     $query = $this->currentQuery();
-    return $query['pickup'] !== '' && $query['return'] !== '';
+    return $this->validWindow($query['pickup'], $query['return']);
+  }
+
+  /**
+   * Pickup location, committed dates in the URL, and hotel name when required.
+   *
+   * Dates must be present in the request. Banner defaults are not enough.
+   */
+  public function tripIsComplete(): bool {
+    $query = $this->currentQuery();
+    $from = $this->locationTerm($query['from']);
+    if (!$from) {
+      return FALSE;
+    }
+    if (!$this->hasRentalWindow()) {
+      return FALSE;
+    }
+    $to = $this->locationTerm($query['to'] !== '' ? $query['to'] : $query['from']);
+    if (!$to) {
+      return FALSE;
+    }
+    if ($this->locationNeedsPlace((string) $from->id()) || $this->locationNeedsPlace((string) $to->id())) {
+      return $query['place'] !== '';
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Values the fleet banner JS uses to compare the form with the last search.
+   *
+   * @return array{tripComplete: bool, hasRentalWindow: bool, committed: array{pickup: string, return: string, ptime: string, rtime: string}}
+   */
+  public function searchClientSettings(): array {
+    $query = $this->currentQuery();
+
+    return [
+      'tripComplete' => $this->tripIsComplete(),
+      'hasRentalWindow' => $this->hasRentalWindow(),
+      'committed' => [
+        'pickup' => $query['pickup'],
+        'return' => $query['return'],
+        'ptime' => $query['ptime'],
+        'rtime' => $query['rtime'],
+      ],
+    ];
+  }
+
+  /**
+   * Query for sending the guest back to fleet to finish the trip.
+   *
+   * @return array<string, string|null>
+   */
+  public function incompleteTripQuery(?string $category_id = NULL): array {
+    $query = $this->currentQuery();
+    if ($query['category'] === '' && $category_id) {
+      $query['category'] = $category_id;
+    }
+    $query['need'] = 'trip';
+
+    return $query;
+  }
+
+  public function wantsTripPrompt(): bool {
+    $need = $this->requestStack->getCurrentRequest()?->query->get('need');
+
+    return is_scalar($need) && (string) $need === 'trip';
+  }
+
+  /**
+   * Show the banner hint when the guest is mid-search without a complete trip.
+   */
+  public function shouldPromptForTrip(): bool {
+    if ($this->tripIsComplete()) {
+      return FALSE;
+    }
+    if ($this->wantsTripPrompt()) {
+      return TRUE;
+    }
+    $query = $this->currentQuery();
+
+    return $query['category'] !== '' || $query['from'] !== '';
   }
 
   public function hasFilters(): bool {
     $query = $this->currentQuery();
     return !empty($query['from']) || !empty($query['to']) || !empty($query['place']) || !empty($query['pickup']) || !empty($query['ptime']) || !empty($query['return']) || !empty($query['rtime']) || !empty($query['category']) || !empty($query['brand']) || !empty($query['model']) || !empty($query['color']) || !empty($query['price']);
+  }
+
+  public function validWindow(string $pickup, string $return): bool {
+    if ($pickup === '' || $return === '') {
+      return FALSE;
+    }
+    $start = \DateTimeImmutable::createFromFormat('Y-m-d', $pickup);
+    $end = \DateTimeImmutable::createFromFormat('Y-m-d', $return);
+
+    return $start instanceof \DateTimeImmutable
+      && $end instanceof \DateTimeImmutable
+      && $start->format('Y-m-d') === $pickup
+      && $end->format('Y-m-d') === $return
+      && $end >= $start;
   }
 
 }

@@ -1,0 +1,87 @@
+.fare-inclusions {
+  padding: var(--spacing-10) 0 var(--spacing-12);
+  background: var(--color-velo-di-luce);
+  color: var(--color-notte-profonda);
+}
+
+.fare-inclusions .kicker {
+  color: var(--color-rosso-corsa);
+}
+
+.fare-inclusions .title {
+  margin: 0 0 var(--spacing-6);
+  font-size: var(--text-display);
+  letter-spacing: var(--track-display);
+}
+
+.fare-inclusions__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-4) var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fare-inclusions__item {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr);
+  gap: var(--spacing-3);
+  align-items: start;
+}
+
+.fare-inclusions__mark {
+  display: block;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.15rem;
+  background: var(--color-rosso-corsa);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='black' stroke-width='1.8' d='M3 8.2l3.2 3.2L13 4.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.fare-inclusions__copy {
+  display: grid;
+  gap: 2px;
+}
+
+.fare-inclusions__copy strong {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-body);
+  letter-spacing: var(--track-ui);
+}
+
+.fare-inclusions__detail {
+  color: var(--color-piombo);
+  font-size: var(--text-caption);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.fare-inclusions__notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3) var(--spacing-6);
+  margin-top: var(--spacing-6);
+  padding-top: var(--spacing-5);
+  border-top: 1px solid var(--color-argento-chiaro);
+}
+
+.fare-inclusions__notes p {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  letter-spacing: var(--track-ui);
+  text-transform: uppercase;
+  color: var(--color-notte-profonda);
+}
+
+@media (max-width: 900px) {
+  .fare-inclusions__list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .fare-inclusions__list {
+    grid-template-columns: 1fr;
+  }
+}

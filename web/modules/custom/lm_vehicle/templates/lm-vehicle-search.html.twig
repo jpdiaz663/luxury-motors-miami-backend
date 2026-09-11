@@ -2,13 +2,18 @@
 /**
  * @file
  * Search hero: full-bleed background plus the banner form.
+ *
+ * On fleet the sticky section must be a sibling of the listing, not nested
+ * in a short wrapper, or position:sticky has no room to travel.
  */
 #}
-<section class="hero hero--search" id="top" aria-label="{{ 'Search a car'|t }}">
-  {#<div class="hero-media" role="img" aria-label="{{ background.alt|default('Dark luxury coupe on empty asphalt at night'|t) }}">
-    {% if background.url %}
-      <img src="{{ background.url }}" alt="{{ background.alt }}" /> 
-    {% endif %}
-  </div>#}
-  {{ form }}
-</section>
+{% if is_fleet %}
+  <div class="hero-search-offset" aria-hidden="true"></div>
+  <section class="hero hero--search hero--search-fleet" id="top" aria-label="{{ 'Search a car'|t }}">
+    {{ form }}
+  </section>
+{% else %}
+  <section class="hero hero--search" id="top" aria-label="{{ 'Search a car'|t }}">
+    {{ form }}
+  </section>
+{% endif %}

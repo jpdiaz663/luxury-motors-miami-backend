@@ -21,7 +21,7 @@
         <p class="kicker studio-pills">{{ 'Studio'|t }}</p>
         <p class="title">{{ vehicle.title }}</p>
       </div>
-      <a class="btn btn--primary btn--book studio-book" href="{{ vehicle.checkout_url }}">{{ 'Reserve now!'|t }}</a>
+      <a class="btn btn--primary btn--book studio-book" href="{{ vehicle.checkout_url }}" data-lm-reserve>{{ 'Reserve now!'|t }}</a>
     </div>
     {% if slides|length > 1 %}
       <div class="film" role="tablist" aria-label="{{ 'Vehicle photographs'|t }}">

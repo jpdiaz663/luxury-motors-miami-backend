@@ -7,9 +7,11 @@ namespace Drupal\lm_booking\Form;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Url;
 use Drupal\lm_booking\AvailabilityManager;
 use Drupal\lm_booking\Quote\QuoteCalculator;
+use Drupal\lm_booking\ReservationCode;
 use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\lm_vehicle\VehiclePresenter;
 use Drupal\node\NodeInterface;
@@ -25,7 +27,9 @@ final class CheckoutForm extends FormBase {
     private readonly VehiclePresenter $presenter,
     private readonly QuoteCalculator $quoteCalculator,
     private readonly AvailabilityManager $availability,
+    private readonly ReservationCode $reservationCode,
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly LockBackendInterface $lock,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -34,7 +38,9 @@ final class CheckoutForm extends FormBase {
       $container->get('lm_vehicle.presenter'),
       $container->get('lm_booking.quote'),
       $container->get('lm_booking.availability'),
+      $container->get('lm_booking.reservation_code'),
       $container->get('entity_type.manager'),
+      $container->get('lock'),
     );
   }
 
@@ -51,16 +57,17 @@ final class CheckoutForm extends FormBase {
 
     $query = $this->fleetCatalog->currentQuery();
     $today = (new \DateTimeImmutable('today'))->format('Y-m-d');
-    $pickup = (string) ($form_state->getValue('pickup') ?: ($query['pickup'] !== '' ? $query['pickup'] : ''));
-    $return = (string) ($form_state->getValue('return') ?: ($query['return'] !== '' ? $query['return'] : ''));
-    $ptime = $query['ptime'] !== '' ? $this->fleetCatalog->hourValue($query['ptime']) : '07:00';
-    $rtime = $query['rtime'] !== '' ? $this->fleetCatalog->hourValue($query['rtime']) : '07:00';
+    $window = $this->fleetCatalog->resolvedWindow();
+    $pickup = (string) ($form_state->getValue('pickup') ?: $window['pickup']);
+    $return = (string) ($form_state->getValue('return') ?: $window['return']);
+    $ptime = $this->fleetCatalog->hourValue($query['ptime']);
+    $rtime = $this->fleetCatalog->hourValue($query['rtime']);
 
     $from = $this->fleetCatalog->locationTerm($query['from']);
     $to = $this->fleetCatalog->locationTerm($query['to']);
-    $pickup_place = $from ? (string) $from->label() : (string) $this->t('Miami');
+    $pickup_place = $from ? (string) $from->label() : '';
     $dropoff_place = $to ? (string) $to->label() : $pickup_place;
-    if ($query['place'] !== '') {
+    if ($query['place'] !== '' && $pickup_place !== '') {
       $pickup_place .= ' — ' . $query['place'];
     }
 
@@ -68,7 +75,7 @@ final class CheckoutForm extends FormBase {
     if ($node->hasField('field_daily_price') && !$node->get('field_daily_price')->isEmpty()) {
       $daily = (float) $node->get('field_daily_price')->value;
     }
-    $days = ($pickup !== '' && $return !== '') ? $this->quoteCalculator->days($pickup, $return) : 1;
+    $days = $this->quoteCalculator->days($pickup, $return);
     $quote = $this->quoteCalculator->quote($daily, $days, $pickup_place, $dropoff_place);
 
     $hours = $this->fleetCatalog->hourOptions();
@@ -78,8 +85,8 @@ final class CheckoutForm extends FormBase {
     $form['#trip'] = [
       'title' => $card['display_title'] ?? $node->label(),
       'image' => $card['image'] ?? NULL,
-      'pickup_place' => $from ? (string) $from->label() : (string) $this->t('Miami'),
-      'dropoff_place' => $to ? (string) $to->label() : (string) $this->t('Miami'),
+      'pickup_place' => $from ? (string) $from->label() : '',
+      'dropoff_place' => $to ? (string) $to->label() : '',
       'pickup_when' => $this->whenLabel($pickup, $ptime, $hours),
       'dropoff_when' => $this->whenLabel($return, $rtime, $hours),
       'place' => $query['place'],
@@ -110,20 +117,7 @@ final class CheckoutForm extends FormBase {
       '#required' => TRUE,
       '#attributes' => ['autocomplete' => 'tel'],
     ];
-    $form['pickup'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Start'),
-      '#required' => TRUE,
-      '#default_value' => $pickup !== '' ? $pickup : NULL,
-      '#attributes' => ['min' => $today],
-    ];
-    $form['return'] = [
-      '#type' => 'date',
-      '#title' => $this->t('End'),
-      '#required' => TRUE,
-      '#default_value' => $return !== '' ? $return : NULL,
-      '#attributes' => ['min' => $today],
-    ];
+    
     $form['note'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Note'),
@@ -161,24 +155,7 @@ final class CheckoutForm extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-    $pickup = (string) $form_state->getValue('pickup');
-    $return = (string) $form_state->getValue('return');
-    if ($pickup === '' || $return === '') {
-      return;
-    }
-    if ($return < $pickup) {
-      $form_state->setErrorByName('return', $this->t('Return must be on or after pickup.'));
-      return;
-    }
-
-    $vehicle = $form_state->get('vehicle');
-    if (!$vehicle instanceof NodeInterface) {
-      return;
-    }
-    $blocked = $this->availability->unavailableVehicleIds($pickup, $return);
-    if (in_array((int) $vehicle->id(), $blocked, TRUE)) {
-      $form_state->setErrorByName('pickup', $this->t('This vehicle is not available for the selected dates.'));
-    }
+    $this->assertAvailable($form_state);
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
@@ -187,42 +164,91 @@ final class CheckoutForm extends FormBase {
       return;
     }
 
-    $name = trim((string) $form_state->getValue('name'));
-    $storage = $this->entityTypeManager->getStorage('node');
-    /** @var \Drupal\node\NodeInterface $booking */
-    $booking = $storage->create([
-      'type' => 'booking',
-      'title' => $name . ' — ' . $vehicle->label(),
-      'status' => 1,
-      'uid' => $this->currentUser()->id(),
-    ]);
-    $booking->set('field_booking_vehicle', (int) $vehicle->id());
-    $booking->set('field_booking_start', (string) $form_state->getValue('pickup'));
-    $booking->set('field_booking_end', (string) $form_state->getValue('return'));
-    $booking->set('field_booking_status', 'confirmed');
-    if ($booking->hasField('field_customer_name')) {
-      $booking->set('field_customer_name', $name);
+    $lock_name = 'lm_booking.vehicle.' . $vehicle->id();
+    if (!$this->lock->acquire($lock_name, 15.0)) {
+      $form_state->setErrorByName('actions', $this->t('This vehicle is being reserved. Wait a moment and try again.'));
+      $form_state->setRebuild();
+      return;
     }
-    if ($booking->hasField('field_customer_email')) {
-      $booking->set('field_customer_email', (string) $form_state->getValue('email'));
+
+    try {
+      $this->assertAvailable($form_state);
+      if ($form_state->hasAnyErrors()) {
+        $form_state->setRebuild();
+        return;
+      }
+
+      $window = $this->fleetCatalog->resolvedWindow();
+      $name = trim((string) $form_state->getValue('name'));
+      $code = $this->reservationCode->mint();
+      $storage = $this->entityTypeManager->getStorage('node');
+      /** @var \Drupal\node\NodeInterface $booking */
+      $booking = $storage->create([
+        'type' => 'booking',
+        'title' => $code,
+        'status' => 1,
+        'uid' => $this->currentUser()->id(),
+      ]);
+      if ($booking->hasField('field_booking_code')) {
+        $booking->set('field_booking_code', $code);
+      }
+      $booking->set('field_booking_vehicle', (int) $vehicle->id());
+      $booking->set('field_booking_start', $window['pickup']);
+      $booking->set('field_booking_end', $window['return']);
+      $booking->set('field_booking_status', 'confirmed');
+      if ($booking->hasField('field_customer_name')) {
+        $booking->set('field_customer_name', $name);
+      }
+      if ($booking->hasField('field_customer_email')) {
+        $booking->set('field_customer_email', (string) $form_state->getValue('email'));
+      }
+      if ($booking->hasField('field_customer_phone')) {
+        $booking->set('field_customer_phone', (string) $form_state->getValue('phone'));
+      }
+      if ($booking->hasField('field_customer_note')) {
+        $booking->set('field_customer_note', trim((string) $form_state->getValue('note')));
+      }
+      if ($booking->hasField('field_marketing_opt_in')) {
+        $booking->set('field_marketing_opt_in', (bool) $form_state->getValue('marketing'));
+      }
+      $booking->save();
     }
-    if ($booking->hasField('field_customer_phone')) {
-      $booking->set('field_customer_phone', (string) $form_state->getValue('phone'));
+    finally {
+      $this->lock->release($lock_name);
     }
-    if ($booking->hasField('field_customer_note')) {
-      $booking->set('field_customer_note', trim((string) $form_state->getValue('note')));
+
+    if ($form_state->hasAnyErrors() || !isset($booking)) {
+      return;
     }
-    if ($booking->hasField('field_marketing_opt_in')) {
-      $booking->set('field_marketing_opt_in', (bool) $form_state->getValue('marketing'));
-    }
-    $booking->save();
 
     $query = $this->fleetCatalog->bookingQuery();
-    $query['pickup'] = (string) $form_state->getValue('pickup');
-    $query['return'] = (string) $form_state->getValue('return');
+    $query[ReservationCode::QUERY_KEY] = $this->reservationCode->digest($code);
     $form_state->setRedirect('lm_booking.confirmation', ['booking' => $booking->id()], [
       'query' => array_filter($query, static fn($value): bool => $value !== NULL && $value !== ''),
     ]);
+  }
+
+  private function assertAvailable(FormStateInterface $form_state): void {
+    if (!$this->fleetCatalog->hasRentalWindow()) {
+      $form_state->setErrorByName('actions', $this->t('Search dates are required before confirming a reservation.'));
+      return;
+    }
+
+    $window = $this->fleetCatalog->resolvedWindow();
+    $pickup = $window['pickup'];
+    $return = $window['return'];
+    if ($return < $pickup) {
+      $form_state->setErrorByName('actions', $this->t('Return must be on or after pickup.'));
+      return;
+    }
+
+    $vehicle = $form_state->get('vehicle');
+    if (!$vehicle instanceof NodeInterface) {
+      return;
+    }
+    if (!$this->availability->isVehicleAvailable((int) $vehicle->id(), $pickup, $return)) {
+      $form_state->setErrorByName('actions', $this->t('This vehicle is no longer available for the selected dates. Please choose another vehicle.'));
+    }
   }
 
   /**

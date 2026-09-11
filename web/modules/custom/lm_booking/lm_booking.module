@@ -35,6 +35,14 @@ function lm_booking_theme(): array {
         'trip' => [],
         'quote' => [],
         'fleet_url' => '',
+        'copy_icon' => '',
+      ],
+    ],
+    'lm_booking_fare_inclusions' => [
+      'variables' => [
+        'heading' => '',
+        'items' => [],
+        'notes' => [],
       ],
     ],
   ];

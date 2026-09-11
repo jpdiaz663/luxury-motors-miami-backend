@@ -25,6 +25,14 @@ function lm_vehicle_update_11001(): string {
 }
 
 /**
+ * Add Miami as a Location term used by pickup and delivery.
+ */
+function lm_vehicle_update_11002(): string {
+  lm_vehicle_ensure_default_locations();
+  return 'Ensured Miami exists as a location term for pickup and delivery.';
+}
+
+/**
  * Creates the rental desks used by the search banner when the vocabulary exists.
  */
 function lm_vehicle_ensure_default_locations(): void {
@@ -35,6 +43,7 @@ function lm_vehicle_ensure_default_locations(): void {
 
   $storage = $entity_type_manager->getStorage('taxonomy_term');
   $defaults = [
+    ['name' => 'Miami', 'place' => FALSE],
     ['name' => 'Brickell desk', 'place' => FALSE],
     ['name' => 'Miami Beach', 'place' => FALSE],
     ['name' => 'MIA arrivals', 'place' => FALSE],

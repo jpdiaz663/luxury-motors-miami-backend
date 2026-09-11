@@ -8,10 +8,10 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\lm_booking\AvailabilityManager;
+use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Excludes vehicles booked across the Search pickup/return dates.
@@ -24,7 +24,7 @@ final class AvailableWindow extends FilterPluginBase implements ContainerFactory
     $plugin_id,
     $plugin_definition,
     private readonly AvailabilityManager $availability,
-    private readonly RequestStack $requestStack,
+    private readonly FleetCatalog $catalog,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -35,7 +35,7 @@ final class AvailableWindow extends FilterPluginBase implements ContainerFactory
       $plugin_id,
       $plugin_definition,
       $container->get('lm_booking.availability'),
-      $container->get('request_stack'),
+      $container->get('lm_vehicle.fleet_catalog'),
     );
   }
 
@@ -74,10 +74,8 @@ final class AvailableWindow extends FilterPluginBase implements ContainerFactory
     if (!$this->query) {
       return;
     }
-    $request = $this->requestStack->getCurrentRequest();
-    $pickup = is_scalar($request?->query->get('pickup')) ? (string) $request->query->get('pickup') : '';
-    $return = is_scalar($request?->query->get('return')) ? (string) $request->query->get('return') : '';
-    $blocked = $this->availability->unavailableVehicleIds($pickup, $return);
+    $query = $this->catalog->currentQuery();
+    $blocked = $this->availability->unavailableVehicleIds($query['pickup'], $query['return']);
     if ($blocked === []) {
       return;
     }
@@ -88,6 +86,8 @@ final class AvailableWindow extends FilterPluginBase implements ContainerFactory
     return Cache::mergeContexts(parent::getCacheContexts(), [
       'url.query_args:pickup',
       'url.query_args:return',
+      'url.query_args:date_from',
+      'url.query_args:date_to',
     ]);
   }
 

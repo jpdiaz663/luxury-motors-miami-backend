@@ -11,10 +11,12 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\lm_booking\Quote\QuoteCalculator;
+use Drupal\lm_booking\ReservationCode;
 use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\lm_vehicle\VehiclePresenter;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Post-checkout itinerary. Parameter is {booking}, not {node}.
@@ -27,6 +29,8 @@ final class ConfirmationController implements ContainerInjectionInterface {
     private readonly FleetCatalog $fleetCatalog,
     private readonly VehiclePresenter $presenter,
     private readonly QuoteCalculator $quoteCalculator,
+    private readonly ReservationCode $reservationCode,
+    private readonly RequestStack $requestStack,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -34,6 +38,8 @@ final class ConfirmationController implements ContainerInjectionInterface {
       $container->get('lm_vehicle.fleet_catalog'),
       $container->get('lm_vehicle.presenter'),
       $container->get('lm_booking.quote'),
+      $container->get('lm_booking.reservation_code'),
+      $container->get('request_stack'),
     );
   }
 
@@ -43,14 +49,15 @@ final class ConfirmationController implements ContainerInjectionInterface {
   public function view(NodeInterface $booking): array {
     $vehicle = $this->referencedVehicle($booking);
     $query = $this->fleetCatalog->currentQuery();
-    $pickup = $this->bookingDate($booking, 'field_booking_start') ?: $query['pickup'];
-    $return = $this->bookingDate($booking, 'field_booking_end') ?: $query['return'];
-    $ptime = $query['ptime'] !== '' ? $this->fleetCatalog->hourValue($query['ptime']) : '07:00';
-    $rtime = $query['rtime'] !== '' ? $this->fleetCatalog->hourValue($query['rtime']) : '07:00';
+    $window = $this->fleetCatalog->resolvedWindow();
+    $pickup = $this->bookingDate($booking, 'field_booking_start') ?: $window['pickup'];
+    $return = $this->bookingDate($booking, 'field_booking_end') ?: $window['return'];
+    $ptime = $this->fleetCatalog->hourValue($query['ptime']);
+    $rtime = $this->fleetCatalog->hourValue($query['rtime']);
 
     $from = $this->fleetCatalog->locationTerm($query['from']);
     $to = $this->fleetCatalog->locationTerm($query['to']);
-    $pickup_place = $from ? (string) $from->label() : (string) $this->t('Miami');
+    $pickup_place = $from ? (string) $from->label() : '';
     $dropoff_place = $to ? (string) $to->label() : $pickup_place;
 
     $daily = 0.0;
@@ -71,7 +78,7 @@ final class ConfirmationController implements ContainerInjectionInterface {
 
     return [
       '#theme' => 'lm_booking_confirmation',
-      '#reference' => (string) $booking->id(),
+      '#reference' => $this->reservationCode->fromBooking($booking) ?: (string) $booking->id(),
       '#guest' => [
         'name' => $name,
         'email' => $email,
@@ -97,11 +104,19 @@ final class ConfirmationController implements ContainerInjectionInterface {
   }
 
   public function access(NodeInterface $booking, AccountInterface $account): AccessResultInterface {
-    $allowed = $booking->bundle() === 'booking'
+    $confirmed = $booking->bundle() === 'booking'
       && $booking->isPublished()
       && $booking->hasField('field_booking_status')
       && $booking->get('field_booking_status')->value === 'confirmed';
-    return AccessResult::allowedIf($allowed)->addCacheableDependency($booking);
+    $result = AccessResult::allowedIf($confirmed)->addCacheableDependency($booking);
+    $code = $this->reservationCode->fromBooking($booking);
+    if ($code === '') {
+      return $result;
+    }
+    $digest = $this->requestStack->getCurrentRequest()?->query->get(ReservationCode::QUERY_KEY);
+    $digest = is_scalar($digest) ? (string) $digest : '';
+    return $result->andIf(AccessResult::allowedIf($this->reservationCode->matches($code, $digest)))
+      ->addCacheContexts(['url.query_args:' . ReservationCode::QUERY_KEY]);
   }
 
   private function referencedVehicle(NodeInterface $booking): ?NodeInterface {

@@ -199,11 +199,19 @@
 
 @media (max-width: 900px) {
   .checkout-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "trip"
       "price"
       "form";
+    gap: var(--spacing-6);
+  }
+
+  .checkout-trip,
+  .checkout-main,
+  .checkout-aside,
+  .confirm-layout {
+    min-width: 0;
   }
 
   .checkout-aside {
@@ -215,7 +223,41 @@
   .checkout-legs,
   .confirm-itinerary,
   .confirm-guest {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .checkout-vehicle-title,
+  .checkout-leg-place,
+  .checkout-leg-when,
+  .checkout-line-copy,
+  .checkout-line-label,
+  .checkout-line-detail {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .checkout-main input[type="text"],
+  .checkout-main input[type="email"],
+  .checkout-main input[type="tel"],
+  .checkout-main input[type="date"] {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .confirm-layout {
+    padding: var(--spacing-4);
+  }
+
+  .confirm-ref-code {
+    margin-left: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .confirm-ref-copy img,
+  .confirm-ref-copy svg {
+    width: 2rem;
+    height: 2rem;
   }
 }
 
@@ -244,10 +286,64 @@
 }
 
 .confirm-ref {
-  margin: var(--spacing-4) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  margin: 2rem;
+  color: var(--color-bianco-ferrari);
+  background: var(--color-rosso-scuro);
+  border: var(--spacing-3);
+  border-radius: 0.54rem;
+  padding: var(--spacing-2) var(--spacing-4);
+}
+
+.confirm-ref-code {
+  margin: 0;
+  margin-inline-end: auto;
+  text-align: start;
   font-size: var(--text-caption);
-  letter-spacing: var(--track-micro);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.confirm-ref-copy {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  margin-inline-start: auto;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-bianco-ferrari);
+  cursor: pointer;
+}
+
+.confirm-ref-copy:hover,
+.confirm-ref-copy:focus-visible {
+  border-color: var(--color-bianco-ferrari);
+}
+
+.confirm-ref-copy img,
+.confirm-ref-copy svg {
+  display: block;
+  width: 6rem;
+  height: 2rem;
+  object-fit: contain;
+  background-image: url('../../luxury_motors/images/icons/copy.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.confirm-ref-copy.is-copied {
+  border-color: var(--color-bianco-ferrari);
 }
 
 .confirm-itinerary {

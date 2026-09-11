@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Results-page refine. GET params match Views identifiers.
+ *
+ * Not attached to the fleet page. Keep for a later refine UI.
  */
 final class VehicleRefineForm extends FormBase {
 

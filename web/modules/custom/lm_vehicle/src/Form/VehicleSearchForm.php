@@ -33,8 +33,9 @@ final class VehicleSearchForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $query = $this->fleetCatalog->currentQuery();
     $today = (new \DateTimeImmutable('today'))->format('Y-m-d');
-    $pickup = $query['pickup'] !== '' ? $query['pickup'] : (new \DateTimeImmutable('tomorrow'))->format('Y-m-d');
-    $return = $query['return'] !== '' ? $query['return'] : (new \DateTimeImmutable('tomorrow +3 days'))->format('Y-m-d');
+    $window = $this->fleetCatalog->resolvedWindow();
+    $pickup = $window['pickup'];
+    $return = $window['return'];
     $from_term = $this->fleetCatalog->locationTerm($query['from']);
     $to_term = $this->fleetCatalog->locationTerm($query['to']);
 
@@ -44,15 +45,24 @@ final class VehicleSearchForm extends FormBase {
     $form['#theme'] = 'lm_vehicle_search_form';
     $form['#theme_wrappers'] = [];
     $form['#after_build'][] = [static::class, 'stripInternalElements'];
-    $need_dates = $this->needsDateConfirmation($query);
-    $form['#need_dates'] = $need_dates;
+    $need_trip = $this->isFleetPath() && $this->fleetCatalog->shouldPromptForTrip();
+    $on_fleet = $this->isFleetPath();
+    $form['#need_trip'] = $need_trip;
+    $form['#on_fleet'] = $on_fleet;
     $form['#attributes'] = [
-      'class' => array_values(array_filter(['banner', $need_dates ? 'is-need-dates' : ''])),
+      'class' => array_values(array_filter([
+        'banner',
+        $need_trip ? 'is-need-trip' : '',
+        $on_fleet ? 'banner--fleet' : '',
+      ])),
       'data-banner' => TRUE,
       'method' => 'get',
       'action' => $action,
       'accept-charset' => 'UTF-8',
     ];
+    if ($on_fleet) {
+      $form['#attributes']['data-banner-fleet'] = TRUE;
+    }
     $form['#show_place'] = $this->fleetCatalog->locationNeedsPlace($query['from'])
       || $this->fleetCatalog->locationNeedsPlace($query['to']);
     $form['#reset_url'] = $action;
@@ -63,7 +73,7 @@ final class VehicleSearchForm extends FormBase {
     $form['#attached']['drupalSettings']['lmVehicleSearch'] = [
       'requiresPlace' => $this->fleetCatalog->locationPlaceTids(),
       'resetUrl' => $action,
-    ];
+    ] + $this->fleetCatalog->searchClientSettings();
 
     $form['from'] = $this->locationId('from', $from_term, 'banner-from-id');
     $form['from_q'] = $this->locationLookup('from_q', $this->t('Pickup location'), $from_term, TRUE, 'banner-from', 'Brickell, MIA, hotel…');
@@ -105,14 +115,10 @@ final class VehicleSearchForm extends FormBase {
     // GET form: the browser query string is the submission.
   }
 
-  /**
-   * @param array<string, string> $query
-   */
-  private function needsDateConfirmation(array $query): bool {
+  private function isFleetPath(): bool {
     $path = '/' . trim((string) $this->getRequest()->getPathInfo(), '/');
-    $on_fleet = $path === FleetCatalog::PATH || str_ends_with($path, FleetCatalog::PATH);
 
-    return $on_fleet && $query['category'] !== '' && $query['pickup'] === '' && $query['return'] === '';
+    return $path === FleetCatalog::PATH || str_ends_with($path, FleetCatalog::PATH);
   }
 
   /**
@@ -197,7 +203,8 @@ final class VehicleSearchForm extends FormBase {
       '#selection_settings' => [
         'target_bundles' => ['location' => 'location'],
       ],
-      '#default_value' => $term,
+      '#default_value' => $term ? (string) $term->label() : NULL,
+      '#process_default_value' => FALSE,
       '#required' => $required,
       '#id' => $id,
       '#attributes' => [

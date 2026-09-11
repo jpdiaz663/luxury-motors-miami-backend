@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.booking.field_booking_code
     - field.field.node.booking.field_booking_end
     - field.field.node.booking.field_booking_start
     - field.field.node.booking.field_booking_status
@@ -26,6 +27,14 @@ content:
     weight: 7
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_booking_code:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 16
+      placeholder: 'LM-XXXXXX'
     third_party_settings: {  }
   field_booking_end:
     type: datetime_default

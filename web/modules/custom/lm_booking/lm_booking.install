@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for lm_booking.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_install().
+ */
+function lm_booking_install(): void {
+  lm_booking_ensure_booking_code_field();
+}
+
+/**
+ * Add the public LM- reservation code field on bookings.
+ */
+function lm_booking_update_11001(): string {
+  lm_booking_ensure_booking_code_field();
+  return 'Added reservation code field (LM- plus six alphanumeric characters).';
+}
+
+function lm_booking_ensure_booking_code_field(): void {
+  if (!FieldStorageConfig::loadByName('node', 'field_booking_code')) {
+    FieldStorageConfig::create([
+      'uuid' => 'c7d1e8a4-3f26-4b90-9e15-6a2c8d4f0b17',
+      'field_name' => 'field_booking_code',
+      'entity_type' => 'node',
+      'type' => 'string',
+      'settings' => [
+        'max_length' => 16,
+        'case_sensitive' => FALSE,
+        'is_ascii' => TRUE,
+      ],
+      'translatable' => FALSE,
+      'cardinality' => 1,
+    ])->save();
+  }
+  if (!FieldConfig::loadByName('node', 'booking', 'field_booking_code')) {
+    FieldConfig::create([
+      'uuid' => 'd8e2f9b5-4a37-4c01-af26-7b3d9e5a1c28',
+      'field_name' => 'field_booking_code',
+      'entity_type' => 'node',
+      'bundle' => 'booking',
+      'label' => 'Reservation code',
+      'description' => 'Public desk reference in the form LM- plus six alphanumeric characters.',
+      'required' => FALSE,
+      'translatable' => FALSE,
+    ])->save();
+  }
+
+  $form = EntityFormDisplay::load('node.booking.default');
+  if ($form && !$form->getComponent('field_booking_code')) {
+    $form->setComponent('field_booking_code', [
+      'type' => 'string_textfield',
+      'weight' => 0,
+      'region' => 'content',
+      'settings' => [
+        'size' => 16,
+        'placeholder' => 'LM-XXXXXX',
+      ],
+    ])->save();
+  }
+
+  $view = EntityViewDisplay::load('node.booking.default');
+  if ($view && !$view->getComponent('field_booking_code')) {
+    $view->setComponent('field_booking_code', [
+      'type' => 'string',
+      'label' => 'above',
+      'weight' => 0,
+      'region' => 'content',
+      'settings' => [
+        'link_to_entity' => FALSE,
+      ],
+    ])->save();
+  }
+}

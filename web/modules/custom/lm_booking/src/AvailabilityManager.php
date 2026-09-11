@@ -53,6 +53,23 @@ final class AvailabilityManager {
     return array_values($blocked);
   }
 
+  /**
+   * Whether this published vehicle can be held for the inclusive window.
+   *
+   * Invalid dates are treated as unavailable. Published status is not
+   * inventory; callers must still check the vehicle entity separately.
+   */
+  public function isVehicleAvailable(int $vehicle_id, string $pickup, string $return): bool {
+    if ($vehicle_id < 1) {
+      return FALSE;
+    }
+    if (!$this->validDate($pickup) || !$this->validDate($return) || $return < $pickup) {
+      return FALSE;
+    }
+
+    return !in_array($vehicle_id, $this->unavailableVehicleIds($pickup, $return), TRUE);
+  }
+
   private function validDate(string $value): bool {
     return (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $value);
   }

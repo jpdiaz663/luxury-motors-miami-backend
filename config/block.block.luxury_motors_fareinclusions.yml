@@ -1,0 +1,25 @@
+uuid: 7c4e8a91-2b6d-4f1a-9c3e-8d5a1b0e47f2
+langcode: en
+status: true
+dependencies:
+  module:
+    - lm_booking
+    - system
+  theme:
+    - luxury_motors
+id: luxury_motors_fareinclusions
+theme: luxury_motors
+region: content
+weight: -2
+provider: null
+plugin: lm_booking_fare_inclusions
+settings:
+  id: lm_booking_fare_inclusions
+  label: 'Fare inclusions'
+  label_display: '0'
+  provider: lm_booking
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /fleet

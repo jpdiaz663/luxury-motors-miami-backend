@@ -14,6 +14,10 @@
     return /^\d+$/.test(String(value || "").trim()) ? String(value).trim() : "";
   }
 
+  function labelOnly(value) {
+    return String(value || "").replace(/\s*\(\d+\)\s*$/, "").trim();
+  }
+
   function bindBanner(form) {
     const from = form.querySelector("#banner-from");
     const to = form.querySelector("#banner-to");
@@ -27,6 +31,11 @@
     const reset = form.querySelector("[data-banner-reset]");
     const settings = drupalSettings.lmVehicleSearch || {};
     const requiresPlace = (settings.requiresPlace || []).map(Number);
+    const collapse = form.querySelector("[data-banner-collapse]");
+    const panel = form.querySelector("[data-banner-panel]");
+    const summary = form.querySelector("[data-banner-summary]");
+    const collapseLabel = form.querySelector("[data-banner-collapse-label]");
+    const storageKey = "lmFleetSearchDock";
 
     if (!from || !to || !fromId || !toId || !pickup || !back || !note || !place) {
       return;
@@ -51,10 +60,12 @@
       const pickupId = termId(from.value);
       if (pickupId) {
         fromId.value = pickupId;
+        from.value = labelOnly(from.value);
       }
       const delivery = termId(to.value);
       if (delivery) {
         toId.value = delivery;
+        to.value = labelOnly(to.value);
       }
       else if (!toId.value) {
         toId.value = fromId.value;
@@ -62,8 +73,8 @@
     }
 
     function hotelNeeded() {
-      return requiresPlace.includes(Number(termId(from.value) || fromId.value))
-        || requiresPlace.includes(Number(termId(to.value) || toId.value));
+      return requiresPlace.includes(Number(fromId.value))
+        || requiresPlace.includes(Number(toId.value));
     }
 
     function syncNote(clearPlace) {
@@ -81,6 +92,104 @@
         submit.disabled = busy;
         submit.classList.toggle("is-busy", busy);
       }
+    }
+
+    function formatSlipDate(value) {
+      if (!value) {
+        return "—";
+      }
+      const parts = String(value).split("-");
+      if (parts.length !== 3) {
+        return value;
+      }
+      const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+      return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    }
+
+    function tripSummary() {
+      const pickupLabel = from.value.trim() || Drupal.t("Pickup");
+      const dropLabel = to.value.trim() || pickupLabel;
+      const placeNote = note && !note.hidden && place && place.value.trim()
+        ? " · " + place.value.trim()
+        : "";
+      return pickupLabel + " → " + dropLabel + placeNote + " · " + formatSlipDate(pickup.value) + "–" + formatSlipDate(back.value);
+    }
+
+    function refreshSummary() {
+      if (summary) {
+        summary.textContent = tripSummary();
+      }
+    }
+
+    function setCollapsed(collapsed, persist) {
+      if (!form.hasAttribute("data-banner-fleet") || !collapse || !panel) {
+        return;
+      }
+      if (form.classList.contains("is-need-trip")) {
+        collapsed = false;
+      }
+      form.classList.toggle("is-collapsed", collapsed);
+      panel.hidden = collapsed;
+      if (collapsed) {
+        panel.setAttribute("inert", "");
+      }
+      else {
+        panel.removeAttribute("inert");
+      }
+      collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      if (collapseLabel) {
+        collapseLabel.textContent = collapsed ? Drupal.t("Edit trip") : Drupal.t("Reduce");
+      }
+      refreshSummary();
+      if (persist) {
+        try {
+          sessionStorage.setItem(storageKey, collapsed ? "collapsed" : "open");
+        }
+        catch (error) {
+          // Private mode can block sessionStorage.
+        }
+      }
+    }
+
+    function bindDock() {
+      if (!form.hasAttribute("data-banner-fleet") || !collapse || !panel) {
+        return;
+      }
+      let stored = "";
+      try {
+        stored = sessionStorage.getItem(storageKey) || "";
+      }
+      catch (error) {
+        stored = "";
+      }
+      const narrow = window.matchMedia("(max-width: 900px)").matches;
+      const startCollapsed = stored === "collapsed" || (stored === "" && narrow);
+      setCollapsed(startCollapsed, false);
+
+      collapse.addEventListener("click", function () {
+        setCollapsed(!form.classList.contains("is-collapsed"), true);
+      });
+      const desk = form.querySelector(".banner-desk");
+      if (desk) {
+        desk.addEventListener("click", function (event) {
+          if (!form.classList.contains("is-collapsed") || event.target.closest("[data-banner-collapse]")) {
+            return;
+          }
+          setCollapsed(false, true);
+        });
+      }
+      ["input", "change"].forEach(function (eventName) {
+        form.addEventListener(eventName, refreshSummary);
+      });
+      form.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !form.classList.contains("is-collapsed")) {
+          setCollapsed(true, true);
+          collapse.focus();
+        }
+      });
     }
 
     pickup.addEventListener("change", function () {
@@ -101,11 +210,15 @@
     });
     syncIds();
     syncNote(false);
+    bindDock();
+    bindAvailabilityDraft(form);
 
-    if (form.classList.contains("is-need-dates") && pickup) {
+    if (form.classList.contains("is-need-trip")) {
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       form.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      pickup.focus();
+      if (from && !fromId.value) {
+        from.focus();
+      }
     }
 
     if (reset) {
@@ -142,8 +255,23 @@
       syncIds();
       if (!fromId.value) {
         event.preventDefault();
-        from.focus();
+        promptTrip(form, from);
         return;
+      }
+      if (hotelNeeded() && place && !place.value.trim()) {
+        event.preventDefault();
+        promptTrip(form, place);
+        return;
+      }
+      if (!pickup.value) {
+        const start = new Date(today);
+        start.setDate(start.getDate() + 1);
+        pickup.value = isoDate(start);
+      }
+      if (!back.value) {
+        const end = new Date(pickup.value);
+        end.setDate(end.getDate() + 3);
+        back.value = isoDate(end);
       }
       if (back.value < pickup.value) {
         event.preventDefault();
@@ -241,11 +369,189 @@
     });
   }
 
+  function promptTrip(form, focusEl) {
+    form.classList.add("is-need-trip");
+    const collapse = form.querySelector("[data-banner-collapse]");
+    const panel = form.querySelector("[data-banner-panel]");
+    if (form.hasAttribute("data-banner-fleet") && panel) {
+      form.classList.remove("is-collapsed");
+      panel.hidden = false;
+      panel.removeAttribute("inert");
+      if (collapse) {
+        collapse.setAttribute("aria-expanded", "true");
+      }
+    }
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    form.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    if (focusEl && typeof focusEl.focus === "function") {
+      focusEl.focus();
+    }
+  }
+
+  function committedWindow() {
+    const settings = drupalSettings.lmVehicleSearch || {};
+    return settings.committed || {};
+  }
+
+  function formWindow(form) {
+    const pickup = form.querySelector("#banner-pickup");
+    const back = form.querySelector("#banner-return");
+    const ptime = form.querySelector("#banner-ptime");
+    const rtime = form.querySelector("#banner-rtime");
+    return {
+      pickup: pickup ? pickup.value : "",
+      return: back ? back.value : "",
+      ptime: ptime ? ptime.value : "",
+      rtime: rtime ? rtime.value : "",
+    };
+  }
+
+  function isAvailabilityDirty(form) {
+    const committed = committedWindow();
+    const current = formWindow(form);
+    const datesChanged = ["pickup", "return"].some(function (key) {
+      return String(committed[key] || "") !== String(current[key] || "");
+    });
+    const timesChanged = ["ptime", "rtime"].some(function (key) {
+      return String(committed[key] || "10:00") !== String(current[key] || "10:00");
+    });
+    return datesChanged || timesChanged;
+  }
+
+  function setFleetStale(stale) {
+    const results = document.querySelector("[data-fleet-results]");
+    if (!results) {
+      return;
+    }
+    results.classList.toggle("is-stale", stale);
+    const message = results.querySelector("[data-fleet-stale]");
+    if (message) {
+      message.hidden = !stale;
+    }
+    document.querySelectorAll("[data-lm-reserve]").forEach(function (link) {
+      link.classList.toggle("is-disabled", stale);
+      link.setAttribute("aria-disabled", stale ? "true" : "false");
+      if (stale) {
+        link.setAttribute("tabindex", "-1");
+      }
+      else {
+        link.removeAttribute("tabindex");
+      }
+    });
+  }
+
+  function showReserveError(text) {
+    const error = document.querySelector("[data-fleet-reserve-error]");
+    if (!error) {
+      return;
+    }
+    error.textContent = text || "";
+    error.hidden = !text;
+    error.classList.toggle("is-visible", !!text);
+  }
+
+  function bindAvailabilityDraft(form) {
+    const watch = ["#banner-pickup", "#banner-return", "#banner-ptime", "#banner-rtime"];
+    function refresh() {
+      setFleetStale(isAvailabilityDirty(form));
+      if (!isAvailabilityDirty(form)) {
+        showReserveError("");
+      }
+    }
+    watch.forEach(function (selector) {
+      const element = form.querySelector(selector);
+      if (!element) {
+        return;
+      }
+      ["change", "input"].forEach(function (eventName) {
+        element.addEventListener(eventName, refresh);
+      });
+    });
+    refresh();
+  }
+
+  function availabilityCheckUrl(link) {
+    const url = new URL(link.href, window.location.origin);
+    const match = url.pathname.match(/\/reserve\/(\d+)\/?$/);
+    if (!match) {
+      return "";
+    }
+    url.pathname = "/reserve/" + match[1] + "/available";
+    return url.pathname + url.search;
+  }
+
+  function bindReserveGate(context) {
+    const settings = drupalSettings.lmVehicleSearch || {};
+    once("lm-reserve-gate", "[data-lm-reserve]", context).forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        if (
+          event.defaultPrevented
+          || event.metaKey
+          || event.ctrlKey
+          || event.shiftKey
+          || event.altKey
+          || event.button !== 0
+        ) {
+          return;
+        }
+        const form = document.querySelector("[data-banner]");
+        if (form && isAvailabilityDirty(form)) {
+          event.preventDefault();
+          setFleetStale(true);
+          promptTrip(form, form.querySelector("#banner-pickup") || form.querySelector("[data-banner-submit]"));
+          return;
+        }
+        if (!settings.tripComplete) {
+          if (!form) {
+            return;
+          }
+          event.preventDefault();
+          const from = form.querySelector("#banner-from");
+          promptTrip(form, from);
+          return;
+        }
+        const checkUrl = availabilityCheckUrl(link);
+        if (!checkUrl) {
+          return;
+        }
+        event.preventDefault();
+        showReserveError("");
+        link.setAttribute("aria-busy", "true");
+        fetch(checkUrl, {
+          headers: { Accept: "application/json" },
+          credentials: "same-origin",
+        })
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("unavailable");
+            }
+            return response.json();
+          })
+          .then(function (data) {
+            if (data && data.available && data.checkout) {
+              window.location.assign(data.checkout);
+              return;
+            }
+            showReserveError(
+              (data && data.message) || Drupal.t("This vehicle is no longer available for the selected dates. Please choose another vehicle."),
+            );
+          })
+          .catch(function () {
+            showReserveError(Drupal.t("This vehicle is no longer available for the selected dates. Please choose another vehicle."));
+          })
+          .finally(function () {
+            link.removeAttribute("aria-busy");
+          });
+      });
+    });
+  }
+
   Drupal.behaviors.lmVehicleSearch = {
     attach: function (context) {
       once("lm-vehicle-search", "[data-banner]", context).forEach(bindBanner);
       once("lm-vehicle-refine", ".fleet-refine", context).forEach(bindRefine);
       once("lm-fleet-filters", "#fleet.view-vehicle-fleet", context).forEach(bindFleetPills);
+      bindReserveGate(context);
     },
   };
 })(Drupal, once, drupalSettings);
