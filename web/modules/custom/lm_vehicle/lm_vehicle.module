@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Url;
 use Drupal\lm_vehicle\FleetCatalog;
 
 /**
@@ -123,8 +124,22 @@ function lm_vehicle_attach_trip_gate(array &$variables): void {
   $variables['#attached']['library'][] = 'luxury_motors/vehicle_search';
   $variables['#attached']['drupalSettings']['lmVehicleSearch'] = array_merge(
     $variables['#attached']['drupalSettings']['lmVehicleSearch'] ?? [],
-    \Drupal::service('lm_vehicle.fleet_catalog')->searchClientSettings(),
+    lm_vehicle_search_client_settings(),
   );
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function lm_vehicle_search_client_settings(): array {
+  $settings = \Drupal::service('lm_vehicle.fleet_catalog')->searchClientSettings();
+  try {
+    $settings['startUrl'] = Url::fromRoute('lm_booking.checkout_start')->toString();
+  }
+  catch (\Throwable) {
+    $settings['startUrl'] = '/checkout/start';
+  }
+  return $settings;
 }
 
 /**

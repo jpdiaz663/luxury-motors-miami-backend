@@ -24,9 +24,9 @@ final class ReservationManageForm extends FormBase {
   private const FLOOD_LIMIT = 8;
 
   public function __construct(
-    private readonly BookingLookup $lookup,
-    private readonly ReservationPresenter $presenter,
-    private readonly FloodInterface $flood,
+    protected BookingLookup $lookup,
+    protected ReservationPresenter $presenter,
+    protected FloodInterface $flood,
   ) {}
 
   public static function create(ContainerInterface $container): static {

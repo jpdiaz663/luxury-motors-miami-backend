@@ -240,6 +240,10 @@ body.is-locked { overflow: hidden; }
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
+.hero--search-fleet:has(.banner:not(.is-collapsed)),
+.hero--search-fleet.hero:has(.banner:not(.is-collapsed)) {
+  position: relative;
+}
 .hero-media {
   position: absolute;
   inset: 0;

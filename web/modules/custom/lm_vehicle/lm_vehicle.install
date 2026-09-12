@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -14,6 +15,7 @@ use Drupal\taxonomy\Entity\Term;
  */
 function lm_vehicle_install(): void {
   lm_vehicle_ensure_default_locations();
+  lm_vehicle_ensure_default_mock_vehicles();
 }
 
 /**
@@ -30,6 +32,14 @@ function lm_vehicle_update_11001(): string {
 function lm_vehicle_update_11002(): string {
   lm_vehicle_ensure_default_locations();
   return 'Ensured Miami exists as a location term for pickup and delivery.';
+}
+
+/**
+ * Seed default mock vehicles for catalog development. Images are left empty.
+ */
+function lm_vehicle_update_11003(): string {
+  $created = lm_vehicle_ensure_default_mock_vehicles();
+  return sprintf('Created %d mock vehicles with titles in the form Brand - mock.', $created);
 }
 
 /**
@@ -72,4 +82,306 @@ function lm_vehicle_ensure_default_locations(): void {
     }
     $term->save();
   }
+}
+
+/**
+ * Creates published mock Vehicle nodes without media.
+ *
+ * Titles use "{brand} - mock". Main image is omitted so editors can attach
+ * photos later. Existing titles are skipped.
+ *
+ * @return int
+ *   Number of vehicle nodes created in this run.
+ */
+function lm_vehicle_ensure_default_mock_vehicles(): int {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if (!$entity_type_manager->getStorage('node_type')->load('vehicle')) {
+    return 0;
+  }
+
+  $defaults = [
+    [
+      'brand' => 'Ferrari',
+      'model' => '296 GTB',
+      'year' => 2024,
+      'category' => ['name' => 'Sports', 'code' => 'SPAR', 'passengers' => 2],
+      'color' => 'Rosso Corsa',
+      'engine' => '3.0L twin-turbo V6 hybrid',
+      'seats' => 2,
+      'doors' => 2,
+      'drive' => 'rwd',
+      'fuel' => 'hybrid',
+      'transmission' => 'dual_clutch',
+      'daily' => 1890,
+      'weekly' => 11500,
+      'monthly' => 38000,
+    ],
+    [
+      'brand' => 'Lamborghini',
+      'model' => 'Huracán EVO',
+      'year' => 2023,
+      'category' => ['name' => 'Sports', 'code' => 'SPAR', 'passengers' => 2],
+      'color' => 'Verde Mantis',
+      'engine' => '5.2L naturally aspirated V10',
+      'seats' => 2,
+      'doors' => 2,
+      'drive' => 'awd',
+      'fuel' => 'gasoline',
+      'transmission' => 'dual_clutch',
+      'daily' => 1650,
+      'weekly' => 9900,
+      'monthly' => 32000,
+    ],
+    [
+      'brand' => 'Porsche',
+      'model' => '911 Carrera S',
+      'year' => 2024,
+      'category' => ['name' => 'Sports', 'code' => 'SPAR', 'passengers' => 2],
+      'color' => 'GT Silver',
+      'engine' => '3.0L twin-turbo flat-6',
+      'seats' => 4,
+      'doors' => 2,
+      'drive' => 'rwd',
+      'fuel' => 'gasoline',
+      'transmission' => 'dual_clutch',
+      'daily' => 890,
+      'weekly' => 5400,
+      'monthly' => 17500,
+    ],
+    [
+      'brand' => 'Rolls-Royce',
+      'model' => 'Ghost',
+      'year' => 2024,
+      'category' => ['name' => 'Sedan', 'code' => 'LUXD', 'passengers' => 5],
+      'color' => 'English White',
+      'engine' => '6.75L twin-turbo V12',
+      'seats' => 5,
+      'doors' => 4,
+      'drive' => 'awd',
+      'fuel' => 'gasoline',
+      'transmission' => 'automatic',
+      'daily' => 1490,
+      'weekly' => 8900,
+      'monthly' => 29000,
+    ],
+    [
+      'brand' => 'Bentley',
+      'model' => 'Continental GT',
+      'year' => 2023,
+      'category' => ['name' => 'Coupe', 'code' => 'COUP', 'passengers' => 4],
+      'color' => 'Beluga',
+      'engine' => '4.0L twin-turbo V8',
+      'seats' => 4,
+      'doors' => 2,
+      'drive' => 'awd',
+      'fuel' => 'gasoline',
+      'transmission' => 'dual_clutch',
+      'daily' => 1190,
+      'weekly' => 7200,
+      'monthly' => 23500,
+    ],
+    [
+      'brand' => 'Mercedes-Benz',
+      'model' => 'G 63 AMG',
+      'year' => 2024,
+      'category' => ['name' => 'SUV', 'code' => 'SFAR', 'passengers' => 5],
+      'color' => 'Obsidian Black',
+      'engine' => '4.0L twin-turbo V8',
+      'seats' => 5,
+      'doors' => 5,
+      'drive' => '4wd',
+      'fuel' => 'gasoline',
+      'transmission' => 'automatic',
+      'daily' => 990,
+      'weekly' => 5900,
+      'monthly' => 19500,
+    ],
+    [
+      'brand' => 'BMW',
+      'model' => 'M8 Competition',
+      'year' => 2024,
+      'category' => ['name' => 'Coupe', 'code' => 'COUP', 'passengers' => 4],
+      'color' => 'Frozen Black',
+      'engine' => '4.4L twin-turbo V8',
+      'seats' => 4,
+      'doors' => 2,
+      'drive' => 'awd',
+      'fuel' => 'gasoline',
+      'transmission' => 'automatic',
+      'daily' => 790,
+      'weekly' => 4700,
+      'monthly' => 15500,
+    ],
+    [
+      'brand' => 'Aston Martin',
+      'model' => 'DB12',
+      'year' => 2024,
+      'category' => ['name' => 'Coupe', 'code' => 'COUP', 'passengers' => 4],
+      'color' => 'Aston Martin Racing Green',
+      'engine' => '4.0L twin-turbo V8',
+      'seats' => 4,
+      'doors' => 2,
+      'drive' => 'rwd',
+      'fuel' => 'gasoline',
+      'transmission' => 'automatic',
+      'daily' => 1090,
+      'weekly' => 6500,
+      'monthly' => 21000,
+    ],
+    [
+      'brand' => 'McLaren',
+      'model' => '720S',
+      'year' => 2023,
+      'category' => ['name' => 'Sports', 'code' => 'SPAR', 'passengers' => 2],
+      'color' => 'Papaya Spark',
+      'engine' => '4.0L twin-turbo V8',
+      'seats' => 2,
+      'doors' => 2,
+      'drive' => 'rwd',
+      'fuel' => 'gasoline',
+      'transmission' => 'dual_clutch',
+      'daily' => 1790,
+      'weekly' => 10800,
+      'monthly' => 35000,
+    ],
+    [
+      'brand' => 'Land Rover',
+      'model' => 'Range Rover Autobiography',
+      'year' => 2024,
+      'category' => ['name' => 'SUV', 'code' => 'SFAR', 'passengers' => 5],
+      'color' => 'Santorini Black',
+      'engine' => '4.4L twin-turbo V8',
+      'seats' => 5,
+      'doors' => 5,
+      'drive' => 'awd',
+      'fuel' => 'gasoline',
+      'transmission' => 'automatic',
+      'daily' => 890,
+      'weekly' => 5300,
+      'monthly' => 17200,
+    ],
+    [
+      'brand' => 'Maserati',
+      'model' => 'MC20',
+      'year' => 2023,
+      'category' => ['name' => 'Sports', 'code' => 'SPAR', 'passengers' => 2],
+      'color' => 'Bianco Audace',
+      'engine' => '3.0L twin-turbo V6',
+      'seats' => 2,
+      'doors' => 2,
+      'drive' => 'rwd',
+      'fuel' => 'gasoline',
+      'transmission' => 'dual_clutch',
+      'daily' => 1390,
+      'weekly' => 8300,
+      'monthly' => 27000,
+    ],
+    [
+      'brand' => 'Audi',
+      'model' => 'RS e-tron GT',
+      'year' => 2024,
+      'category' => ['name' => 'Sedan', 'code' => 'LUXD', 'passengers' => 5],
+      'color' => 'Tactical Green',
+      'engine' => 'Dual-motor electric',
+      'seats' => 5,
+      'doors' => 4,
+      'drive' => 'awd',
+      'fuel' => 'electric',
+      'transmission' => 'automatic',
+      'daily' => 690,
+      'weekly' => 4100,
+      'monthly' => 13500,
+    ],
+  ];
+
+  $created = 0;
+  $node_storage = $entity_type_manager->getStorage('node');
+  foreach ($defaults as $item) {
+    $title = $item['brand'] . ' - mock';
+    $existing = $node_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'vehicle')
+      ->condition('title', $title)
+      ->range(0, 1)
+      ->execute();
+    if ($existing) {
+      continue;
+    }
+
+    $brand_id = lm_vehicle_ensure_term('brand', $item['brand']);
+    $category_id = lm_vehicle_ensure_term('vehicle_category', $item['category']['name'], [
+      'field_category_code' => $item['category']['code'],
+      'field_passengers' => $item['category']['passengers'],
+    ]);
+    if (!$brand_id || !$category_id) {
+      continue;
+    }
+
+    $node = Node::create([
+      'type' => 'vehicle',
+      'title' => $title,
+      'uid' => 1,
+      'status' => 1,
+      'field_brand' => $brand_id,
+      'field_model' => $item['model'],
+      'field_year' => $item['year'],
+      'field_category' => $category_id,
+      'field_vehicle_status' => 'available',
+      'field_short_description' => sprintf('%s %s. Mock catalog vehicle; attach the main photo in the media library.', $item['brand'], $item['model']),
+      'field_transmission' => $item['transmission'],
+      'field_fuel_type' => $item['fuel'],
+      'field_drive_type' => $item['drive'],
+      'field_engine' => $item['engine'],
+      'field_seats' => $item['seats'],
+      'field_doors' => $item['doors'],
+      'field_color' => $item['color'],
+      'field_daily_price' => $item['daily'],
+      'field_weekly_price' => $item['weekly'],
+      'field_monthly_price' => $item['monthly'],
+      'field_currency' => 'USD',
+    ]);
+    $node->save();
+    $created++;
+  }
+
+  return $created;
+}
+
+/**
+ * Loads or creates a published taxonomy term.
+ *
+ * @param array<string, mixed> $fields
+ *   Extra field values applied only when the term is created.
+ */
+function lm_vehicle_ensure_term(string $vid, string $name, array $fields = []): ?int {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if (!$entity_type_manager->getStorage('taxonomy_vocabulary')->load($vid)) {
+    return NULL;
+  }
+
+  $storage = $entity_type_manager->getStorage('taxonomy_term');
+  $existing = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', $vid)
+    ->condition('name', $name)
+    ->range(0, 1)
+    ->execute();
+  if ($existing) {
+    return (int) reset($existing);
+  }
+
+  $values = [
+    'vid' => $vid,
+    'name' => $name,
+    'status' => 1,
+  ];
+  $term = Term::create($values);
+  foreach ($fields as $field_name => $value) {
+    if ($term->hasField($field_name)) {
+      $term->set($field_name, $value);
+    }
+  }
+  $term->save();
+
+  return (int) $term->id();
 }

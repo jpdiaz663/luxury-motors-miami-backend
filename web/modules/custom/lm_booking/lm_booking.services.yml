@@ -1,4 +1,11 @@
 services:
+  lm_booking.checkout_session:
+    class: Drupal\lm_booking\CheckoutSession
+    arguments:
+      - '@tempstore.private'
+      - '@entity_type.manager'
+      - '@lm_vehicle.fleet_catalog'
+      - '@lm_booking.availability'
   lm_booking.availability:
     class: Drupal\lm_booking\AvailabilityManager
     arguments:

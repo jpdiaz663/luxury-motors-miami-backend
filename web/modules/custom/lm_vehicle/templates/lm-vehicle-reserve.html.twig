@@ -36,7 +36,7 @@
       </div>
       {% if vehicle.checkout_url %}
         <p>
-          <a class="btn btn--primary" href="{{ vehicle.checkout_url }}" data-lm-reserve>{{ 'Continue to checkout'|t }}</a>
+          <a class="btn btn--primary" href="{{ vehicle.checkout_url }}" data-lm-reserve data-lm-vehicle="{{ vehicle.nid }}">{{ 'Continue to checkout'|t }}</a>
         </p>
       {% endif %}
     </div>

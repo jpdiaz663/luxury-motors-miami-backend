@@ -1,29 +1,34 @@
-lm_booking.availability_check:
-  path: '/reserve/{vehicle}/available'
+lm_booking.checkout_start:
+  path: '/checkout/start'
   defaults:
-    _controller: '\Drupal\lm_booking\Controller\AvailabilityCheckController::check'
-  methods: [GET]
+    _controller: '\Drupal\lm_booking\Controller\CheckoutStartController::start'
+  methods: [POST]
   requirements:
-    _custom_access: '\Drupal\lm_booking\Controller\CheckoutController::access'
-    vehicle: \d+
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
   options:
     no_cache: TRUE
-    parameters:
-      vehicle:
-        type: entity:node
 
 lm_booking.checkout:
-  path: '/reserve/{vehicle}'
+  path: '/checkout'
   defaults:
     _controller: '\Drupal\lm_booking\Controller\CheckoutController::form'
     _title_callback: '\Drupal\lm_booking\Controller\CheckoutController::title'
   requirements:
-    _custom_access: '\Drupal\lm_booking\Controller\CheckoutController::access'
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+lm_booking.checkout_legacy:
+  path: '/reserve/{vehicle}'
+  defaults:
+    _controller: '\Drupal\lm_booking\Controller\CheckoutController::legacy'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
     vehicle: \d+
   options:
-    parameters:
-      vehicle:
-        type: entity:node
+    no_cache: TRUE
 
 lm_booking.confirmation:
   path: '/reserve/confirmed/{booking}'

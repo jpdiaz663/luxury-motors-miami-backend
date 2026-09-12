@@ -74,6 +74,12 @@ final class VehicleSearchForm extends FormBase {
       'requiresPlace' => $this->fleetCatalog->locationPlaceTids(),
       'resetUrl' => $action,
     ] + $this->fleetCatalog->searchClientSettings();
+    try {
+      $form['#attached']['drupalSettings']['lmVehicleSearch']['startUrl'] = Url::fromRoute('lm_booking.checkout_start')->toString();
+    }
+    catch (\Throwable) {
+      $form['#attached']['drupalSettings']['lmVehicleSearch']['startUrl'] = '/checkout/start';
+    }
 
     $form['from'] = $this->locationId('from', $from_term, 'banner-from-id');
     $form['from_q'] = $this->locationLookup('from_q', $this->t('Pickup location'), $from_term, TRUE, 'banner-from', 'Brickell, MIA, hotel…');

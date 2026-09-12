@@ -58,7 +58,8 @@ final class VehiclePresenter {
       'title' => $node->label(),
       'display_title' => $this->similarTitle((string) $node->label()),
       'url' => $node->toUrl()->toString(),
-      'book_url' => $this->checkoutUrl($node),
+      'nid' => (string) $node->id(),
+      'book_url' => $this->checkoutUrl(),
       'fleet_url' => $fleet_url,
       'category' => $category_name,
       'category_id' => $category_id,
@@ -90,7 +91,8 @@ final class VehiclePresenter {
       'status' => $this->listLabel($node, 'field_vehicle_status'),
       'daily_price' => $this->money($node, 'field_daily_price'),
       'image' => $image,
-      'checkout_url' => $this->checkoutUrl($node),
+      'checkout_url' => $this->checkoutUrl(),
+      'nid' => (string) $node->id(),
     ];
   }
 
@@ -113,7 +115,8 @@ final class VehiclePresenter {
     return [
       'title' => $node->label(),
       'slides' => $slides,
-      'checkout_url' => $this->checkoutUrl($node),
+      'checkout_url' => $this->checkoutUrl(),
+      'nid' => (string) $node->id(),
     ];
   }
 
@@ -193,28 +196,18 @@ final class VehiclePresenter {
       'weekly' => $this->money($node, 'field_weekly_price'),
       'monthly' => $this->money($node, 'field_monthly_price'),
       'status' => $this->listLabel($node, 'field_vehicle_status'),
-      'checkout_url' => $this->checkoutUrl($node),
+      'checkout_url' => $this->checkoutUrl(),
+      'nid' => (string) $node->id(),
     ];
   }
 
-  public function checkoutUrl(NodeInterface $node): string {
-    if (!$this->catalog->tripIsComplete()) {
-      return $this->catalog->fleetUrl($this->catalog->incompleteTripQuery($this->categoryId($node)));
-    }
+  public function checkoutUrl(): string {
     try {
-      return Url::fromRoute('lm_booking.checkout', ['vehicle' => $node->id()], [
-        'query' => $this->catalog->bookingQuery(),
-      ])->toString();
+      return Url::fromRoute('lm_booking.checkout')->toString();
     }
     catch (RouteNotFoundException) {
-      return $node->toUrl()->toString();
+      return FleetCatalog::PATH;
     }
-  }
-
-  private function categoryId(NodeInterface $node): string {
-    $term = $this->categoryTerm($node);
-
-    return $term ? (string) $term->id() : '';
   }
 
   /**

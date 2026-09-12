@@ -375,7 +375,7 @@ final class FleetCatalog {
   /**
    * Values the fleet banner JS uses to compare the form with the last search.
    *
-   * @return array{tripComplete: bool, hasRentalWindow: bool, committed: array{pickup: string, return: string, ptime: string, rtime: string}}
+   * @return array{tripComplete: bool, hasRentalWindow: bool, committed: array{pickup: string, return: string, ptime: string, rtime: string}, locations: array{from: string, to: string, place: string, category: string}}
    */
   public function searchClientSettings(): array {
     $query = $this->currentQuery();
@@ -388,6 +388,12 @@ final class FleetCatalog {
         'return' => $query['return'],
         'ptime' => $query['ptime'],
         'rtime' => $query['rtime'],
+      ],
+      'locations' => [
+        'from' => $query['from'],
+        'to' => $query['to'],
+        'place' => $query['place'],
+        'category' => $query['category'],
       ],
     ];
   }

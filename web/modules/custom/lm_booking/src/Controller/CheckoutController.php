@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\lm_booking\Controller;
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\lm_booking\AvailabilityManager;
+use Drupal\lm_booking\CheckoutSession;
 use Drupal\lm_booking\Form\CheckoutForm;
 use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\node\NodeInterface;
@@ -20,26 +19,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Checkout route title, vehicle access, and trip gate.
- *
- * The route parameter is {vehicle}, not {node}, so node route context
- * and vehicle Block Layout do not treat checkout as a vehicle page.
+ * Checkout page. Trip lives in the Drupal session, not the URL.
  */
 final class CheckoutController implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
   public function __construct(
-    private readonly FleetCatalog $fleetCatalog,
+    private readonly CheckoutSession $checkoutSession,
     private readonly AvailabilityManager $availability,
+    private readonly FleetCatalog $fleetCatalog,
     private readonly FormBuilderInterface $formBuilder,
     private readonly MessengerInterface $messenger,
   ) {}
 
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('lm_vehicle.fleet_catalog'),
+      $container->get('lm_booking.checkout_session'),
       $container->get('lm_booking.availability'),
+      $container->get('lm_vehicle.fleet_catalog'),
       $container->get('form_builder'),
       $container->get('messenger'),
     );
@@ -48,25 +46,31 @@ final class CheckoutController implements ContainerInjectionInterface {
   /**
    * @return array<string, mixed>|\Symfony\Component\HttpFoundation\RedirectResponse
    */
-  public function form(NodeInterface $vehicle): array|RedirectResponse {
-    $category_id = '';
-    if ($vehicle->hasField('field_category') && !$vehicle->get('field_category')->isEmpty()) {
-      $term = $vehicle->get('field_category')->entity;
-      $category_id = $term ? (string) $term->id() : '';
-    }
-
-    if (!$this->fleetCatalog->tripIsComplete()) {
+  public function form(): array|RedirectResponse {
+    $vehicle = $this->checkoutSession->vehicle();
+    $trip = $this->checkoutSession->get();
+    if (!$vehicle instanceof NodeInterface || $trip === NULL) {
       $this->messenger->addError($this->t('Add a pickup location and search dates before reserving.'));
-      return $this->backToFleet($this->fleetCatalog->incompleteTripQuery($category_id));
-    }
-
-    $window = $this->fleetCatalog->resolvedWindow();
-    if (!$this->availability->isVehicleAvailable((int) $vehicle->id(), $window['pickup'], $window['return'])) {
-      $this->messenger->addError($this->t('This vehicle is no longer available for the selected dates. Please choose another vehicle.'));
       return $this->backToFleet($this->fleetCatalog->currentQuery());
     }
 
+    if (!$this->availability->isVehicleAvailable((int) $vehicle->id(), $trip['pickup'], $trip['return'])) {
+      $query = $this->checkoutSession->fleetQuery();
+      $this->checkoutSession->clear();
+      $this->messenger->addError($this->t('This vehicle is no longer available for the selected dates. Please choose another vehicle.'));
+      return $this->backToFleet($query ?: $this->fleetCatalog->currentQuery());
+    }
+
     return $this->formBuilder->getForm(CheckoutForm::class, $vehicle);
+  }
+
+  /**
+   * Old /reserve/{id} links land on the session checkout.
+   */
+  public function legacy(): RedirectResponse {
+    return new RedirectResponse(Url::fromRoute('lm_booking.checkout')->toString(), 302, [
+      'Cache-Control' => 'no-store, no-cache, must-revalidate',
+    ]);
   }
 
   /**
@@ -78,13 +82,12 @@ final class CheckoutController implements ContainerInjectionInterface {
     ]);
   }
 
-  public function title(NodeInterface $vehicle): TranslatableMarkup {
-    return new TranslatableMarkup('Checkout — @title', ['@title' => $vehicle->label()]);
-  }
-
-  public function access(NodeInterface $vehicle, AccountInterface $account): AccessResultInterface {
-    $allowed = $vehicle->bundle() === 'vehicle' && $vehicle->isPublished() && $vehicle->access('view', $account);
-    return AccessResult::allowedIf($allowed)->addCacheableDependency($vehicle);
+  public function title(): TranslatableMarkup {
+    $vehicle = $this->checkoutSession->vehicle();
+    if ($vehicle instanceof NodeInterface) {
+      return new TranslatableMarkup('Checkout — @title', ['@title' => $vehicle->label()]);
+    }
+    return new TranslatableMarkup('Checkout');
   }
 
 }

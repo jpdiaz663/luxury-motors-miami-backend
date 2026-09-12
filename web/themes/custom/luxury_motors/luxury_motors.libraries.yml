@@ -21,7 +21,7 @@ vehicle:
     js/vehicle-studio.js: {}
 
 vehicle_search:
-  version: '1.4.3'
+  version: '1.4.5'
   js:
     js/vehicle-search.js: {}
   dependencies:

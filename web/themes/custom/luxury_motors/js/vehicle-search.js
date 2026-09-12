@@ -470,18 +470,118 @@
     refresh();
   }
 
-  function availabilityCheckUrl(link) {
-    const url = new URL(link.href, window.location.origin);
-    const match = url.pathname.match(/\/reserve\/(\d+)\/?$/);
-    if (!match) {
-      return "";
+  function bannerFields(form) {
+    return {
+      from: form.querySelector("#banner-from"),
+      fromId: form.querySelector("#banner-from-id") || form.querySelector('input[name="from"]'),
+      to: form.querySelector("#banner-to"),
+      toId: form.querySelector("#banner-to-id") || form.querySelector('input[name="to"]'),
+      place: form.querySelector("#banner-place"),
+    };
+  }
+
+  function syncLocationIds(form) {
+    const fields = bannerFields(form);
+    if (!fields.from || !fields.fromId || !fields.to || !fields.toId) {
+      return fields;
     }
-    url.pathname = "/reserve/" + match[1] + "/available";
-    return url.pathname + url.search;
+    const pickupId = termId(fields.from.value);
+    if (pickupId) {
+      fields.fromId.value = pickupId;
+      fields.from.value = labelOnly(fields.from.value);
+    }
+    const delivery = termId(fields.to.value);
+    if (delivery) {
+      fields.toId.value = delivery;
+      fields.to.value = labelOnly(fields.to.value);
+    }
+    else if (!fields.toId.value && fields.fromId.value) {
+      fields.toId.value = fields.fromId.value;
+    }
+    return fields;
+  }
+
+  function missingTripControl(form) {
+    const settings = drupalSettings.lmVehicleSearch || {};
+    const requiresPlace = (settings.requiresPlace || []).map(Number);
+    const fields = syncLocationIds(form);
+    if (!fields.fromId || !fields.fromId.value) {
+      return fields.from;
+    }
+    const hotel = requiresPlace.includes(Number(fields.fromId.value))
+      || (fields.toId && requiresPlace.includes(Number(fields.toId.value)));
+    if (hotel && fields.place && !fields.place.value.trim()) {
+      return fields.place;
+    }
+    return null;
+  }
+
+  function tripPayload(link, form) {
+    const settings = drupalSettings.lmVehicleSearch || {};
+    const committed = committedWindow();
+    const locations = settings.locations || {};
+    const fields = form ? syncLocationIds(form) : {};
+    const params = new URLSearchParams(window.location.search);
+    return {
+      vehicle: link.getAttribute("data-lm-vehicle") || "",
+      from: (fields.fromId && fields.fromId.value) || locations.from || "",
+      to: (fields.toId && fields.toId.value) || locations.to || "",
+      place: (fields.place && fields.place.value.trim()) || locations.place || "",
+      pickup: committed.pickup || "",
+      return: committed.return || "",
+      ptime: committed.ptime || "10:00",
+      rtime: committed.rtime || "10:00",
+      category: params.get("category") || locations.category || "",
+    };
+  }
+
+  function startCheckout(link, form) {
+    const settings = drupalSettings.lmVehicleSearch || {};
+    const startUrl = settings.startUrl || "/checkout/start";
+    showReserveError("");
+    link.setAttribute("aria-busy", "true");
+    fetch("/session/token", { credentials: "same-origin" })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("csrf");
+        }
+        return response.text();
+      })
+      .then(function (token) {
+        return fetch(startUrl, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "X-CSRF-Token": token,
+          },
+          body: JSON.stringify(tripPayload(link, form)),
+        });
+      })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          return { ok: response.ok, data: data };
+        });
+      })
+      .then(function (result) {
+        if (result.ok && result.data && result.data.redirect) {
+          window.location.assign(result.data.redirect);
+          return;
+        }
+        showReserveError(
+          (result.data && result.data.message) || Drupal.t("This vehicle is no longer available for the selected dates. Please choose another vehicle."),
+        );
+      })
+      .catch(function () {
+        showReserveError(Drupal.t("This vehicle is no longer available for the selected dates. Please choose another vehicle."));
+      })
+      .finally(function () {
+        link.removeAttribute("aria-busy");
+      });
   }
 
   function bindReserveGate(context) {
-    const settings = drupalSettings.lmVehicleSearch || {};
     once("lm-reserve-gate", "[data-lm-reserve]", context).forEach(function (link) {
       link.addEventListener("click", function (event) {
         if (
@@ -501,47 +601,16 @@
           promptTrip(form, form.querySelector("#banner-pickup") || form.querySelector("[data-banner-submit]"));
           return;
         }
-        if (!settings.tripComplete) {
-          if (!form) {
+        if (form) {
+          const missing = missingTripControl(form);
+          if (missing) {
+            event.preventDefault();
+            promptTrip(form, missing);
             return;
           }
-          event.preventDefault();
-          const from = form.querySelector("#banner-from");
-          promptTrip(form, from);
-          return;
-        }
-        const checkUrl = availabilityCheckUrl(link);
-        if (!checkUrl) {
-          return;
         }
         event.preventDefault();
-        showReserveError("");
-        link.setAttribute("aria-busy", "true");
-        fetch(checkUrl, {
-          headers: { Accept: "application/json" },
-          credentials: "same-origin",
-        })
-          .then(function (response) {
-            if (!response.ok) {
-              throw new Error("unavailable");
-            }
-            return response.json();
-          })
-          .then(function (data) {
-            if (data && data.available && data.checkout) {
-              window.location.assign(data.checkout);
-              return;
-            }
-            showReserveError(
-              (data && data.message) || Drupal.t("This vehicle is no longer available for the selected dates. Please choose another vehicle."),
-            );
-          })
-          .catch(function () {
-            showReserveError(Drupal.t("This vehicle is no longer available for the selected dates. Please choose another vehicle."));
-          })
-          .finally(function () {
-            link.removeAttribute("aria-busy");
-          });
+        startCheckout(link, form);
       });
     });
   }

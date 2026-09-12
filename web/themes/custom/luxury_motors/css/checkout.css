@@ -513,6 +513,12 @@
     text-align: center;
   }
 
+  .title .success {
+    background: var(--color-green-success);
+    color: var(--color-bianco-ferrari);
+    border-radius: var(--radius-cards);
+  }
+  
   .confirm-ref {
     margin: var(--spacing-4) 0 0;
     width: 100%;
