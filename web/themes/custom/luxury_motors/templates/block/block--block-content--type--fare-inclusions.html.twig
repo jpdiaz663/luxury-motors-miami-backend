@@ -1,0 +1,50 @@
+{#
+/**
+ * @file
+ * Fare inclusions custom block on the fleet catalog.
+ *
+ * Variables from FareInclusionsPreprocessor:
+ * - kicker: string
+ * - heading: string
+ * - items: list of { label, detail }
+ * - notes: list of strings
+ */
+#}
+{{ attach_library('luxury_motors/fare_inclusions') }}
+<div{{ attributes }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  <section class="fare-inclusions" aria-labelledby="fare-inclusions-title">
+    <div class="wrap">
+      <p class="kicker">{{ kicker }}</p>
+      <h2 class="title" id="fare-inclusions-title">{{ heading }}</h2>
+
+      {% if items %}
+        <ul class="fare-inclusions__list">
+          {% for item in items %}
+            <li class="fare-inclusions__item">
+              <span class="fare-inclusions__mark" aria-hidden="true"></span>
+              <span class="fare-inclusions__copy">
+                <strong>{{ item.label }}</strong>
+                {% if item.detail %}
+                  <span class="fare-inclusions__detail">{{ item.detail }}</span>
+                {% endif %}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if notes %}
+        <div class="fare-inclusions__notes">
+          {% for note in notes %}
+            <p>{{ note }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</div>

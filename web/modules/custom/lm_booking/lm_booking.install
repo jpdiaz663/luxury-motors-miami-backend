@@ -7,10 +7,12 @@
 
 declare(strict_types=1);
 
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * Implements hook_install().
@@ -18,6 +20,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 function lm_booking_install(): void {
   lm_booking_ensure_booking_code_field();
   lm_booking_ensure_booking_trip_fields();
+  lm_booking_ensure_fare_inclusions_block();
 }
 
 /**
@@ -34,6 +37,100 @@ function lm_booking_update_11001(): string {
 function lm_booking_update_11002(): string {
   lm_booking_ensure_booking_trip_fields();
   return 'Added booking pickup/drop-off location, time, and place fields.';
+}
+
+/**
+ * Move fleet fare-inclusions copy into an editorial custom block.
+ */
+function lm_booking_update_11003(): string {
+  lm_booking_ensure_fare_inclusions_block();
+  return 'Migrated fare inclusions to a custom block type.';
+}
+
+/**
+ * UUID of the placed Fare inclusions custom block.
+ */
+function lm_booking_fare_inclusions_uuid(): string {
+  return '3e7c9a12-5b84-4d6f-9e01-8a2c4f6d0b35';
+}
+
+/**
+ * Create the fare inclusions block (same copy as the retired plugin) and place it.
+ */
+function lm_booking_ensure_fare_inclusions_block(): void {
+  $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('block_content');
+  if (!isset($bundles['fare_inclusions'])) {
+    return;
+  }
+
+  $uuid = lm_booking_fare_inclusions_uuid();
+  $repository = \Drupal::service('entity.repository');
+  $block_content = $repository->loadEntityByUuid('block_content', $uuid);
+
+  if (!$block_content instanceof BlockContent) {
+    $items = [
+      ['label' => 'Seguro total del vehículo', 'detail' => 'Robo y accidente (CDW/LDW)'],
+      ['label' => 'Seguro a terceros', 'detail' => 'SLP / LIS / TPL / ALI'],
+      ['label' => 'Asistencia al vehículo', 'detail' => 'Falla mecánica'],
+      ['label' => 'Un conductor adicional', 'detail' => ''],
+      ['label' => 'Kilometraje ilimitado', 'detail' => ''],
+      ['label' => 'Todos los impuestos y tasas locales', 'detail' => ''],
+    ];
+    $item_values = [];
+    foreach ($items as $item) {
+      $paragraph = Paragraph::create([
+        'type' => 'fare_item',
+        'field_headline' => $item['label'],
+        'field_description' => $item['detail'],
+      ]);
+      $paragraph->save();
+      $item_values[] = [
+        'target_id' => $paragraph->id(),
+        'target_revision_id' => $paragraph->getRevisionId(),
+      ];
+    }
+
+    $block_content = BlockContent::create([
+      'uuid' => $uuid,
+      'type' => 'fare_inclusions',
+      'info' => 'Fare inclusions',
+      'status' => TRUE,
+      'reusable' => TRUE,
+      'field_kicker' => 'Included in rate',
+      'field_headline' => 'Artículos incluidos en la tarifa',
+      'field_fare_items' => $item_values,
+      'field_notes' => [
+        ['value' => 'Reserve ahora sin tarjeta de crédito y pague solo en el mostrador.'],
+        ['value' => 'Cancelación gratis: sin tasa de cancelación.'],
+      ],
+    ]);
+    $block_content->save();
+  }
+
+  $plugin_id = 'block_content:' . $uuid;
+  $config = \Drupal::configFactory()->getEditable('block.block.luxury_motors_fareinclusions');
+  if ($config->isNew()) {
+    return;
+  }
+  if ($config->get('plugin') === $plugin_id) {
+    return;
+  }
+
+  $config
+    ->set('plugin', $plugin_id)
+    ->set('settings', [
+      'id' => $plugin_id,
+      'label' => 'Fare inclusions',
+      'label_display' => '0',
+      'provider' => 'block_content',
+      'view_mode' => 'full',
+    ])
+    ->set('dependencies', [
+      'content' => ['block_content:fare_inclusions:' . $uuid],
+      'module' => ['block_content', 'system'],
+      'theme' => ['luxury_motors'],
+    ])
+    ->save();
 }
 
 function lm_booking_ensure_booking_code_field(): void {

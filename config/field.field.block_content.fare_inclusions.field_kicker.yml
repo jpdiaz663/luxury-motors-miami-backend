@@ -1,0 +1,19 @@
+uuid: 88ebf3b6-0d57-4f24-c249-61be8d3fa572
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.fare_inclusions
+    - field.storage.block_content.field_kicker
+id: block_content.fare_inclusions.field_kicker
+field_name: field_kicker
+entity_type: block_content
+bundle: fare_inclusions
+label: Kicker
+description: 'Short label above the section title.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,5 +1,5 @@
 .fare-inclusions {
-  padding: var(--spacing-10) 0 var(--spacing-12);
+  padding: var(--spacing-16) 2rem var(--spacing-12);
   background: var(--color-velo-di-luce);
   color: var(--color-notte-profonda);
 }
@@ -68,7 +68,7 @@
 
 .fare-inclusions__notes p {
   margin: 0;
-  font-size: var(--text-body-sm);
+  font-size: 0.87rem;
   letter-spacing: var(--track-ui);
   text-transform: uppercase;
   color: var(--color-notte-profonda);

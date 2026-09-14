@@ -1,0 +1,68 @@
+uuid: 06a31b3e-85df-470c-4ac1-e93605b72dfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.fare_inclusions
+    - field.field.block_content.fare_inclusions.field_fare_items
+    - field.field.block_content.fare_inclusions.field_headline
+    - field.field.block_content.fare_inclusions.field_kicker
+    - field.field.block_content.fare_inclusions.field_notes
+  module:
+    - paragraphs
+id: block_content.fare_inclusions.default
+targetEntityType: block_content
+bundle: fare_inclusions
+mode: default
+content:
+  field_fare_items:
+    type: paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: Item
+      title_plural: Items
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: fare_item
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_headline:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_kicker:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_notes:
+    type: string_textarea
+    weight: 4
+    region: content
+    settings:
+      rows: 2
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

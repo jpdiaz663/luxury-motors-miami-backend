@@ -1,0 +1,20 @@
+uuid: 17b42c4f-96e0-481d-5bd2-fa4716c83e0b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.fare_inclusions
+    - field.field.block_content.fare_inclusions.field_fare_items
+    - field.field.block_content.fare_inclusions.field_headline
+    - field.field.block_content.fare_inclusions.field_kicker
+    - field.field.block_content.fare_inclusions.field_notes
+id: block_content.fare_inclusions.default
+targetEntityType: block_content
+bundle: fare_inclusions
+mode: default
+content: {  }
+hidden:
+  field_fare_items: true
+  field_headline: true
+  field_kicker: true
+  field_notes: true

@@ -1,0 +1,19 @@
+uuid: 99fca4c7-1e68-4035-d35a-72cf9e40b683
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.fare_inclusions
+    - field.storage.block_content.field_headline
+id: block_content.fare_inclusions.field_headline
+field_name: field_headline
+entity_type: block_content
+bundle: fare_inclusions
+label: Headline
+description: 'Section title shown above the inclusion list.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

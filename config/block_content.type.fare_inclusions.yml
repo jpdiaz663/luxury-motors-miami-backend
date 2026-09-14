@@ -1,0 +1,8 @@
+uuid: 8c3a1d47-6e2f-4b90-a1c5-9d7e4f2b6083
+langcode: en
+status: true
+dependencies: {  }
+id: fare_inclusions
+label: 'Fare inclusions'
+revision: false
+description: 'Reusable copy for items included in the rental rate, shown on the fleet catalog.'

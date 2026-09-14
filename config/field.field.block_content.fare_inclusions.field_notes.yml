@@ -1,0 +1,19 @@
+uuid: b1bec6e9-308a-4257-f57c-94e1b062d8a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.fare_inclusions
+    - field.storage.block_content.field_notes
+id: block_content.fare_inclusions.field_notes
+field_name: field_notes
+entity_type: block_content
+bundle: fare_inclusions
+label: Notes
+description: 'Short notes shown under the inclusion list.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

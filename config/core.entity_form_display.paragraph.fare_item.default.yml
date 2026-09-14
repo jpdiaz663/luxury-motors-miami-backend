@@ -1,0 +1,32 @@
+uuid: e4e1f91c-63bd-458a-28af-c714e3950bd8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.fare_item.field_description
+    - field.field.paragraph.fare_item.field_headline
+    - paragraphs.paragraphs_type.fare_item
+id: paragraph.fare_item.default
+targetEntityType: paragraph
+bundle: fare_item
+mode: default
+content:
+  field_description:
+    type: string_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 2
+      placeholder: ''
+    third_party_settings: {  }
+  field_headline:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

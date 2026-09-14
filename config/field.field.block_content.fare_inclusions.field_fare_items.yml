@@ -1,19 +1,19 @@
-uuid: 24872cdf-ae9c-4500-a943-2130ba549057
+uuid: a0adb5d8-2f79-4146-e46b-83d0af51c794
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.terms_and_faqs
-    - field.storage.block_content.field_faqs
-    - paragraphs.paragraphs_type.faq_item
+    - block_content.type.fare_inclusions
+    - field.storage.block_content.field_fare_items
+    - paragraphs.paragraphs_type.fare_item
   module:
     - entity_reference_revisions
-id: block_content.terms_and_faqs.field_faqs
-field_name: field_faqs
+id: block_content.fare_inclusions.field_fare_items
+field_name: field_fare_items
 entity_type: block_content
-bundle: terms_and_faqs
-label: FAQs
-description: 'Question and answer pairs for the accordion.'
+bundle: fare_inclusions
+label: 'Included items'
+description: 'Each item is a rate inclusion with an optional detail line.'
 required: false
 translatable: false
 default_value: {  }
@@ -22,15 +22,15 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      faq_item: faq_item
+      fare_item: fare_item
     negate: 0
     target_bundles_drag_drop:
       faq_item:
         weight: 1
-        enabled: true
+        enabled: false
       fare_item:
         weight: 4
-        enabled: false
+        enabled: true
       featured_cars:
         weight: 0
         enabled: false

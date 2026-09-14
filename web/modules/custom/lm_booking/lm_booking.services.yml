@@ -12,8 +12,6 @@ services:
       - '@entity_type.manager'
   lm_booking.quote:
     class: Drupal\lm_booking\Quote\QuoteCalculator
-  lm_booking.fare_inclusions:
-    class: Drupal\lm_booking\FareInclusions
   lm_booking.reservation_code:
     class: Drupal\lm_booking\ReservationCode
     arguments:

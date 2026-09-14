@@ -496,6 +496,14 @@
   margin: 0;
 }
 
+.title.success {
+  background: var(--color-green-success) !important;
+  color: var(--color-bianco-ferrari);
+  border-radius: var(--radius-cards);
+  font-size: 18px;
+  margin: 0 3rem 0 0;
+}
+
 @media (max-width: 900px) {
   .checkout.confirm.light {
     padding: var(--spacing-8) var(--spacing-4);
@@ -511,12 +519,6 @@
   .confirm-hero .kicker,
   .confirm-hero .confirm-lead {
     text-align: center;
-  }
-
-  .title .success {
-    background: var(--color-green-success);
-    color: var(--color-bianco-ferrari);
-    border-radius: var(--radius-cards);
   }
   
   .confirm-ref {

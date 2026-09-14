@@ -28,6 +28,9 @@ settings:
       faq_item:
         weight: 4
         enabled: false
+      fare_item:
+        weight: 7
+        enabled: false
       featured_cars:
         weight: 3
         enabled: true

@@ -4,9 +4,12 @@ description: 'Reservation records and real availability for the fleet catalog.'
 package: Luxury Motors
 core_version_requirement: ^11
 dependencies:
+  - drupal:block
+  - drupal:block_content
   - drupal:node
   - drupal:datetime
   - drupal:options
   - drupal:taxonomy
   - drupal:views
   - lm_vehicle:lm_vehicle
+  - paragraphs:paragraphs

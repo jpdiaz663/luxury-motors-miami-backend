@@ -1,0 +1,30 @@
+uuid: f5f20a2d-74ce-469b-39b0-d825f4a61ce9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.fare_item.field_description
+    - field.field.paragraph.fare_item.field_headline
+    - paragraphs.paragraphs_type.fare_item
+id: paragraph.fare_item.default
+targetEntityType: paragraph
+bundle: fare_item
+mode: default
+content:
+  field_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_headline:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

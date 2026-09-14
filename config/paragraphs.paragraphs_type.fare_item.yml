@@ -1,0 +1,10 @@
+uuid: 2f9e6b14-0c58-4a73-b8d1-5e7a3c90f246
+langcode: en
+status: true
+dependencies: {  }
+id: fare_item
+label: 'Fare inclusion item'
+icon_uuid: null
+icon_default: null
+description: 'A rate inclusion with a title and optional detail line.'
+behavior_plugins: {  }

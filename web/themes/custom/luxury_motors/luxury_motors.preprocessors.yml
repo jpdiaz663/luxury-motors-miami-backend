@@ -12,3 +12,11 @@ luxury_motors.preprocessor.block.terms_and_faqs:
     - block__block_content__terms_and_faqs
     - block__luxury_motors_termsandfaqs
   weight: 0
+
+luxury_motors.preprocessor.block.fare_inclusions:
+  class: '\Drupal\luxury_motors\Plugin\preprocessors\FareInclusionsPreprocessor'
+  hooks:
+    - block__block_content__type__fare_inclusions
+    - block__block_content__fare_inclusions
+    - block__luxury_motors_fareinclusions
+  weight: 0

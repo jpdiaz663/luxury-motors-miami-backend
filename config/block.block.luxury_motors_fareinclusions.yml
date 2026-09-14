@@ -2,8 +2,10 @@ uuid: 7c4e8a91-2b6d-4f1a-9c3e-8d5a1b0e47f2
 langcode: en
 status: true
 dependencies:
+  content:
+    - 'block_content:fare_inclusions:3e7c9a12-5b84-4d6f-9e01-8a2c4f6d0b35'
   module:
-    - lm_booking
+    - block_content
     - system
   theme:
     - luxury_motors
@@ -12,12 +14,13 @@ theme: luxury_motors
 region: content
 weight: -2
 provider: null
-plugin: lm_booking_fare_inclusions
+plugin: 'block_content:3e7c9a12-5b84-4d6f-9e01-8a2c4f6d0b35'
 settings:
-  id: lm_booking_fare_inclusions
+  id: 'block_content:3e7c9a12-5b84-4d6f-9e01-8a2c4f6d0b35'
   label: 'Fare inclusions'
   label_display: '0'
-  provider: lm_booking
+  provider: block_content
+  view_mode: full
 visibility:
   request_path:
     id: request_path

@@ -39,13 +39,6 @@ function lm_booking_theme(): array {
         'copy_icon' => '',
       ],
     ],
-    'lm_booking_fare_inclusions' => [
-      'variables' => [
-        'heading' => '',
-        'items' => [],
-        'notes' => [],
-      ],
-    ],
     'lm_booking_reservation_form' => [
       'render element' => 'form',
     ],
