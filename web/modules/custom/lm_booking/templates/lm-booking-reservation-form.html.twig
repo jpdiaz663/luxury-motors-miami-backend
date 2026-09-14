@@ -22,11 +22,10 @@
       </div>
     {% else %}
       <header class="confirm-hero">
-        <p class="kicker">{{ 'Reservation'|t }}</p>
-        <h1 class="title">{{ 'Your reservation'|t }}</h1>
         {% if status_label %}
           <p class="reservation-status" data-status="{{ status }}">{{ status_label }}</p>
         {% endif %}
+        <p class="kicker">{{ 'Please visit our offices to complete the process. If you need further information, please check your email.'|t }}</h1>
         {% if reference %}
           <div class="confirm-ref">
             <p class="confirm-ref-code">{{ 'Confirmation code: @id'|t({'@id': reference}) }}</p>

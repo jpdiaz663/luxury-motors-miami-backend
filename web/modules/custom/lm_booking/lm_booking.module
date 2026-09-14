@@ -37,12 +37,21 @@ function lm_booking_theme(): array {
         'fleet_url' => '',
         'manage_url' => '',
         'copy_icon' => '',
+        'success_icon' => '',
       ],
     ],
     'lm_booking_reservation_form' => [
       'render element' => 'form',
     ],
   ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for confirmation itinerary.
+ */
+function lm_booking_preprocess_lm_booking_confirmation(array &$variables): void {
+  $path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
+  $variables['success_icon'] = '/' . $path . '/images/icons/success-car.png';
 }
 
 /**

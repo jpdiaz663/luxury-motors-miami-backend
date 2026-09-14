@@ -61,7 +61,7 @@ terms_and_faqs:
     - core/once
 
 checkout:
-  version: '1.1.5'
+  version: '1.1.7'
   css:
     component:
       css/checkout.css: {}
