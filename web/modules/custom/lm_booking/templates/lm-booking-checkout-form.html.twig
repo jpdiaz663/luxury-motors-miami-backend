@@ -46,10 +46,14 @@
         {{ form.return }}
       </div>
       {{ form.note }}
-      <div class="checkout-legal">
+      <section class="checkout-legal" aria-labelledby="checkout-legal-heading">
+        <header class="checkout-legal-mast">
+          <p class="kicker">{{ 'Agreements'|t }}</p>
+          <h3 id="checkout-legal-heading" class="checkout-legal-title">{{ 'Before you confirm'|t }}</h3>
+        </header>
         {{ form.terms }}
         {{ form.marketing }}
-      </div>
+      </section>
       {{ form.actions }}
     </div>
 

@@ -70,6 +70,18 @@ function luxury_motors_preprocess_page(array &$variables): void {
     $theme_path = \Drupal::service('extension.list.theme')->getPath('luxury_motors');
     $variables['error_background_url'] = '/' . $theme_path . '/images/error-4xx-bg.jpg';
   }
+
+  // Overlay nav (absolute, white type) only on full-bleed dark heroes.
+  // Checkout, reservation, and other light pages keep the bar in flow.
+  $overlay_nav = !empty($variables['is_front'])
+    || $route_name === 'view.vehicle_fleet.page_1'
+    || in_array($route_name, ['system.403', 'system.404'], TRUE);
+  if ($node && in_array($node->bundle(), ['vehicle', 'page'], TRUE)) {
+    $overlay_nav = TRUE;
+  }
+  if ($overlay_nav) {
+    $variables['attributes']['class'][] = 'is-overlay-nav';
+  }
 }
 
 /**

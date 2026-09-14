@@ -33,6 +33,13 @@
   flex-direction: column;
   background: var(--surface-void-black);
 }
+.lm-page > #main-content {
+  flex: 1 1 auto;
+}
+.lm-page > .footer {
+  flex-shrink: 0;
+  margin-top: auto;
+}
 .lm-page.is-fleet #main-content,
 .lm-page.is-fleet #main-content > div {
   overflow: visible;
@@ -97,11 +104,9 @@
 /* Nav */
 
 .nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 20;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -110,11 +115,18 @@
   border: 0;
 }
 
+.lm-page.is-overlay-nav > .nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 /* Sit below Drupal/Gin admin toolbar; anonymous users never get these classes. */
-body.toolbar-fixed .nav,
-body.toolbar-horizontal .nav,
-body.gin--classic-toolbar .nav,
-body.gin--horizontal-toolbar .nav {
+body.toolbar-fixed .lm-page.is-overlay-nav > .nav,
+body.toolbar-horizontal .lm-page.is-overlay-nav > .nav,
+body.gin--classic-toolbar .lm-page.is-overlay-nav > .nav,
+body.gin--horizontal-toolbar .lm-page.is-overlay-nav > .nav {
   top: calc(var(--gin-toolbar-height, 39px) + 16px);
 }
 
@@ -1409,7 +1421,7 @@ a.pill:focus-visible {
 
 .footer {
   background: var(--color-cemento);
-  border-top: 1px solid var(--color-grafite);
+  /* border-top: 1px solid var(--color-grafite); */
   padding: 54px 32px 44px;
 }
 .footer-grid {
@@ -1809,7 +1821,7 @@ a.pill:focus-visible {
   /* Hero */
 
   .hero--search:not(.hero--search-fleet) {
-    min-height: 100svh;
+    min-height: 50svh;
     overflow: visible;
   }
   .hero-media { background-position: center 18%; }

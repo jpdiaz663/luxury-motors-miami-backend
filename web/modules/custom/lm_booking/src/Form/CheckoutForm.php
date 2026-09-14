@@ -133,19 +133,21 @@ final class CheckoutForm extends FormBase {
       ],
     ];
 
-    $terms = Url::fromUserInput('/terms-and-conditions')->toString();
+    $terms = Url::fromUserInput('/terms')->toString();
     $form['terms'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('I have read and agree to the <a href="@url">Terms and Conditions</a> of the website.', [
         '@url' => $terms,
       ]),
       '#required' => TRUE,
+      '#wrapper_attributes' => ['class' => ['checkout-legal__item']],
     ];
     $form['marketing'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('I agree to receive promotional emails from Luxury Motors.'),
       '#required' => FALSE,
       '#default_value' => 0,
+      '#wrapper_attributes' => ['class' => ['checkout-legal__item', 'checkout-legal__item--optional']],
     ];
     $form['actions'] = [
       '#type' => 'actions',

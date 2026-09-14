@@ -1,5 +1,9 @@
 .checkout {
-  padding: var(--spacing-16) var(--spacing-8);
+  padding: var(--spacing-8);
+}
+
+.checkout.light {
+  padding: var(--spacing-8);
 }
 
 .checkout-layout {
@@ -95,22 +99,11 @@
 }
 
 .checkout-main .form-item label,
-.reservation-lookup-card .form-item label,
-.checkout-legal .form-item label {
+.reservation-lookup-card .form-item label {
   font-size: var(--text-caption);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
   color: var(--color-piombo);
-}
-
-.checkout-legal .form-item label {
-  text-transform: none;
-  letter-spacing: 0.015em;
-  font-size: var(--text-body);
-  color: var(--color-carbone);
-  display: flex;
-  gap: var(--spacing-3);
-  align-items: flex-start;
 }
 
 .checkout-main input[type="text"],
@@ -131,13 +124,102 @@
 
 .checkout-legal {
   display: grid;
-  gap: var(--spacing-4);
-  margin: var(--spacing-8) 0 var(--spacing-6);
+  gap: 0;
+  margin: 0 0 var(--spacing-6);
+  padding: var(--spacing-6) 0 0;
+  border-top: 1px solid var(--color-argento);
+}
+
+.checkout-legal-mast {
+  margin: 0 0 var(--spacing-4);
+}
+
+.checkout-legal-mast .kicker {
+  margin: 0 0 var(--spacing-1);
+}
+
+.checkout-legal-title {
+  margin: 0;
+  font-size: var(--text-display);
+  letter-spacing: var(--track-display);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-carbone);
+}
+
+.checkout-main .checkout-legal .form-item,
+.checkout-legal .form-item {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  column-gap: var(--spacing-3);
+  align-items: start;
+  margin: 0;
+  padding: var(--spacing-4) 0 0;
+}
+
+.checkout-legal .form-item + .form-item {
+  margin-top: var(--spacing-3);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-argento);
+}
+
+.checkout-legal input[type="checkbox"] {
+  appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.2em 0 0;
+  border: 1px solid var(--color-argento);
+  border-radius: 2px;
+  background-color: var(--color-bianco);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0.7rem;
+  cursor: pointer;
+}
+
+.checkout-legal input[type="checkbox"]:checked {
+  border-color: var(--color-rosso-corsa);
+  background-color: var(--color-rosso-corsa);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.2l3.2 3.3L13 4.5'/%3E%3C/svg%3E");
+}
+
+.checkout-legal input[type="checkbox"]:focus-visible {
+  outline: 1px solid var(--color-rosso-corsa);
+  outline-offset: 3px;
+}
+
+.checkout-main .checkout-legal .form-item > label,
+.checkout-legal .form-item > label,
+.checkout-legal .form-item .option {
+  display: block;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0.015em;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-carbone);
+  cursor: pointer;
+}
+
+.checkout-legal__item--optional .option,
+.checkout-legal__item--optional > label {
+  color: var(--color-piombo);
+}
+
+.checkout-legal .form-item__error-message,
+.checkout-legal .form-item--error-message {
+  grid-column: 2;
+  margin: var(--spacing-1) 0 0;
 }
 
 .checkout-legal a {
   color: var(--color-carbone);
   text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.checkout-legal a:hover,
+.checkout-legal a:focus-visible {
+  color: var(--color-rosso-corsa);
 }
 
 .checkout-cta {

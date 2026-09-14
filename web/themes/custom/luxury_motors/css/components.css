@@ -115,7 +115,7 @@ button.cta,
 .btn--primary:focus-visible {
   background-color: var(--color-rosso-scuro);
   border-color: var(--color-rosso-scuro);
-  color: var(--color-bianco-ferrari);
+  color: var(--color-bianco-ferrari) !important;
 }
 
 .btn--primary:active:not(:disabled) {
