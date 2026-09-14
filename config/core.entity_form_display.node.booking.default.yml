@@ -39,7 +39,7 @@ content:
     region: content
     settings:
       size: 16
-      placeholder: 'LM-XXXXXX'
+      placeholder: LM-XXXXXX
     third_party_settings: {  }
   field_booking_dropoff_location:
     type: entity_reference_autocomplete

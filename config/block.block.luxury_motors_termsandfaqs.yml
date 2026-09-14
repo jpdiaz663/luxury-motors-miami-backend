@@ -25,6 +25,4 @@ visibility:
   request_path:
     id: request_path
     negate: false
-    pages: |-
-      /home
-      <front>
+    pages: "/home\r\n/terms\r\n<front>"

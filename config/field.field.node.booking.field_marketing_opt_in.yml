@@ -9,7 +9,7 @@ id: node.booking.field_marketing_opt_in
 field_name: field_marketing_opt_in
 entity_type: node
 bundle: booking
-label: Marketing emails
+label: 'Marketing emails'
 description: 'Optional promotional email consent from checkout.'
 required: false
 translatable: false

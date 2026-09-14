@@ -9,7 +9,7 @@ id: node.booking.field_booking_code
 field_name: field_booking_code
 entity_type: node
 bundle: booking
-label: Reservation code
+label: 'Reservation code'
 description: 'Public desk reference in the form LM- plus six alphanumeric characters.'
 required: false
 translatable: false
