@@ -30,9 +30,9 @@
     {% endif %}
   </div>
   <aside class="card-quote">
-    <p class="card-quote-kicker">{{ 'Total price'|t }}</p>
+    <p class="card-quote-kicker">{{ 'Total price for'|t }}  <span class="card-quote-kicker-days">{{ card.days }}</span> {{ 'days'|t }} </p>
     {% if card.total_price %}
-      <p class="card-quote-price">{{ card.total_price }}</p>
+      <p class="card-quote-price">{{ card.total_price }} </p>
     {% endif %}
     {% if card.book_url %}
       <a class="btn btn--primary card-quote-cta" href="{{ card.book_url }}" data-lm-reserve data-lm-vehicle="{{ card.nid }}">{{ 'Reserve on Counter'|t }}</a>

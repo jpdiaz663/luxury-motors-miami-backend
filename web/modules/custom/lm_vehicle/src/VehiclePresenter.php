@@ -70,6 +70,7 @@ final class VehiclePresenter {
       'glow' => $color ? $this->visibleOnDark($chip) : '#5c6370',
       'short_description' => $this->plain($node, 'field_short_description'),
       'daily_price' => $this->money($node, 'field_daily_price'),
+      'days' => (string) $this->catalog->rentalDays(),
       'total_price' => $this->totalPrice($node),
       'specs' => $this->cardSpecs($node, $category),
       'image' => $this->mediaImage($this->referencedMedia($node, 'field_main_image')),

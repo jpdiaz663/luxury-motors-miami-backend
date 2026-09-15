@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ * Contact desk: inquiry form + direct lines.
+ *
+ * - kicker, heading, intro
+ * - form: inquiry Form API render
+ * - channels: list of { id, label, value, href, pending }
+ */
+#}
+<section class="contact" aria-labelledby="contact-heading">
+  <div class="wrap contact__layout">
+    <header class="contact__mast">
+      {% if kicker %}
+        <p class="kicker">{{ kicker }}</p>
+      {% endif %}
+      <h2 class="title" id="contact-heading">{{ heading }}</h2>
+      {% if intro %}
+        <p class="contact__intro">{{ intro }}</p>
+      {% endif %}
+    </header>
+
+    <div class="contact-desk">
+      <h3 class="contact-desk__title">{{ 'Request'|t }}</h3>
+      {{ form }}
+    </div>
+
+    <aside class="contact-lines" aria-labelledby="contact-lines-heading">
+      <p class="kicker" id="contact-lines-heading">{{ 'Direct lines'|t }}</p>
+      <p class="contact-lines__note">{{ 'Skip the form if you already know who to call.'|t }}</p>
+      <ul class="contact-lines__list">
+        {% for channel in channels %}
+          <li class="contact-lines__item{% if channel.pending %} is-pending{% endif %}">
+            <span class="contact-lines__label">{{ channel.label }}</span>
+            {% if channel.href %}
+              <a class="contact-lines__value" href="{{ channel.href }}">{{ channel.value }}</a>
+            {% else %}
+              <span class="contact-lines__value">{{ channel.value }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </div>
+</section>

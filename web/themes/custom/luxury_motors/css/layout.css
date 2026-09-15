@@ -2207,3 +2207,10 @@ a.pill:focus-visible {
     line-height: var(--lh-7xl) !important;
   }
 }
+
+.card-quote-kicker-days {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-xs);
+  font-weight: 400;
+  color: var(--color-cemento);
+}

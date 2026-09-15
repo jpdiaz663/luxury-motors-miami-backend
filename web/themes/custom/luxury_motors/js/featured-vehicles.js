@@ -39,9 +39,14 @@
       });
       const activeThumb = thumbs[index];
       if (activeThumb && track) {
-        activeThumb.scrollIntoView({
-          inline: "center",
-          block: "nearest",
+        const trackBox = track.getBoundingClientRect();
+        const thumbBox = activeThumb.getBoundingClientRect();
+        const delta =
+          thumbBox.left +
+          thumbBox.width / 2 -
+          (trackBox.left + trackBox.width / 2);
+        track.scrollTo({
+          left: track.scrollLeft + delta,
           behavior: reduced ? "auto" : "smooth",
         });
       }

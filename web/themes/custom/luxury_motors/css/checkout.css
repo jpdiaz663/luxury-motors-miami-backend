@@ -306,9 +306,7 @@
 
   .checkout-vehicle,
   .checkout-dates,
-  .checkout-legs,
-  .confirm-itinerary,
-  .confirm-guest {
+  .checkout-legs {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -443,6 +441,8 @@
   grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem);
   gap: var(--spacing-6);
   align-items: stretch;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .confirm-itinerary-copy,
@@ -461,17 +461,21 @@
 
 .confirm-photo {
   margin: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   border-radius: var(--radius-cards);
   background: var(--color-cemento);
 }
 
-.confirm-photo img {
+.lm-theme .confirm-photo img {
+  display: block;
   width: 100%;
+  max-width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  min-height: 16rem;
+  object-position: center;
 }
 
 .confirm-guest {
@@ -618,6 +622,26 @@
     text-align: center;
   }
   
+  .confirm-itinerary,
+  .confirm-guest {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .confirm-photo {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 14rem;
+  }
+
+  .lm-theme .confirm-photo img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 14rem;
+    object-fit: cover;
+  }
+
   .confirm-ref {
     margin: var(--spacing-4) 0 0;
     width: 100%;

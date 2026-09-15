@@ -1,0 +1,7 @@
+name: Luxury Motors Contact
+type: module
+description: 'Inquiry form and direct-line contact desk for Concierge requests.'
+package: Luxury Motors
+core_version_requirement: ^11
+dependencies:
+  - drupal:block

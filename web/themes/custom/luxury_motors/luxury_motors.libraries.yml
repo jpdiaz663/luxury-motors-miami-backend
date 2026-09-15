@@ -77,4 +77,10 @@ fare_inclusions:
     component:
       css/fare-inclusions.css: {}
 
+contact:
+  version: VERSION
+  css:
+    component:
+      css/contact.css: {}
+
 

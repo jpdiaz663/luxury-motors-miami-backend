@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Inquiry fields for the contact desk.
+ */
+#}
+<form{{ create_attribute(form['#attributes']) }}>
+  {{ form.name }}
+  <div class="contact-form__pair">
+    {{ form.email }}
+    {{ form.phone }}
+  </div>
+  <div class="contact-form__pair">
+    {{ form.pickup }}
+    {{ form.return }}
+  </div>
+  {{ form.vehicle }}
+  {{ form.message }}
+  {{ form.website }}
+  {{ form.actions }}
+  {{ form.form_build_id }}
+  {{ form.form_token }}
+  {{ form.form_id }}
+</form>

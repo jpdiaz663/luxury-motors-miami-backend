@@ -31,6 +31,7 @@ module:
   layout_discovery: 0
   link: 0
   lm_booking: 0
+  lm_contact: 0
   lm_vehicle: 0
   media: 0
   media_library: 0
