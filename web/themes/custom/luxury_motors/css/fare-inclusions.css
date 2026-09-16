@@ -1,5 +1,6 @@
 .fare-inclusions {
-  padding: var(--spacing-16) 2rem var(--spacing-12);
+  --fare-inclusions-gutter: 2rem;
+  padding: var(--spacing-16) var(--fare-inclusions-gutter) var(--spacing-12);
   background: var(--color-velo-di-luce);
   color: var(--color-notte-profonda);
 }
@@ -82,6 +83,35 @@
 
 @media (max-width: 640px) {
   .fare-inclusions__list {
-    grid-template-columns: 1fr;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: var(--spacing-3);
+    margin-inline: calc(var(--fare-inclusions-gutter) * -1);
+    padding: var(--spacing-2) var(--fare-inclusions-gutter) var(--spacing-3);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--fare-inclusions-gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fare-inclusions__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fare-inclusions__item {
+    flex: 0 0 min(18.5rem, 78vw);
+    padding: var(--spacing-4);
+    background: var(--color-bianco-ferrari);
+    border: 0;
+    border-radius: var(--radius-cards);
+    box-shadow: var(--shadow-cards);
+    scroll-snap-align: start;
+  }
+
+  .fare-inclusions__notes {
+    margin-top: var(--spacing-5);
   }
 }

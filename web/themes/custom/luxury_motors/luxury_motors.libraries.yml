@@ -91,6 +91,11 @@ fare_inclusions:
   css:
     component:
       css/fare-inclusions.css: {}
+  js:
+    js/fare-inclusions.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 contact:
   version: VERSION
