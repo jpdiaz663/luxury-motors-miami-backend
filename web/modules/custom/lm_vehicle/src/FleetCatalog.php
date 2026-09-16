@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\lm_vehicle;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -17,6 +19,12 @@ final class FleetCatalog {
 
   public const PATH = '/fleet';
 
+  public const LEAD_HOURS = 24;
+
+  public const MIN_RENTAL_HOURS = 0;
+
+  public const DEFAULT_SPAN_DAYS = 3;
+
   /**
    * Views grouped price keys (must match views.view.vehicle_fleet).
    */
@@ -29,6 +37,8 @@ final class FleetCatalog {
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly RequestStack $requestStack,
+    private readonly ConfigFactoryInterface $configFactory,
+    private readonly TimeInterface $time,
   ) {}
 
   /**
@@ -246,8 +256,13 @@ final class FleetCatalog {
     $window = $this->resolvedWindow();
     $clean['pickup'] = $window['pickup'];
     $clean['return'] = $window['return'];
-    $clean['ptime'] = $this->hourValue($clean['ptime'] ?? '');
-    $clean['rtime'] = $this->hourValue($clean['rtime'] ?? '');
+    $defaults = $this->defaultWindow();
+    $clean['ptime'] = ($clean['ptime'] ?? '') !== ''
+      ? $this->hourValue($clean['ptime'])
+      : $defaults['ptime'];
+    $clean['rtime'] = ($clean['rtime'] ?? '') !== ''
+      ? $this->hourValue($clean['rtime'])
+      : $defaults['rtime'];
 
     return $clean;
   }
@@ -255,12 +270,19 @@ final class FleetCatalog {
   /**
    * Banner default pickup/return when the query omits dates.
    *
-   * @return array{pickup: string, return: string}
+   * @return array{pickup: string, return: string, ptime: string, rtime: string}
    */
   public function defaultWindow(): array {
+    $pickup = $this->earliestPickupInstant();
+    $return = $pickup->modify('+' . self::DEFAULT_SPAN_DAYS . ' days');
+    $ptime = $pickup->format('H') . ':00';
+    $rtime = $return->format('H') . ':00';
+
     return [
-      'pickup' => (new \DateTimeImmutable('tomorrow'))->format('Y-m-d'),
-      'return' => (new \DateTimeImmutable('tomorrow +3 days'))->format('Y-m-d'),
+      'pickup' => $pickup->format('Y-m-d'),
+      'return' => $return->format('Y-m-d'),
+      'ptime' => $ptime,
+      'rtime' => $rtime,
     ];
   }
 
@@ -344,7 +366,16 @@ final class FleetCatalog {
    */
   public function hasRentalWindow(): bool {
     $query = $this->currentQuery();
-    return $this->validWindow($query['pickup'], $query['return']);
+    if ($query['pickup'] === '' || $query['return'] === '') {
+      return FALSE;
+    }
+
+    return $this->validTrip(
+      $query['pickup'],
+      $this->hourValue($query['ptime']),
+      $query['return'],
+      $this->hourValue($query['rtime']),
+    );
   }
 
   /**
@@ -375,14 +406,19 @@ final class FleetCatalog {
   /**
    * Values the fleet banner JS uses to compare the form with the last search.
    *
-   * @return array{tripComplete: bool, hasRentalWindow: bool, committed: array{pickup: string, return: string, ptime: string, rtime: string}, locations: array{from: string, to: string, place: string, category: string}}
+   * @return array<string, mixed>
    */
   public function searchClientSettings(): array {
     $query = $this->currentQuery();
+    $earliest = $this->earliestPickupInstant();
 
     return [
       'tripComplete' => $this->tripIsComplete(),
       'hasRentalWindow' => $this->hasRentalWindow(),
+      'leadHours' => self::LEAD_HOURS,
+      'minRentalHours' => self::MIN_RENTAL_HOURS,
+      'earliestPickup' => $earliest->format('c'),
+      'defaultWindow' => $this->defaultWindow(),
       'committed' => [
         'pickup' => $query['pickup'],
         'return' => $query['return'],
@@ -443,14 +479,101 @@ final class FleetCatalog {
     if ($pickup === '' || $return === '') {
       return FALSE;
     }
-    $start = \DateTimeImmutable::createFromFormat('Y-m-d', $pickup);
-    $end = \DateTimeImmutable::createFromFormat('Y-m-d', $return);
+    $start = $this->parseDay($pickup);
+    $end = $this->parseDay($return);
 
     return $start instanceof \DateTimeImmutable
       && $end instanceof \DateTimeImmutable
-      && $start->format('Y-m-d') === $pickup
-      && $end->format('Y-m-d') === $return
       && $end >= $start;
+  }
+
+  public function timezone(): \DateTimeZone {
+    $name = (string) $this->configFactory->get('system.date')->get('timezone.default');
+    return new \DateTimeZone($name !== '' ? $name : 'UTC');
+  }
+
+  public function now(): \DateTimeImmutable {
+    return (new \DateTimeImmutable('@' . $this->time->getRequestTime()))->setTimezone($this->timezone());
+  }
+
+  /**
+   * First selectable pickup instant (now + lead time, rounded up to an hour).
+   */
+  public function earliestPickupInstant(): \DateTimeImmutable {
+    return $this->ceilToHour($this->now()->modify('+' . self::LEAD_HOURS . ' hours'));
+  }
+
+  /**
+   * Earliest return instant for a pickup date/time.
+   */
+  public function minReturnInstant(string $pickup, string $ptime, ?int $min_rental_hours = NULL): ?\DateTimeImmutable {
+    $start = $this->instant($pickup, $ptime);
+    if (!$start) {
+      return NULL;
+    }
+    $hours = $min_rental_hours ?? self::MIN_RENTAL_HOURS;
+    if ($hours <= 0) {
+      return $start;
+    }
+
+    return $this->ceilToHour($start->modify('+' . $hours . ' hours'));
+  }
+
+  public function validTrip(string $pickup, string $ptime, string $return, string $rtime, ?int $min_rental_hours = NULL): bool {
+    return $this->tripIssue($pickup, $ptime, $return, $rtime, $min_rental_hours) === NULL;
+  }
+
+  /**
+   * @return 'window'|'lead'|'return'|null
+   */
+  public function tripIssue(string $pickup, string $ptime, string $return, string $rtime, ?int $min_rental_hours = NULL): ?string {
+    if (!$this->validWindow($pickup, $return)) {
+      return 'window';
+    }
+    $start = $this->instant($pickup, $ptime);
+    $end = $this->instant($return, $rtime);
+    if (!$start || !$end) {
+      return 'window';
+    }
+    if ($start < $this->earliestPickupInstant()) {
+      return 'lead';
+    }
+    $min_return = $this->minReturnInstant($pickup, $ptime, $min_rental_hours);
+    if (!$min_return || $end < $min_return) {
+      return 'return';
+    }
+
+    return NULL;
+  }
+
+  public function parseDay(string $date): ?\DateTimeImmutable {
+    $parsed = \DateTimeImmutable::createFromFormat('!Y-m-d', $date, $this->timezone());
+    if (!$parsed instanceof \DateTimeImmutable || $parsed->format('Y-m-d') !== $date) {
+      return NULL;
+    }
+
+    return $parsed;
+  }
+
+  public function instant(string $date, string $time): ?\DateTimeImmutable {
+    $day = $this->parseDay($date);
+    if (!$day) {
+      return NULL;
+    }
+    $hour = $this->hourValue($time);
+    $parts = explode(':', $hour);
+
+    return $day->setTime((int) $parts[0], (int) ($parts[1] ?? 0));
+  }
+
+  public function ceilToHour(\DateTimeImmutable $instant): \DateTimeImmutable {
+    $local = $instant->setTimezone($this->timezone());
+    if ((int) $local->format('i') === 0 && (int) $local->format('s') === 0) {
+      return $local->setTime((int) $local->format('G'), 0);
+    }
+    $next = $local->modify('+1 hour');
+
+    return $next->setTime((int) $next->format('G'), 0);
   }
 
 }

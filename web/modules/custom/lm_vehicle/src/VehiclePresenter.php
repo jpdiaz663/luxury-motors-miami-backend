@@ -49,8 +49,8 @@ final class VehiclePresenter {
         'category' => $category_id,
         'pickup' => $window['pickup'],
         'return' => $window['return'],
-        'ptime' => '10:00',
-        'rtime' => '10:00',
+        'ptime' => $window['ptime'],
+        'rtime' => $window['rtime'],
       ])
       : $this->catalog->fleetUrl([]);
 

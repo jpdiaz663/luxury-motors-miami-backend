@@ -9,6 +9,8 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@request_stack'
+      - '@config.factory'
+      - '@datetime.time'
   lm_vehicle.popular_collection:
     class: Drupal\lm_vehicle\PopularCollection
     arguments:

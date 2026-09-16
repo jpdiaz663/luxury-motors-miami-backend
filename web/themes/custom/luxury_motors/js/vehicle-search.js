@@ -6,6 +6,68 @@
     return `${year}-${month}-${day}`;
   }
 
+  function parseDay(value) {
+    const parts = String(value || "").split("-");
+    if (parts.length !== 3) {
+      return null;
+    }
+    const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function combineDateTime(dateStr, timeStr) {
+    const date = parseDay(dateStr);
+    if (!date) {
+      return null;
+    }
+    const bits = String(timeStr || "10:00").split(":");
+    date.setHours(Number(bits[0]) || 0, Number(bits[1]) || 0, 0, 0);
+    return date;
+  }
+
+  function searchSettings() {
+    return drupalSettings.lmVehicleSearch || {};
+  }
+
+  function earliestPickupDate() {
+    const settings = searchSettings();
+    if (settings.earliestPickup) {
+      const parsed = new Date(settings.earliestPickup);
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed;
+      }
+    }
+    const fallback = new Date();
+    fallback.setHours(fallback.getHours() + (Number(settings.leadHours) || 24));
+    return fallback;
+  }
+
+  function minReturnDate(pickup, ptime) {
+    const start = combineDateTime(pickup, ptime);
+    if (!start) {
+      return null;
+    }
+    const hours = Number(searchSettings().minRentalHours || 0);
+    if (hours <= 0) {
+      return start;
+    }
+    return new Date(start.getTime() + hours * 3600000);
+  }
+
+  function tripIssueFromValues(pickup, ptime, back, rtime) {
+    const start = combineDateTime(pickup, ptime);
+    const end = combineDateTime(back, rtime);
+    const earliest = earliestPickupDate();
+    if (!start || start < earliest) {
+      return "lead";
+    }
+    const minReturn = minReturnDate(pickup, ptime);
+    if (!end || !minReturn || end < minReturn) {
+      return "return";
+    }
+    return null;
+  }
+
   function termId(value) {
     const match = String(value || "").match(/\((\d+)\)\s*$/);
     if (match) {
@@ -18,6 +80,134 @@
     return String(value || "").replace(/\s*\(\d+\)\s*$/, "").trim();
   }
 
+  function closeTimeDrops(except) {
+    document.querySelectorAll(".lm-time-drop.is-open").forEach(function (drop) {
+      if (except && drop === except) {
+        return;
+      }
+      drop.classList.remove("is-open");
+      const trigger = drop.querySelector(".lm-time-drop__trigger");
+      const panel = drop.querySelector(".lm-time-drop__panel");
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+      }
+      if (panel) {
+        panel.hidden = true;
+      }
+    });
+  }
+
+  function refreshTimeDrop(select) {
+    if (select && typeof select.lmRefreshTimeDrop === "function") {
+      select.lmRefreshTimeDrop();
+    }
+  }
+
+  function bindTimeDrop(select) {
+    if (!select || select.closest(".lm-time-drop")) {
+      return;
+    }
+    const wrap = document.createElement("div");
+    wrap.className = "lm-time-drop";
+    select.parentNode.insertBefore(wrap, select);
+    wrap.appendChild(select);
+    select.classList.add("lm-time-drop__native");
+    select.setAttribute("tabindex", "-1");
+    select.setAttribute("aria-hidden", "true");
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "lm-time-drop__trigger";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.id = (select.id || "banner-time") + "-trigger";
+
+    const panel = document.createElement("div");
+    panel.className = "lm-time-drop__panel";
+    panel.setAttribute("role", "listbox");
+    panel.setAttribute("aria-labelledby", trigger.id);
+    panel.hidden = true;
+
+    function selectedLabel() {
+      return select.selectedOptions[0] ? select.selectedOptions[0].textContent.trim() : "";
+    }
+
+    function close() {
+      wrap.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      panel.hidden = true;
+    }
+
+    function renderOptions() {
+      panel.replaceChildren();
+      Array.prototype.forEach.call(select.options, function (option) {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "lm-time-drop__option";
+        item.setAttribute("role", "option");
+        item.dataset.value = option.value;
+        item.textContent = option.textContent.trim();
+        item.disabled = option.disabled;
+        const selected = option.selected || option.value === select.value;
+        item.setAttribute("aria-selected", selected ? "true" : "false");
+        if (selected) {
+          item.classList.add("is-selected");
+        }
+        item.addEventListener("click", function () {
+          if (option.disabled) {
+            return;
+          }
+          select.value = option.value;
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          close();
+          trigger.focus();
+        });
+        panel.appendChild(item);
+      });
+      trigger.textContent = selectedLabel();
+    }
+
+    function open() {
+      closeTimeDrops(wrap);
+      renderOptions();
+      wrap.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+      panel.hidden = false;
+      const selected = panel.querySelector(".is-selected") || panel.querySelector(".lm-time-drop__option:not(:disabled)");
+      if (selected) {
+        selected.focus();
+        selected.scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    trigger.addEventListener("click", function (event) {
+      event.preventDefault();
+      if (wrap.classList.contains("is-open")) {
+        close();
+      }
+      else {
+        open();
+      }
+    });
+    trigger.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open();
+      }
+    });
+    wrap.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        trigger.focus();
+      }
+    });
+    wrap.appendChild(trigger);
+    wrap.appendChild(panel);
+    select.lmRefreshTimeDrop = renderOptions;
+    renderOptions();
+  }
+
   function bindBanner(form) {
     const from = form.querySelector("#banner-from");
     const to = form.querySelector("#banner-to");
@@ -25,11 +215,14 @@
     const toId = form.querySelector("#banner-to-id") || form.querySelector('input[name="to"]');
     const pickup = form.querySelector("#banner-pickup");
     const back = form.querySelector("#banner-return");
+    const ptime = form.querySelector("#banner-ptime");
+    const rtime = form.querySelector("#banner-rtime");
+    const dateHint = form.querySelector("[data-banner-date-hint]");
     const note = form.querySelector("[data-banner-note]");
     const place = form.querySelector("#banner-place");
     const submit = form.querySelector("[data-banner-submit]");
     const reset = form.querySelector("[data-banner-reset]");
-    const settings = drupalSettings.lmVehicleSearch || {};
+    const settings = searchSettings();
     const requiresPlace = (settings.requiresPlace || []).map(Number);
     const collapse = form.querySelector("[data-banner-collapse]");
     const panel = form.querySelector("[data-banner-panel]");
@@ -41,19 +234,232 @@
       return;
     }
 
-    const today = new Date();
-    const min = isoDate(today);
-    pickup.min = min;
-    back.min = pickup.value || min;
-    if (!pickup.value) {
-      const start = new Date(today);
-      start.setDate(start.getDate() + 1);
-      pickup.value = isoDate(start);
+    const defaults = settings.defaultWindow || {};
+    if (!pickup.value && defaults.pickup) {
+      pickup.value = defaults.pickup;
     }
-    if (!back.value) {
-      const end = new Date(pickup.value);
-      end.setDate(end.getDate() + 3);
-      back.value = isoDate(end);
+    if (!back.value && defaults.return) {
+      back.value = defaults.return;
+    }
+    if (ptime && !ptime.value && defaults.ptime) {
+      ptime.value = defaults.ptime;
+    }
+    if (rtime && !rtime.value && defaults.rtime) {
+      rtime.value = defaults.rtime;
+    }
+
+    let pickupPicker = null;
+    let returnPicker = null;
+    let syncingDates = false;
+
+    function showDateHint(kind) {
+      if (!dateHint) {
+        return;
+      }
+      const strong = dateHint.querySelector("strong");
+      const kicker = dateHint.querySelector(".banner-dates-hint__kicker");
+      if (kind === "lead") {
+        if (kicker) {
+          kicker.textContent = Drupal.t("Pickup");
+        }
+        if (strong) {
+          strong.textContent = Drupal.t("Your reservation must be made at least 24 hours before the pickup date.");
+        }
+        dateHint.hidden = false;
+      }
+      else if (kind === "return") {
+        if (kicker) {
+          kicker.textContent = Drupal.t("Return");
+        }
+        if (strong) {
+          strong.textContent = Drupal.t("Choose a return date on or after pickup.");
+        }
+        dateHint.hidden = false;
+      }
+      else {
+        dateHint.hidden = true;
+      }
+    }
+
+    function disableHoursBefore(select, minInstant, dateStr) {
+      if (!select || !dateStr) {
+        return;
+      }
+      Array.prototype.forEach.call(select.options, function (option) {
+        const instant = combineDateTime(dateStr, option.value);
+        option.disabled = !!(minInstant && instant && instant < minInstant);
+      });
+      if (select.selectedOptions[0] && select.selectedOptions[0].disabled) {
+        const next = Array.prototype.find.call(select.options, function (option) {
+          return !option.disabled && option.value;
+        });
+        select.value = next ? next.value : "";
+      }
+    }
+
+    function syncHourOptions() {
+      disableHoursBefore(ptime, earliestPickupDate(), pickup.value);
+      disableHoursBefore(rtime, minReturnDate(pickup.value, ptime ? ptime.value : ""), back.value);
+      refreshTimeDrop(ptime);
+      refreshTimeDrop(rtime);
+    }
+
+    function earliestDay() {
+      return isoDate(earliestPickupDate());
+    }
+
+    function returnMinDay() {
+      const minInstant = minReturnDate(pickup.value, ptime ? ptime.value : "") || earliestPickupDate();
+      return isoDate(minInstant);
+    }
+
+    function clearReturn() {
+      syncingDates = true;
+      if (returnPicker) {
+        returnPicker.clear();
+      }
+      else {
+        back.value = "";
+      }
+      syncingDates = false;
+    }
+
+    function syncReturnConstraint(clearInvalid) {
+      const minDay = returnMinDay();
+      if (returnPicker) {
+        returnPicker.set("minDate", minDay);
+      }
+      else {
+        back.min = minDay;
+      }
+      syncHourOptions();
+      if (clearInvalid && back.value) {
+        const issue = tripIssueFromValues(
+          pickup.value,
+          ptime ? ptime.value : "",
+          back.value,
+          rtime ? rtime.value : "",
+        );
+        if (issue === "return") {
+          clearReturn();
+          showDateHint("return");
+          back.focus();
+        }
+      }
+    }
+
+    function applyDefaultWindow() {
+      const windowDefaults = searchSettings().defaultWindow || {};
+      syncingDates = true;
+      if (pickupPicker) {
+        pickupPicker.setDate(windowDefaults.pickup || earliestDay(), false);
+      }
+      else {
+        pickup.value = windowDefaults.pickup || earliestDay();
+      }
+      if (returnPicker) {
+        returnPicker.setDate(windowDefaults.return || "", false);
+      }
+      else {
+        back.value = windowDefaults.return || "";
+      }
+      if (ptime) {
+        ptime.value = windowDefaults.ptime || "10:00";
+      }
+      if (rtime) {
+        rtime.value = windowDefaults.rtime || "10:00";
+      }
+      syncingDates = false;
+      syncReturnConstraint(false);
+      showDateHint("");
+    }
+
+    const pickerOptions = {
+      dateFormat: "Y-m-d",
+      disableMobile: true,
+      allowInput: false,
+      clickOpens: true,
+      static: true,
+      monthSelectorType: "static",
+      nextArrow: "<span aria-hidden=\"true\">›</span>",
+      prevArrow: "<span aria-hidden=\"true\">‹</span>",
+      onOpen: function () {
+        closeTimeDrops();
+      },
+    };
+
+    if (typeof window.flatpickr === "function") {
+      pickupPicker = window.flatpickr(pickup, Object.assign({}, pickerOptions, {
+        minDate: earliestDay(),
+        defaultDate: pickup.value || null,
+        onChange: function () {
+          if (syncingDates) {
+            return;
+          }
+          syncReturnConstraint(true);
+          const issue = tripIssueFromValues(
+            pickup.value,
+            ptime ? ptime.value : "",
+            back.value,
+            rtime ? rtime.value : "",
+          );
+          if (issue === "lead") {
+            showDateHint("lead");
+          }
+          else if (issue !== "return") {
+            showDateHint("");
+          }
+        },
+      }));
+      returnPicker = window.flatpickr(back, Object.assign({}, pickerOptions, {
+        minDate: returnMinDay(),
+        defaultDate: back.value || null,
+        onChange: function () {
+          if (syncingDates) {
+            return;
+          }
+          syncHourOptions();
+          const issue = tripIssueFromValues(
+            pickup.value,
+            ptime ? ptime.value : "",
+            back.value,
+            rtime ? rtime.value : "",
+          );
+          showDateHint(issue === "lead" ? "lead" : issue === "return" ? "return" : "");
+        },
+      }));
+    }
+    else {
+      pickup.min = earliestDay();
+      back.min = returnMinDay();
+    }
+
+    syncReturnConstraint(true);
+    bindTimeDrop(ptime);
+    bindTimeDrop(rtime);
+    document.addEventListener("mousedown", function (event) {
+      if (!event.target.closest(".lm-time-drop")) {
+        closeTimeDrops();
+      }
+    });
+
+    if (ptime) {
+      ptime.addEventListener("change", function () {
+        refreshTimeDrop(ptime);
+        syncReturnConstraint(true);
+      });
+    }
+    if (rtime) {
+      rtime.addEventListener("change", function () {
+        refreshTimeDrop(rtime);
+        const issue = tripIssueFromValues(
+          pickup.value,
+          ptime ? ptime.value : "",
+          back.value,
+          rtime ? rtime.value : "",
+        );
+        showDateHint(issue === "lead" ? "lead" : issue === "return" ? "return" : "");
+      });
     }
 
     function syncIds() {
@@ -192,12 +598,6 @@
       });
     }
 
-    pickup.addEventListener("change", function () {
-      back.min = pickup.value || min;
-      if (back.value && back.value < back.min) {
-        back.value = back.min;
-      }
-    });
     ["change", "blur", "autocompleteclose", "autocompleteselect"].forEach(function (eventName) {
       from.addEventListener(eventName, function () {
         syncIds();
@@ -232,20 +632,7 @@
         fromId.value = "";
         toId.value = "";
         place.value = "";
-        const start = new Date(today);
-        start.setDate(start.getDate() + 1);
-        pickup.value = isoDate(start);
-        const end = new Date(start);
-        end.setDate(end.getDate() + 3);
-        back.value = isoDate(end);
-        const ptime = form.querySelector("#banner-ptime");
-        const rtime = form.querySelector("#banner-rtime");
-        if (ptime) {
-          ptime.value = "10:00";
-        }
-        if (rtime) {
-          rtime.value = "10:00";
-        }
+        applyDefaultWindow();
         setBusy(false);
         syncNote();
       });
@@ -263,19 +650,37 @@
         promptTrip(form, place);
         return;
       }
-      if (!pickup.value) {
-        const start = new Date(today);
-        start.setDate(start.getDate() + 1);
-        pickup.value = isoDate(start);
+      if (!pickup.value && defaults.pickup) {
+        if (pickupPicker) {
+          pickupPicker.setDate(defaults.pickup, false);
+        }
+        else {
+          pickup.value = defaults.pickup;
+        }
       }
-      if (!back.value) {
-        const end = new Date(pickup.value);
-        end.setDate(end.getDate() + 3);
-        back.value = isoDate(end);
+      if (!back.value && defaults.return) {
+        if (returnPicker) {
+          returnPicker.setDate(defaults.return, false);
+        }
+        else {
+          back.value = defaults.return;
+        }
       }
-      if (back.value < pickup.value) {
+      const issue = tripIssueFromValues(
+        pickup.value,
+        ptime ? ptime.value : "",
+        back.value,
+        rtime ? rtime.value : "",
+      );
+      if (issue) {
         event.preventDefault();
-        back.focus();
+        showDateHint(issue);
+        if (issue === "lead") {
+          pickup.focus();
+        }
+        else {
+          back.focus();
+        }
         return;
       }
       form.querySelectorAll("[data-banner-lookup]").forEach(function (element) {
@@ -595,6 +1000,34 @@
           return;
         }
         const form = document.querySelector("[data-banner]");
+        if (form) {
+          const windowValues = formWindow(form);
+          const issue = tripIssueFromValues(
+            windowValues.pickup,
+            windowValues.ptime,
+            windowValues.return,
+            windowValues.rtime,
+          );
+          if (issue) {
+            event.preventDefault();
+            const hint = form.querySelector("[data-banner-date-hint]");
+            if (hint) {
+              const strong = hint.querySelector("strong");
+              const kicker = hint.querySelector(".banner-dates-hint__kicker");
+              if (kicker) {
+                kicker.textContent = issue === "lead" ? Drupal.t("Pickup") : Drupal.t("Return");
+              }
+              if (strong) {
+                strong.textContent = issue === "lead"
+                  ? Drupal.t("Your reservation must be made at least 24 hours before the pickup date.")
+                  : Drupal.t("Choose a return date on or after pickup.");
+              }
+              hint.hidden = false;
+            }
+            promptTrip(form, form.querySelector(issue === "lead" ? "#banner-pickup" : "#banner-return"));
+            return;
+          }
+        }
         if (form && isAvailabilityDirty(form)) {
           event.preventDefault();
           setFleetStale(true);

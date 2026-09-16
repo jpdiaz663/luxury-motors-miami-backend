@@ -1,7 +1,8 @@
 global:
-  version: '1.4.4'
+  version: '1.4.6'
   js:
     js/page-progress.js: {}
+    js/messages.js: {}
   css:
     base:
       '//fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap':
@@ -13,18 +14,32 @@ global:
       css/layout.css: {}
     component:
       css/components.css: {}
+      css/messages.css: {}
       css/terms-and-faqs.css: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupal.message
 
 vehicle:
   version: VERSION
   js:
     js/vehicle-studio.js: {}
 
+flatpickr:
+  version: '4.6.13-lm2'
+  js:
+    js/vendor/flatpickr/flatpickr.min.js: { minified: true, preprocess: false }
+  css:
+    component:
+      css/flatpickr.css: {}
+
 vehicle_search:
-  version: '1.4.5'
+  version: '1.5.2'
   js:
     js/vehicle-search.js: {}
   dependencies:
+    - luxury_motors/flatpickr
     - core/drupal
     - core/drupalSettings
     - core/once

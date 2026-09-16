@@ -18,7 +18,7 @@ final class InquiryForm extends FormBase {
 
   private const FLOOD_NAME = 'lm_contact.inquiry';
   private const FLOOD_WINDOW = 3600;
-  private const FLOOD_LIMIT = 11;
+  private const FLOOD_LIMIT = 3;
 
   public function __construct(
     private readonly EventDispatcherInterface $eventDispatcher,

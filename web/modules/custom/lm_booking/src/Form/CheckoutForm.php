@@ -275,7 +275,16 @@ final class CheckoutForm extends FormBase {
 
   private function assertAvailable(FormStateInterface $form_state): void {
     $trip = $this->checkoutSession->get();
-    if ($trip === NULL || !$this->fleetCatalog->validWindow($trip['pickup'], $trip['return'])) {
+    if ($trip === NULL) {
+      $form_state->setErrorByName('actions', $this->t('Search dates are required before confirming a reservation.'));
+      return;
+    }
+    $issue = $this->fleetCatalog->tripIssue($trip['pickup'], $trip['ptime'], $trip['return'], $trip['rtime']);
+    if ($issue === 'lead') {
+      $form_state->setErrorByName('actions', $this->t('Your reservation must be made at least 24 hours before the pickup date.'));
+      return;
+    }
+    if ($issue !== NULL) {
       $form_state->setErrorByName('actions', $this->t('Search dates are required before confirming a reservation.'));
       return;
     }

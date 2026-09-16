@@ -58,11 +58,15 @@ final class CheckoutSession {
       $trip['place'] = '';
     }
 
-    if (!$this->fleetCatalog->validWindow($trip['pickup'], $trip['return'])) {
-      return $this->fail($this->t('Search dates are required before confirming a reservation.'));
-    }
     $trip['ptime'] = $this->fleetCatalog->hourValue($trip['ptime']);
     $trip['rtime'] = $this->fleetCatalog->hourValue($trip['rtime']);
+    $issue = $this->fleetCatalog->tripIssue($trip['pickup'], $trip['ptime'], $trip['return'], $trip['rtime']);
+    if ($issue === 'lead') {
+      return $this->fail($this->t('Your reservation must be made at least 24 hours before the pickup date.'));
+    }
+    if ($issue !== NULL) {
+      return $this->fail($this->t('Search dates are required before confirming a reservation.'));
+    }
 
     if ($trip['category'] === '' && $vehicle->hasField('field_category') && !$vehicle->get('field_category')->isEmpty()) {
       $term = $vehicle->get('field_category')->entity;

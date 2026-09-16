@@ -1,0 +1,386 @@
+/* Luxury Motors calendar chrome for Flatpickr. Layout only; tokens from :root. */
+
+.flatpickr-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.flatpickr-calendar {
+  box-sizing: border-box;
+  position: absolute;
+  display: none;
+  visibility: hidden;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  padding: 16px;
+  width: 308px;
+  z-index: 600;
+  background: var(--color-notte);
+  color: var(--color-bianco);
+  border: 0;
+  border-radius: var(--radius-cards);
+  box-shadow: var(--shadow-cards-dark);
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  line-height: var(--leading, 1.78);
+  animation: none;
+}
+
+.flatpickr-calendar.open,
+.flatpickr-calendar.inline {
+  display: inline-block;
+  visibility: visible;
+  overflow: visible;
+  max-height: 640px;
+  opacity: 1;
+}
+
+.flatpickr-calendar.inline {
+  position: relative;
+  top: auto;
+  left: auto;
+  display: block;
+}
+
+.flatpickr-calendar.static {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+}
+
+.flatpickr-calendar.static.open {
+  display: block;
+  z-index: 600;
+}
+
+.flatpickr-calendar.animate.open {
+  animation: none;
+}
+
+.flatpickr-calendar:before,
+.flatpickr-calendar:after {
+  display: none;
+}
+
+.flatpickr-months {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: 0 0 12px;
+}
+
+.flatpickr-month {
+  flex: 1;
+  overflow: hidden;
+  height: 32px;
+  position: relative;
+  line-height: 1;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-argento);
+  fill: currentColor;
+  border-radius: var(--radius-cards);
+}
+
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+  width: 12px;
+  height: 12px;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  background: var(--color-grafite);
+  color: var(--color-bianco);
+}
+
+.flatpickr-prev-month.flatpickr-disabled,
+.flatpickr-next-month.flatpickr-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  color: var(--color-piombo);
+}
+
+.flatpickr-current-month {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 32px;
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-ui);
+  text-transform: uppercase;
+  color: var(--color-bianco);
+}
+
+.flatpickr-current-month .cur-month,
+.flatpickr-current-month .numInputWrapper {
+  font: inherit;
+  color: inherit;
+}
+
+.flatpickr-current-month input.cur-year {
+  width: 4.5ch;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  appearance: textfield;
+}
+
+.flatpickr-current-month input.cur-year::-webkit-outer-spin-button,
+.flatpickr-current-month input.cur-year::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.numInputWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.numInputWrapper span {
+  display: none;
+}
+
+.flatpickr-weekdays {
+  display: flex;
+  margin: 0 0 8px;
+}
+
+.flatpickr-weekdaycontainer {
+  display: flex;
+  flex: 1;
+}
+
+span.flatpickr-weekday {
+  flex: 1;
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-micro);
+  text-transform: uppercase;
+  color: var(--color-fumo);
+  text-align: center;
+  font-weight: var(--font-weight-medium);
+}
+
+.flatpickr-innerContainer,
+.flatpickr-rContainer {
+  display: block;
+}
+
+.flatpickr-days {
+  outline: 0;
+}
+
+.dayContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 276px;
+}
+
+.flatpickr-day {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 39.4px;
+  height: 36px;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: transparent;
+  color: var(--color-bianco);
+  cursor: pointer;
+  font-weight: var(--font-weight-regular);
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: var(--color-piombo);
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  background: var(--color-grafite);
+  color: var(--color-bianco);
+  outline: none;
+  box-shadow: 0 0 12px rgba(218, 41, 28, 0.28);
+}
+
+.flatpickr-day.today {
+  color: var(--color-rosso-corsa);
+  font-weight: var(--font-weight-medium);
+}
+
+.flatpickr-day.today:hover,
+.flatpickr-day.today:focus {
+  color: var(--color-bianco);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: var(--color-rosso-corsa);
+  color: var(--color-bianco);
+  box-shadow: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover,
+.flatpickr-day.notAllowed,
+.flatpickr-day.notAllowed:hover {
+  color: var(--color-piombo);
+  opacity: 0.4;
+  background: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner .flatpickr-input[readonly] {
+  cursor: pointer;
+}
+
+.lm-time-drop {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.lm-time-drop__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  pointer-events: none;
+}
+
+.lm-time-drop__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 6px 20px 6px 0;
+  min-height: 36px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23ffffff' stroke-width='1.4'%3E%3Cpath d='M3 6l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 12px;
+  color: var(--color-bianco);
+  font-family: inherit;
+  font-size: var(--text-title);
+  letter-spacing: 0.015em;
+  line-height: inherit;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.lm-time-drop__trigger:hover,
+.lm-time-drop__trigger:focus,
+.lm-time-drop.is-open .lm-time-drop__trigger {
+  outline: none;
+  border-bottom-color: var(--color-rosso-corsa);
+}
+
+.lm-time-drop__panel {
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  display: none;
+  width: max(168px, 100%);
+  max-height: 280px;
+  padding: 12px;
+  overflow: auto;
+  z-index: 600;
+  background: var(--color-notte);
+  color: var(--color-bianco);
+  border: 0;
+  border-radius: var(--radius-cards);
+  box-shadow: var(--shadow-cards-dark);
+  font-family: var(--font-display);
+}
+
+.lm-time-drop.is-open .lm-time-drop__panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.lm-time-drop__option {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--radius-cards);
+  background: transparent;
+  color: var(--color-bianco);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-micro);
+  text-transform: uppercase;
+}
+
+.lm-time-drop__option:hover,
+.lm-time-drop__option:focus {
+  background: var(--color-grafite);
+  color: var(--color-bianco);
+  outline: none;
+  box-shadow: 0 0 12px rgba(218, 41, 28, 0.28);
+}
+
+.lm-time-drop__option.is-selected,
+.lm-time-drop__option.is-selected:hover,
+.lm-time-drop__option.is-selected:focus {
+  background: var(--color-rosso-corsa);
+  color: var(--color-bianco);
+  box-shadow: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.lm-time-drop__option:disabled,
+.lm-time-drop__option:disabled:hover {
+  color: var(--color-piombo);
+  opacity: 0.4;
+  background: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner-dates-hint[hidden] {
+  display: none;
+}

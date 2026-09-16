@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Messages sit in the same wrap as views, not as raw region chrome.
+ */
+#}
+<div{{ attributes.addClass('lm-alerts') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <div class="wrap">
+    {{ content }}
+  </div>
+</div>

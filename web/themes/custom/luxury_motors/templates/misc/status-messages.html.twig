@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Status messages as in-view alert cards (not a full-bleed black strip).
+ */
+#}
+<div data-drupal-messages class="messages-list">
+  {% if message_list is not empty %}
+    <div class="messages__wrapper">
+      {% for type, messages in message_list %}
+        {%
+          set classes = [
+            'messages',
+            'messages--' ~ type,
+          ]
+        %}
+        <div{{ attributes
+          .addClass(classes)
+          .setAttribute('role', type in ['error', 'warning'] ? 'alert' : 'status')
+          .setAttribute('aria-label', status_headings[type])
+          .setAttribute('data-drupal-message-type', type)
+        }}>
+          <span class="messages__icon" aria-hidden="true"></span>
+          <div class="messages__body">
+            {% if status_headings[type] %}
+              <p class="messages__kicker">{{ status_headings[type] }}</p>
+            {% endif %}
+            <div class="messages__content">
+              {% if messages|length > 1 %}
+                <ul class="messages__list">
+                  {% for message in messages %}
+                    <li class="messages__item">{{ message }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                {{ messages|first }}
+              {% endif %}
+            </div>
+          </div>
+          <button type="button" class="messages__dismiss" data-lm-alert-dismiss>
+            <span class="visually-hidden">{{ 'Dismiss'|t }}</span>
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        {% set attributes = attributes.removeClass(classes) %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

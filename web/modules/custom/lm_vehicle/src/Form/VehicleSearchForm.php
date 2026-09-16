@@ -32,10 +32,13 @@ final class VehicleSearchForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $query = $this->fleetCatalog->currentQuery();
-    $today = (new \DateTimeImmutable('today'))->format('Y-m-d');
+    $min = $this->fleetCatalog->earliestPickupInstant()->format('Y-m-d');
+    $defaults = $this->fleetCatalog->defaultWindow();
     $window = $this->fleetCatalog->resolvedWindow();
     $pickup = $window['pickup'];
     $return = $window['return'];
+    $ptime = $query['ptime'] !== '' ? $this->fleetCatalog->hourValue($query['ptime']) : $defaults['ptime'];
+    $rtime = $query['rtime'] !== '' ? $this->fleetCatalog->hourValue($query['rtime']) : $defaults['rtime'];
     $from_term = $this->fleetCatalog->locationTerm($query['from']);
     $to_term = $this->fleetCatalog->locationTerm($query['to']);
 
@@ -69,6 +72,7 @@ final class VehicleSearchForm extends FormBase {
     $form['#cache']['contexts'][] = 'url.query_args';
     $form['#cache']['contexts'][] = 'url.path';
     $form['#cache']['tags'][] = 'taxonomy_term_list:location';
+    $form['#cache']['max-age'] = 60;
     $form['#attached']['library'][] = 'luxury_motors/vehicle_search';
     $form['#attached']['drupalSettings']['lmVehicleSearch'] = [
       'requiresPlace' => $this->fleetCatalog->locationPlaceTids(),
@@ -97,10 +101,10 @@ final class VehicleSearchForm extends FormBase {
       ],
       '#theme_wrappers' => [],
     ];
-    $form['pickup'] = $this->dateField('pickup', $pickup, $today, 'banner-pickup', TRUE);
-    $form['ptime'] = $this->hourSelect('ptime', $this->fleetCatalog->hourValue($query['ptime']), 'banner-ptime', TRUE);
-    $form['return'] = $this->dateField('return', $return, $today, 'banner-return', TRUE);
-    $form['rtime'] = $this->hourSelect('rtime', $this->fleetCatalog->hourValue($query['rtime']), 'banner-rtime', TRUE);
+    $form['pickup'] = $this->dateField('pickup', $pickup, $min, 'banner-pickup', TRUE);
+    $form['ptime'] = $this->hourSelect('ptime', $ptime, 'banner-ptime', TRUE);
+    $form['return'] = $this->dateField('return', $return, $min, 'banner-return', TRUE);
+    $form['rtime'] = $this->hourSelect('rtime', $rtime, 'banner-rtime', TRUE);
 
     foreach (['category', 'brand', 'color', 'price'] as $name) {
       if ($query[$name] !== '') {
@@ -112,7 +116,7 @@ final class VehicleSearchForm extends FormBase {
     }
 
     $form['#filtered'] = $this->fleetCatalog->hasFilters();
-    $this->hydrateGetInput($form_state, $query, $from_term, $to_term, $pickup, $return);
+    $this->hydrateGetInput($form_state, $query, $from_term, $to_term, $pickup, $return, $ptime, $rtime);
 
     return $form;
   }
@@ -133,7 +137,7 @@ final class VehicleSearchForm extends FormBase {
    *
    * @param array<string, string> $query
    */
-  private function hydrateGetInput(FormStateInterface $form_state, array $query, ?TermInterface $from_term, ?TermInterface $to_term, string $pickup, string $return): void {
+  private function hydrateGetInput(FormStateInterface $form_state, array $query, ?TermInterface $from_term, ?TermInterface $to_term, string $pickup, string $return, string $ptime, string $rtime): void {
     $input = $form_state->getUserInput();
     if (!is_array($input)) {
       $input = [];
@@ -148,9 +152,9 @@ final class VehicleSearchForm extends FormBase {
       'to' => $to_term ? (string) $to_term->id() : '',
       'place' => $query['place'],
       'pickup' => $pickup,
-      'ptime' => $this->fleetCatalog->hourValue($query['ptime']),
+      'ptime' => $ptime,
       'return' => $return,
-      'rtime' => $this->fleetCatalog->hourValue($query['rtime']),
+      'rtime' => $rtime,
       'category' => $query['category'],
       'brand' => $query['brand'],
       'color' => $query['color'],
@@ -242,14 +246,20 @@ final class VehicleSearchForm extends FormBase {
    */
   private function dateField(string $name, string $default, string $min, string $id, bool $required): array {
     return [
-      '#type' => 'date',
+      '#type' => 'textfield',
       '#title' => $name,
       '#title_display' => 'invisible',
       '#default_value' => $default,
       '#required' => $required,
       '#id' => $id,
+      '#maxlength' => 10,
+      '#size' => 12,
       '#attributes' => [
         'min' => $min,
+        'autocomplete' => 'off',
+        'inputmode' => 'none',
+        'class' => ['form-date'],
+        'data-lm-date' => $name,
       ],
       '#theme_wrappers' => [],
     ];

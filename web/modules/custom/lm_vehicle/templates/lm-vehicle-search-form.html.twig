@@ -65,23 +65,28 @@
     </p>
   {% endif %}
 
+  <p class="banner-dates-hint" data-banner-date-hint hidden role="status">
+    <span class="banner-dates-hint__kicker">{{ 'Pickup'|t }}</span>
+    <strong>{{ 'Your reservation must be made at least 24 hours before the pickup date.'|t }}</strong>
+  </p>
+
   <div class="banner-window">
-    <label class="banner-field">
-      <span>{{ 'Pickup'|t }}</span>
+    <div class="banner-field">
+      <label for="banner-pickup">{{ 'Pickup'|t }}</label>
       {{ form.pickup }}
-    </label>
-    <label class="banner-field">
-      <span>{{ 'Time'|t }}</span>
+    </div>
+    <div class="banner-field">
+      <label for="banner-ptime">{{ 'Time'|t }}</label>
       {{ form.ptime }}
-    </label>
-    <label class="banner-field">
-      <span>{{ 'Return'|t }}</span>
+    </div>
+    <div class="banner-field">
+      <label for="banner-return">{{ 'Return'|t }}</label>
       {{ form.return }}
-    </label>
-    <label class="banner-field">
-      <span>{{ 'Time'|t }}</span>
+    </div>
+    <div class="banner-field">
+      <label for="banner-rtime">{{ 'Time'|t }}</label>
       {{ form.rtime }}
-    </label>
+    </div>
 
     <div class="banner-actions">
       <button type="submit" class="btn btn--primary banner-submit" data-banner-submit>
