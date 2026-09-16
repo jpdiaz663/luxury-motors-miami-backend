@@ -37,7 +37,7 @@ services:
   lm_booking.reservation_mailer:
     class: Drupal\lm_booking\ReservationMailer
     arguments:
-      - '@lm_notify.notifier'
+      - '@?lm_notify.notifier'
       - '@lm_booking.reservation_presenter'
       - '@lm_booking.reservation_code'
       - '@renderer'

@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class ReservationMailer implements ReservationGuestMailerInterface {
 
   public function __construct(
-    private readonly NotifierInterface $notifier,
+    private readonly ?NotifierInterface $notifier,
     private readonly ReservationPresenter $presenter,
     private readonly ReservationCode $reservationCode,
     private readonly RendererInterface $renderer,
@@ -37,6 +37,11 @@ final class ReservationMailer implements ReservationGuestMailerInterface {
    * @param array{theme: string, guest_key: string, desk_key: string, guest_subject: string, desk_subject: string, plain_lead: string} $notice
    */
   public function sendPair(NodeInterface $booking, array $notice): void {
+
+    if (\Drupal::moduleHandler()->moduleExists('lm_notify') && $this->notifier === NULL) {
+      return;
+    }
+
     $view = $this->view($booking);
     $code = (string) ($view['reference'] ?? '');
     $guestEmail = trim((string) ($view['guest']['email'] ?? ''));
