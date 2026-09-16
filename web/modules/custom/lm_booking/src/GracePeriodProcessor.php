@@ -120,7 +120,7 @@ final class GracePeriodProcessor {
   }
 
   private function retryCancelMail(NodeInterface $booking, \DateTimeImmutable $pickup): void {
-    if (!$this->clock->graceExpired($pickup) || !$this->isEmpty($booking, 'field_booking_grace_cancel_mailed')) {
+    if (!$this->clock->graceExpired($pickup) || !$this->isEmpty($booking, 'field_booking_grace_cancel_sent')) {
       return;
     }
     if (!$this->clock->withinLookback($pickup) && $this->isEmpty($booking, 'field_booking_grace_notified')) {
@@ -130,7 +130,7 @@ final class GracePeriodProcessor {
   }
 
   private function sendCancelMail(NodeInterface $booking, \DateTimeImmutable $pickup): void {
-    if (!$this->isEmpty($booking, 'field_booking_grace_cancel_mailed')) {
+    if (!$this->isEmpty($booking, 'field_booking_grace_cancel_sent')) {
       return;
     }
     $code = $this->code($booking);
@@ -148,7 +148,7 @@ final class GracePeriodProcessor {
       ]);
       return;
     }
-    $booking->set('field_booking_grace_cancel_mailed', $this->clock->now()->getTimestamp());
+    $booking->set('field_booking_grace_cancel_sent', $this->clock->now()->getTimestamp());
     $booking->save();
   }
 

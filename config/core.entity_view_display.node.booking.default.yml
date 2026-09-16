@@ -7,7 +7,7 @@ dependencies:
     - field.field.node.booking.field_booking_dropoff_location
     - field.field.node.booking.field_booking_dropoff_time
     - field.field.node.booking.field_booking_end
-    - field.field.node.booking.field_booking_grace_cancel_mailed
+    - field.field.node.booking.field_booking_grace_cancel_sent
     - field.field.node.booking.field_booking_grace_notified
     - field.field.node.booking.field_booking_pickup_location
     - field.field.node.booking.field_booking_pickup_time
@@ -63,7 +63,7 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_booking_grace_cancel_mailed:
+  field_booking_grace_cancel_sent:
     type: timestamp
     label: above
     settings:

@@ -4,8 +4,8 @@ status: true
 dependencies:
   module:
     - node
-id: node.field_booking_grace_cancel_mailed
-field_name: field_booking_grace_cancel_mailed
+id: node.field_booking_grace_cancel_sent
+field_name: field_booking_grace_cancel_sent
 entity_type: node
 type: timestamp
 settings: {  }

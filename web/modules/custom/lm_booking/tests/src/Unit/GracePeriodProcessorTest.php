@@ -76,11 +76,11 @@ final class GracePeriodProcessorTest extends UnitTestCase {
 
     $processor->processBooking($booking);
     $this->assertSame('cancelled', $state['field_booking_status']);
-    $this->assertNull($state['field_booking_grace_cancel_mailed']);
+    $this->assertNull($state['field_booking_grace_cancel_sent']);
 
     $processor->processBooking($booking);
     $this->assertSame('cancelled', $state['field_booking_status']);
-    $this->assertNotEmpty($state['field_booking_grace_cancel_mailed']);
+    $this->assertNotEmpty($state['field_booking_grace_cancel_sent']);
   }
 
   /**
@@ -123,7 +123,7 @@ final class GracePeriodProcessorTest extends UnitTestCase {
       'field_booking_pickup_time' => '10:00',
       'field_booking_code' => 'LM-TEST1',
       'field_booking_grace_notified' => NULL,
-      'field_booking_grace_cancel_mailed' => NULL,
+      'field_booking_grace_cancel_sent' => NULL,
     ];
   }
 

@@ -154,7 +154,7 @@ function lm_booking_node_presave(\Drupal\Core\Entity\EntityInterface $entity): v
   if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'booking') {
     return;
   }
-  if (!$entity->hasField('field_booking_status') || !$entity->hasField('field_booking_grace_cancel_mailed')) {
+  if (!$entity->hasField('field_booking_status') || !$entity->hasField('field_booking_grace_cancel_sent')) {
     return;
   }
   if (\Drupal::service('lm_booking.grace_period_processor')->isAutoExpiring()) {
@@ -172,8 +172,8 @@ function lm_booking_node_presave(\Drupal\Core\Entity\EntityInterface $entity): v
   elseif (!$entity->id()) {
     return;
   }
-  if (!$entity->get('field_booking_grace_cancel_mailed')->isEmpty()) {
+  if (!$entity->get('field_booking_grace_cancel_sent')->isEmpty()) {
     return;
   }
-  $entity->set('field_booking_grace_cancel_mailed', \Drupal::time()->getRequestTime());
+  $entity->set('field_booking_grace_cancel_sent', \Drupal::time()->getRequestTime());
 }
