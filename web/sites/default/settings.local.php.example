@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Local overrides. Copy to settings.local.php — never commit secrets.
+ *
+ * SMTP password and username are read from the environment first
+ * (see settings.php and the project-root .env.example). Override here
+ * only if this environment cannot inject getenv().
+ */
+
+$settings['lm_notify']['smtp_username'] = getenv('LM_SMTP_USERNAME') ?: '';
+$settings['lm_notify']['smtp_password'] = getenv('LM_SMTP_PASSWORD') ?: '';
+
+// Local: Gmail SMTP (port 587 + tls). Use php_mail to skip SMTP.
+$config['lm_notify.settings']['email']['transport'] = getenv('LM_NOTIFY_TRANSPORT') ?: 'smtp';
+$config['lm_notify.settings']['email']['host'] = getenv('LM_SMTP_HOST') ?: 'smtp.gmail.com';
+$config['lm_notify.settings']['email']['port'] = (int) (getenv('LM_SMTP_PORT') ?: 587);
+$config['lm_notify.settings']['email']['encryption'] = getenv('LM_SMTP_ENCRYPTION') ?: 'tls';
+$lm_local_from = getenv('LM_NOTIFY_FROM') ?: getenv('LM_SMTP_USERNAME') ?: '';
+if (is_string($lm_local_from) && $lm_local_from !== '') {
+  $config['lm_notify.settings']['email']['from_address'] = $lm_local_from;
+}

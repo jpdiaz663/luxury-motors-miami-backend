@@ -94,4 +94,4 @@
 #/.idea/
 
 # Ignore .env files as they are personal
-#/.env
+/.env

@@ -1,0 +1,14 @@
+services:
+  logger.channel.lm_contact:
+    parent: logger.channel_base
+    arguments: ['lm_contact']
+  lm_contact.inquiry_mail:
+    class: Drupal\lm_contact\EventSubscriber\InquiryMailSubscriber
+    arguments:
+      - '@lm_notify.notifier'
+      - '@renderer'
+      - '@config.factory'
+      - '@email.validator'
+      - '@logger.channel.lm_contact'
+    tags:
+      - { name: event_subscriber }

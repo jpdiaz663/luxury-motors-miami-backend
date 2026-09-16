@@ -1,0 +1,48 @@
+services:
+  logger.channel.lm_notify:
+    parent: logger.channel_base
+    arguments: ['lm_notify']
+
+  lm_notify.site_settings:
+    class: Drupal\Core\Site\Settings
+    factory: ['Drupal\Core\Site\Settings', 'getInstance']
+
+  lm_notify.channel.email:
+    class: Drupal\lm_notify\Adapter\HostingerPhpMailerAdapter
+    arguments:
+      - '@config.factory'
+      - '@lm_notify.site_settings'
+      - '@email.validator'
+      - '@logger.channel.lm_notify'
+
+  lm_notify.channel.email.secure:
+    class: Drupal\lm_notify\Decorator\SecurityChannelDecorator
+    decorates: lm_notify.channel.email
+    arguments:
+      - '@lm_notify.channel.email.secure.inner'
+      - '@email.validator'
+      - '@config.factory'
+
+  lm_notify.channel_resolver:
+    class: Drupal\lm_notify\ChannelResolver
+    arguments:
+      -
+        email: '@lm_notify.channel.email'
+        # sms: '@lm_notify.channel.sms'
+
+  lm_notify.notifier:
+    class: Drupal\lm_notify\Notifier
+    arguments:
+      - '@lm_notify.channel_resolver'
+      - '@event_dispatcher'
+      - '@logger.channel.lm_notify'
+
+  Drupal\lm_notify\NotifierInterface: '@lm_notify.notifier'
+
+  lm_notify.dispatch_log_subscriber:
+    class: Drupal\lm_notify\EventSubscriber\DispatchLogSubscriber
+    arguments:
+      - '@entity_type.manager'
+      - '@logger.channel.lm_notify'
+    tags:
+      - { name: event_subscriber }

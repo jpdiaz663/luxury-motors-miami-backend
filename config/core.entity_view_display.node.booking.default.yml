@@ -7,6 +7,8 @@ dependencies:
     - field.field.node.booking.field_booking_dropoff_location
     - field.field.node.booking.field_booking_dropoff_time
     - field.field.node.booking.field_booking_end
+    - field.field.node.booking.field_booking_grace_cancel_mailed
+    - field.field.node.booking.field_booking_grace_notified
     - field.field.node.booking.field_booking_pickup_location
     - field.field.node.booking.field_booking_pickup_time
     - field.field.node.booking.field_booking_place
@@ -60,6 +62,44 @@ content:
       format_type: html_date
     third_party_settings: {  }
     weight: 5
+    region: content
+  field_booking_grace_cancel_mailed:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+      tooltip:
+        date_format: long
+        custom_date_format: ''
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
+    third_party_settings: {  }
+    weight: 16
+    region: content
+  field_booking_grace_notified:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+      tooltip:
+        date_format: long
+        custom_date_format: ''
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
+    third_party_settings: {  }
+    weight: 15
     region: content
   field_booking_pickup_location:
     type: entity_reference_label

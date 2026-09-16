@@ -4,26 +4,31 @@ declare(strict_types=1);
 
 namespace Drupal\lm_contact\Form;
 
+use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Mail\MailManagerInterface;
-use Psr\Log\LoggerInterface;
+use Drupal\lm_contact\Event\InquirySubmittedEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Concierge inquiry: name, dates, vehicle, and the rental requirement.
  */
 final class InquiryForm extends FormBase {
 
+  private const FLOOD_NAME = 'lm_contact.inquiry';
+  private const FLOOD_WINDOW = 3600;
+  private const FLOOD_LIMIT = 11;
+
   public function __construct(
-    private readonly MailManagerInterface $mailManager,
-    private readonly LoggerInterface $contactLogger,
+    private readonly EventDispatcherInterface $eventDispatcher,
+    private readonly FloodInterface $flood,
   ) {}
 
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('plugin.manager.mail'),
-      $container->get('logger.factory')->get('lm_contact'),
+      $container->get('event_dispatcher'),
+      $container->get('flood'),
     );
   }
 
@@ -37,9 +42,16 @@ final class InquiryForm extends FormBase {
 
     $form['#theme'] = 'lm_contact_inquiry_form';
     $form['#theme_wrappers'] = [];
+    $form['#theme_wrappers'] = [];
     $form['#cache']['max-age'] = 0;
     $form['#attributes']['class'][] = 'contact-form';
     $form['#attributes']['novalidate'] = 'novalidate';
+
+    $form['#attributes']['method'] = 'post';
+    $form['#attributes']['accept-charset'] = 'UTF-8';
+    if (!empty($form['#action'])) {
+      $form['#attributes']['action'] = $form['#action'];
+    }
 
     $form['name'] = [
       '#type' => 'textfield',
@@ -60,31 +72,12 @@ final class InquiryForm extends FormBase {
       '#required' => TRUE,
       '#attributes' => ['autocomplete' => 'tel'],
     ];
-   /* $form['pickup'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Pick up'),
-      '#required' => FALSE,
-    ];
-    $form['return'] = [
-      '#type' => 'date',
-      '#title' => $this->t('Drop off'),
-      '#required' => FALSE,
-    ];
-    $form['vehicle'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Vehicle of interest'),
-      '#required' => FALSE,
-      '#maxlength' => 255,
-      '#attributes' => [
-        'placeholder' => $this->t('Model, or leave blank if you want a recommendation'),
-      ],
-    ];*/
-
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('The requirement'),
       '#required' => TRUE,
       '#rows' => 5,
+      '#maxlength' => 4000,
       '#attributes' => [
         'placeholder' => $this->t('Occasion, passenger count, chauffeur, airport, hotel, or anything the desk should know.'),
       ],
@@ -113,12 +106,17 @@ final class InquiryForm extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-   /* $pickup = trim((string) $form_state->getValue('pickup'));
-    $return = trim((string) $form_state->getValue('return'));
-    if ($pickup !== '' && $return !== '' && $return < $pickup) {
-      $form_state->setErrorByName('return', $this->t('Drop off must be on or after pick up.'));
+    if (trim((string) $form_state->getValue('website')) !== '') {
+      return;
     }
-    */
+    if ($form_state->hasAnyErrors()) {
+      return;
+    }
+    if (!$this->flood->isAllowed(self::FLOOD_NAME, self::FLOOD_LIMIT, self::FLOOD_WINDOW)) {
+      $form_state->setErrorByName('message', $this->t('Too many messages. Try again later.'));
+      return;
+    }
+    $this->flood->register(self::FLOOD_NAME, self::FLOOD_WINDOW);
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
@@ -127,37 +125,33 @@ final class InquiryForm extends FormBase {
       return;
     }
 
-    $name = trim((string) $form_state->getValue('name'));
-    $email = trim((string) $form_state->getValue('email'));
-    $phone = trim((string) $form_state->getValue('phone'));
-   /* $pickup = trim((string) $form_state->getValue('pickup'));
-    $return = trim((string) $form_state->getValue('return'));
-    $vehicle = trim((string) $form_state->getValue('vehicle'));*/
-    $message = trim((string) $form_state->getValue('message'));
-    $recipient = (string) $form_state->get('recipient');
-
-    $lines = [
-      'Name: ' . $name,
-      'Email: ' . $email,
-      'Phone: ' . $phone,
-      '',
-      'Requirement:',
-      $message,
-    ];
-
-    $langcode = $this->languageManager()->getDefaultLanguage()->getId();
-    $result = ['result' => TRUE];
-
-    if (empty($result['result'])) {
-      $this->contactLogger->error('Failed to send inquiry from @email to @to.', [
-        '@email' => $email,
-        '@to' => $recipient,
+    $ip = (string) $this->getRequest()->getClientIp();
+    try {
+     
+      $this->eventDispatcher->dispatch(new InquirySubmittedEvent(
+        name: $this->plain((string) $form_state->getValue('name'), 255),
+        email: $this->plain((string) $form_state->getValue('email'), 254),
+        phone: $this->plain((string) $form_state->getValue('phone'), 64),
+        requirement: $this->plain((string) $form_state->getValue('message'), 4000),
+        deskRecipient: $this->plain((string) $form_state->get('recipient'), 254),
+        ipHash: $ip !== '' ? hash('sha256', $ip) : NULL,
+      ));
+    }
+    catch (\Throwable $e) {
+      dd('entra');
+      $this->logger('lm_contact')->error('Inquiry submitted event failed: @error', [
+        '@error' => mb_substr($e->getMessage(), 0, 500),
       ]);
-      $this->messenger()->addError($this->t('The desk did not receive the message. Email contact@luxurymotorsmiami.com or try again.'));
-      return;
     }
 
     $this->messenger()->addStatus($this->t('Received. The desk will reply shortly.'));
+  }
+
+  private function plain(string $value, int $max): string {
+    $value = trim(strip_tags($value));
+    $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', $value) ?? $value;
+    $value = str_replace(["\r\n", "\r"], "\n", $value);
+    return mb_substr($value, 0, $max);
   }
 
 }

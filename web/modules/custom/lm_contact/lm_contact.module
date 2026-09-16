@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Theme hooks and mail for the contact desk.
+ * Theme hooks for the contact desk.
  */
 
 declare(strict_types=1);
@@ -24,6 +24,17 @@ function lm_contact_theme(): array {
     'lm_contact_inquiry_form' => [
       'render element' => 'form',
     ],
+    'lm_contact_mail_inquiry' => [
+      'variables' => [
+        'audience' => 'guest',
+        'name' => '',
+        'email' => '',
+        'phone' => '',
+        'requirement' => '',
+        'site_name' => '',
+        'site_url' => '',
+      ],
+    ],
   ];
 }
 
@@ -32,20 +43,4 @@ function lm_contact_theme(): array {
  */
 function lm_contact_preprocess_lm_contact(array &$variables): void {
   $variables['#attached']['library'][] = 'luxury_motors/contact';
-}
-
-/**
- * Implements hook_mail().
- */
-function lm_contact_mail(string $key, array &$message, array $params): void {
-  if ($key !== 'inquiry') {
-    return;
-  }
-
-  $message['subject'] = (string) ($params['subject'] ?? t('New vehicle requirement'));
-  $message['body'][] = (string) ($params['body'] ?? '');
-  $reply = trim((string) ($params['reply_to'] ?? ''));
-  if ($reply !== '') {
-    $message['headers']['Reply-To'] = $reply;
-  }
 }

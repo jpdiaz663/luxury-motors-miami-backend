@@ -1,0 +1,35 @@
+lm_notify.settings:
+  type: config_object
+  label: 'Luxury Motors notify settings'
+  mapping:
+    email:
+      type: mapping
+      label: 'Email transport'
+      mapping:
+        transport:
+          type: string
+          label: 'Transport id'
+        host:
+          type: string
+          label: 'SMTP host'
+        port:
+          type: integer
+          label: 'SMTP port'
+        encryption:
+          type: string
+          label: 'Encryption (ssl or tls)'
+        from_address:
+          type: string
+          label: 'From address'
+        from_name:
+          type: string
+          label: 'From name'
+        timeout:
+          type: integer
+          label: 'SMTP timeout in seconds'
+        subject_max_length:
+          type: integer
+          label: 'Maximum subject length'
+        body_max_length:
+          type: integer
+          label: 'Maximum body length'

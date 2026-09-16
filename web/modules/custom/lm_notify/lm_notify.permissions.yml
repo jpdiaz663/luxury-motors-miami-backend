@@ -1,0 +1,4 @@
+administer lm_notify:
+  title: 'Administer Luxury Motors notifications'
+  description: 'View dispatch logs and manage notification settings.'
+  restrict access: true

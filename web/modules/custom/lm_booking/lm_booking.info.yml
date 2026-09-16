@@ -12,4 +12,5 @@ dependencies:
   - drupal:taxonomy
   - drupal:views
   - lm_vehicle:lm_vehicle
+  - lm_notify:lm_notify
   - paragraphs:paragraphs

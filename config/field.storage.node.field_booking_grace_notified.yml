@@ -1,0 +1,18 @@
+uuid: 3c8e1a72-9b4d-4f61-a2e0-7d15c9f04b88
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_booking_grace_notified
+field_name: field_booking_grace_notified
+entity_type: node
+type: timestamp
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

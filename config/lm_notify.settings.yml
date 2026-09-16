@@ -1,0 +1,11 @@
+uuid: c2ef4d42-b33f-4ac9-b4c6-1ad6d8163410
+email:
+  transport: hostinger
+  host: smtp.hostinger.com
+  port: 465
+  encryption: ssl
+  from_address: ''
+  from_name: Luxury Motors
+  timeout: 15
+  subject_max_length: 200
+  body_max_length: 20000

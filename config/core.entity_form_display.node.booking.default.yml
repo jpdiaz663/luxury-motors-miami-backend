@@ -7,6 +7,8 @@ dependencies:
     - field.field.node.booking.field_booking_dropoff_location
     - field.field.node.booking.field_booking_dropoff_time
     - field.field.node.booking.field_booking_end
+    - field.field.node.booking.field_booking_grace_cancel_mailed
+    - field.field.node.booking.field_booking_grace_notified
     - field.field.node.booking.field_booking_pickup_location
     - field.field.node.booking.field_booking_pickup_time
     - field.field.node.booking.field_booking_place
@@ -184,5 +186,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
+  field_booking_grace_cancel_mailed: true
+  field_booking_grace_notified: true
   promote: true
   sticky: true

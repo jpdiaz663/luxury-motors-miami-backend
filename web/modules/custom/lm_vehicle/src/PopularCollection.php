@@ -22,9 +22,10 @@ final class PopularCollection {
   /**
    * Published vehicle nids ordered by reservation count in the last 90 days.
    *
-   * Count includes pending and confirmed bookings whose pickup date is on or
-   * after today minus 90 days. Cancelled holds are ignored. No fallback cars:
-   * the rail only uses vehicles that were actually reserved in the window.
+   * Count includes pending, confirmed, picked-up, and completed bookings whose
+   * pickup date is on or after today minus 90 days. Cancelled holds are ignored.
+   * No fallback cars: the rail only uses vehicles that were actually reserved
+   * in the window.
    *
    * @return array<int, int>
    *   Vehicle nid keyed to reservation count, already sorted.
@@ -65,7 +66,7 @@ final class PopularCollection {
     $query->addExpression('COUNT(booking.nid)', 'reservation_count');
     $query->condition('booking.type', 'booking');
     $query->condition('booking.status', 1);
-    $query->condition('booking_status.field_booking_status_value', ['confirmed', 'pending'], 'IN');
+    $query->condition('booking_status.field_booking_status_value', ['confirmed', 'pending', 'in_progress', 'completed'], 'IN');
     $query->condition('booking_start.field_booking_start_value', $since, '>=');
     $query->condition('vehicle.type', 'vehicle');
     $query->condition('vehicle.status', 1);

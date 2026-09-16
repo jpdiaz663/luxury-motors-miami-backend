@@ -144,6 +144,8 @@ final class ReservationPresenter {
     return match ($status) {
       'confirmed' => (string) $this->t('Confirmed'),
       'pending' => (string) $this->t('Pending'),
+      'in_progress' => (string) $this->t('Picked up'),
+      'completed' => (string) $this->t('Completed'),
       'cancelled' => (string) $this->t('Cancelled'),
       default => $status,
     };

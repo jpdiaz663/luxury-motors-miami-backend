@@ -1,0 +1,5 @@
+name: Luxury Motors Notify
+type: module
+description: 'Channel-based notifications (email now, SMS later) with dispatch logging.'
+package: Luxury Motors
+core_version_requirement: ^11

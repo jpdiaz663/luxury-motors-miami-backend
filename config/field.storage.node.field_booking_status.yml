@@ -18,6 +18,12 @@ settings:
       value: confirmed
       label: Confirmed
     -
+      value: in_progress
+      label: 'Picked up'
+    -
+      value: completed
+      label: Completed
+    -
       value: cancelled
       label: Cancelled
   allowed_values_function: ''

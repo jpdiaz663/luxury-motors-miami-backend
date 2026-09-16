@@ -8,9 +8,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 
 /**
- * Calendar availability from confirmed/pending booking nodes.
+ * Calendar availability from active booking nodes.
  */
 final class AvailabilityManager {
+
+  public const ACTIVE_STATUSES = ['confirmed', 'pending', 'in_progress'];
 
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
@@ -34,7 +36,7 @@ final class AvailabilityManager {
       ->accessCheck(FALSE)
       ->condition('type', 'booking')
       ->condition('status', 1)
-      ->condition('field_booking_status', ['confirmed', 'pending'], 'IN')
+      ->condition('field_booking_status', self::ACTIVE_STATUSES, 'IN')
       ->condition('field_booking_start', $return, '<')
       ->condition('field_booking_end', $pickup, '>')
       ->execute();

@@ -13,7 +13,7 @@ declare(strict_types=1);
 function lm_booking_views_data_alter(array &$data): void {
   $data['node_field_data']['lm_booking_available_window'] = [
     'title' => t('Available in rental window'),
-    'help' => t('Hides vehicles that have a pending or confirmed booking overlapping pickup/return.'),
+    'help' => t('Hides vehicles that have a pending, confirmed, or picked-up booking overlapping pickup/return. Completed and cancelled bookings do not block.'),
     'filter' => [
       'id' => 'lm_booking_available_window',
     ],
@@ -38,6 +38,65 @@ function lm_booking_theme(): array {
         'manage_url' => '',
         'copy_icon' => '',
         'success_icon' => '',
+      ],
+    ],
+    'lm_booking_mail_confirmed' => [
+      'variables' => [
+        'audience' => 'guest',
+        'reference' => '',
+        'guest' => [],
+        'trip' => [],
+        'quote' => [],
+        'confirmation_url' => '',
+        'manage_url' => '',
+        'fleet_url' => '',
+        'site_name' => '',
+        'site_url' => '',
+      ],
+    ],
+    'lm_booking_mail_cancelled' => [
+      'variables' => [
+        'audience' => 'guest',
+        'reference' => '',
+        'guest' => [],
+        'trip' => [],
+        'quote' => [],
+        'confirmation_url' => '',
+        'manage_url' => '',
+        'fleet_url' => '',
+        'site_name' => '',
+        'site_url' => '',
+        'grace_ends_when' => '',
+      ],
+    ],
+    'lm_booking_mail_grace_started' => [
+      'variables' => [
+        'audience' => 'guest',
+        'reference' => '',
+        'guest' => [],
+        'trip' => [],
+        'quote' => [],
+        'confirmation_url' => '',
+        'manage_url' => '',
+        'fleet_url' => '',
+        'site_name' => '',
+        'site_url' => '',
+        'grace_ends_when' => '',
+      ],
+    ],
+    'lm_booking_mail_grace_cancelled' => [
+      'variables' => [
+        'audience' => 'guest',
+        'reference' => '',
+        'guest' => [],
+        'trip' => [],
+        'quote' => [],
+        'confirmation_url' => '',
+        'manage_url' => '',
+        'fleet_url' => '',
+        'site_name' => '',
+        'site_url' => '',
+        'grace_ends_when' => '',
       ],
     ],
     'lm_booking_reservation_form' => [
@@ -79,4 +138,42 @@ function lm_booking_preprocess_lm_booking_reservation_form(array &$variables): v
   $variables['fleet_url'] = $form['#fleet_url'] ?? '';
   $variables['disclaimer'] = $form['#disclaimer'] ?? '';
   $variables['#attached']['library'][] = 'luxury_motors/checkout';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function lm_booking_cron(): void {
+  \Drupal::service('lm_booking.grace_period_processor')->process();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node.
+ */
+function lm_booking_node_presave(\Drupal\Core\Entity\EntityInterface $entity): void {
+  if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'booking') {
+    return;
+  }
+  if (!$entity->hasField('field_booking_status') || !$entity->hasField('field_booking_grace_cancel_mailed')) {
+    return;
+  }
+  if (\Drupal::service('lm_booking.grace_period_processor')->isAutoExpiring()) {
+    return;
+  }
+  if ((string) $entity->get('field_booking_status')->value !== 'cancelled') {
+    return;
+  }
+  $original = $entity->getOriginal();
+  if ($original instanceof \Drupal\node\NodeInterface && $original->hasField('field_booking_status')) {
+    if ((string) $original->get('field_booking_status')->value === 'cancelled') {
+      return;
+    }
+  }
+  elseif (!$entity->id()) {
+    return;
+  }
+  if (!$entity->get('field_booking_grace_cancel_mailed')->isEmpty()) {
+    return;
+  }
+  $entity->set('field_booking_grace_cancel_mailed', \Drupal::time()->getRequestTime());
 }

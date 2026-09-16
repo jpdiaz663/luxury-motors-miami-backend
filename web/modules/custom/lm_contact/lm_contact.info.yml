@@ -5,3 +5,4 @@ package: Luxury Motors
 core_version_requirement: ^11
 dependencies:
   - drupal:block
+  - lm_notify:lm_notify

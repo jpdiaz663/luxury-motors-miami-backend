@@ -1,4 +1,7 @@
 services:
+  logger.channel.lm_booking:
+    parent: logger.channel_base
+    arguments: ['lm_booking']
   lm_booking.checkout_session:
     class: Drupal\lm_booking\CheckoutSession
     arguments:
@@ -31,3 +34,34 @@ services:
       - '@lm_booking.quote'
       - '@lm_booking.reservation_code'
       - '@lm_vehicle.fleet_catalog'
+  lm_booking.reservation_mailer:
+    class: Drupal\lm_booking\ReservationMailer
+    arguments:
+      - '@lm_notify.notifier'
+      - '@lm_booking.reservation_presenter'
+      - '@lm_booking.reservation_code'
+      - '@renderer'
+      - '@config.factory'
+      - '@email.validator'
+      - '@logger.channel.lm_booking'
+      - '@request_stack'
+  lm_booking.booking_clock:
+    class: Drupal\lm_booking\BookingClock
+    arguments:
+      - '@config.factory'
+      - '@datetime.time'
+  lm_booking.grace_period_processor:
+    class: Drupal\lm_booking\GracePeriodProcessor
+    arguments:
+      - '@entity_type.manager'
+      - '@lm_booking.booking_clock'
+      - '@lm_booking.reservation_mailer'
+      - '@event_dispatcher'
+      - '@logger.channel.lm_booking'
+  lm_booking.booking_mail:
+    class: Drupal\lm_booking\EventSubscriber\BookingMailSubscriber
+    arguments:
+      - '@lm_booking.reservation_mailer'
+      - '@lm_booking.reservation_code'
+    tags:
+      - { name: event_subscriber }

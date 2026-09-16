@@ -1,0 +1,19 @@
+uuid: b7e5c318-4a06-49d2-9f80-c1d2e64b7a19
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_booking_grace_cancel_mailed
+    - node.type.booking
+id: node.booking.field_booking_grace_cancel_mailed
+field_name: field_booking_grace_cancel_mailed
+entity_type: node
+bundle: booking
+label: 'Grace period cancel mailed'
+description: 'Set by cron after the guest grace-period cancellation email succeeds, or when a human cancels so cron will not send that notice.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

@@ -11,12 +11,14 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Url;
 use Drupal\lm_booking\AvailabilityManager;
 use Drupal\lm_booking\CheckoutSession;
+use Drupal\lm_booking\Event\BookingConfirmedEvent;
 use Drupal\lm_booking\Quote\QuoteCalculator;
 use Drupal\lm_booking\ReservationCode;
 use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\lm_vehicle\VehiclePresenter;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Customer checkout. Creates a confirmed booking hold (no payment).
@@ -32,6 +34,7 @@ final class CheckoutForm extends FormBase {
     protected ReservationCode $reservationCode,
     protected EntityTypeManagerInterface $entityTypeManager,
     protected LockBackendInterface $lock,
+    protected EventDispatcherInterface $eventDispatcher,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -44,6 +47,7 @@ final class CheckoutForm extends FormBase {
       $container->get('lm_booking.reservation_code'),
       $container->get('entity_type.manager'),
       $container->get('lock'),
+      $container->get('event_dispatcher'),
     );
   }
 
@@ -243,8 +247,18 @@ final class CheckoutForm extends FormBase {
       }
       $booking->save();
       $this->checkoutSession->clear();
+      try {
+        $this->eventDispatcher->dispatch(new BookingConfirmedEvent($booking));
+      }
+      catch (\Throwable $e) {
+        $this->logger('lm_booking')->error('Booking confirmed event failed for @id: @error', [
+          '@id' => $booking->id(),
+          '@error' => mb_substr($e->getMessage(), 0, 500),
+        ]);
+      }
     }
     finally {
+      
       $this->lock->release($lock_name);
     }
 

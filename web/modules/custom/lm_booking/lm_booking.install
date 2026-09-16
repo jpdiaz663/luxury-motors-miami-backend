@@ -21,6 +21,7 @@ function lm_booking_install(): void {
   lm_booking_ensure_booking_code_field();
   lm_booking_ensure_booking_trip_fields();
   lm_booking_ensure_fare_inclusions_block();
+  lm_booking_ensure_completed_status();
 }
 
 /**
@@ -45,6 +46,45 @@ function lm_booking_update_11002(): string {
 function lm_booking_update_11003(): string {
   lm_booking_ensure_fare_inclusions_block();
   return 'Migrated fare inclusions to a custom block type.';
+}
+
+/**
+ * Add completed booking status for desk-closed trips.
+ */
+function lm_booking_update_11004(): string {
+  lm_booking_ensure_completed_status();
+  return 'Added completed booking status. Desk marks a trip completed after successful drop-off.';
+}
+
+/**
+ * Ensure field_booking_status includes completed.
+ */
+function lm_booking_ensure_completed_status(): void {
+  $storage = FieldStorageConfig::loadByName('node', 'field_booking_status');
+  if (!$storage) {
+    return;
+  }
+  $values = $storage->getSetting('allowed_values') ?: [];
+  if (!isset($values['completed'])) {
+    $ordered = [];
+    foreach ($values as $value => $label) {
+      if ($value === 'cancelled') {
+        $ordered['completed'] = 'Completed';
+      }
+      $ordered[$value] = $label;
+    }
+    if (!isset($ordered['completed'])) {
+      $ordered['completed'] = 'Completed';
+    }
+    $storage->setSetting('allowed_values', $ordered);
+    $storage->save();
+  }
+
+  $field = FieldConfig::loadByName('node', 'booking', 'field_booking_status');
+  if ($field) {
+    $field->setDescription('Pending, confirmed, and picked up block the vehicle. Completed and cancelled do not.');
+    $field->save();
+  }
 }
 
 /**

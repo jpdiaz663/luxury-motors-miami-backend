@@ -24,7 +24,8 @@
         "drupal/gin": "^5.0",
         "drupal/admin_toolbar": "^3.6",
         "drupal/paragraphs": "^1.23",
-        "drupal/preprocessors": "^3.1"
+        "drupal/preprocessors": "^3.1",
+        "phpmailer/phpmailer": "^6.9"
     },
     "require-dev": {
         "drupal/core-dev": "^11",

@@ -9,10 +9,12 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\lm_booking\BookingLookup;
+use Drupal\lm_booking\Event\BookingCancelledEvent;
 use Drupal\lm_booking\ReservationPresenter;
 use Drupal\lm_vehicle\FleetCatalog;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Public reservation lookup by code and email, with cancel.
@@ -27,6 +29,7 @@ final class ReservationManageForm extends FormBase {
     protected BookingLookup $lookup,
     protected ReservationPresenter $presenter,
     protected FloodInterface $flood,
+    protected EventDispatcherInterface $eventDispatcher,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -34,6 +37,7 @@ final class ReservationManageForm extends FormBase {
       $container->get('lm_booking.booking_lookup'),
       $container->get('lm_booking.reservation_presenter'),
       $container->get('flood'),
+      $container->get('event_dispatcher'),
     );
   }
 
@@ -180,6 +184,15 @@ final class ReservationManageForm extends FormBase {
     }
     $booking->set('field_booking_status', 'cancelled');
     $booking->save();
+    try {
+      $this->eventDispatcher->dispatch(new BookingCancelledEvent($booking));
+    }
+    catch (\Throwable $e) {
+      $this->logger('lm_booking')->error('Booking cancelled event failed for @id: @error', [
+        '@id' => $booking->id(),
+        '@error' => mb_substr($e->getMessage(), 0, 500),
+      ]);
+    }
     $this->messenger()->addStatus($this->t('Your reservation has been cancelled.'));
     $this->logger('lm_booking')->notice('Reservation @code cancelled.', [
       '@code' => $this->presenter->build($booking)['reference'],

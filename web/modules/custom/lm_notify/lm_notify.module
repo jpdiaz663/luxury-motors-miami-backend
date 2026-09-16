@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Channel-based notifications for Luxury Motors.
+ */
+
+declare(strict_types=1);

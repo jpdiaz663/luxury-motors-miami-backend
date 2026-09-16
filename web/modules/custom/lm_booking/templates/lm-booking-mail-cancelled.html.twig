@@ -1,0 +1,138 @@
+{#
+/**
+ * @file
+ * Cancellation email. Desk copy stresses the released rental window.
+ */
+#}
+{% set guest = guest|default({}) %}
+{% set trip = trip|default({}) %}
+{% set quote = quote|default({}) %}
+{% set is_desk = audience == 'desk' %}
+{% set rosso = '#da291c' %}
+{% set notte = '#181818' %}
+{% set grafite = '#303030' %}
+{% set velo = '#f7f7f7' %}
+{% set fumo = '#8f8f8f' %}
+{% set white = '#ffffff' %}
+{% set green = '#2f855a' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ is_desk ? 'Vehicle released'|t : 'Reservation cancelled'|t }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:{{ velo }};font-family:Inter,Helvetica Neue,Arial,sans-serif;color:{{ notte }};">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:{{ velo }};">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;background-color:{{ white }};">
+          <tr>
+            <td style="background-color:{{ notte }};padding:28px 32px;border-bottom:3px solid {{ is_desk ? green : rosso }};">
+              <p style="margin:0 0 6px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ fumo }};">{{ site_name }}</p>
+              <h1 style="margin:0;font-size:22px;font-weight:500;color:{{ white }};line-height:1.3;">
+                {% if is_desk %}
+                  {{ 'Vehicle released — reservation cancelled'|t }}
+                {% else %}
+                  {{ 'Your reservation has been cancelled'|t }}
+                {% endif %}
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 32px 8px;">
+              <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ fumo }};">{{ 'Confirmation code'|t }}</p>
+              <p style="margin:0 0 20px;font-size:20px;letter-spacing:0.08em;color:{{ rosso }};font-weight:500;">{{ reference }}</p>
+              {% if is_desk %}
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:{{ grafite }};">{{ 'This hold is off the calendar. The vehicle is available again for the window below — same-day handoff rules still apply.'|t }}</p>
+              {% else %}
+                <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:{{ grafite }};">{{ 'The hold is released. If your plans change, you can book again from the fleet, subject to availability and current rates.'|t }}</p>
+              {% endif %}
+            </td>
+          </tr>
+          {% if is_desk %}
+            <tr>
+              <td style="padding:0 32px 24px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:{{ velo }};border-left:4px solid {{ green }};">
+                  <tr>
+                    <td style="padding:16px 20px;">
+                      <p style="margin:0 0 6px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ green }};">{{ 'Availability'|t }}</p>
+                      <p style="margin:0;font-size:15px;color:{{ notte }};">{{ trip.title }}</p>
+                      <p style="margin:8px 0 0;font-size:13px;color:{{ grafite }};">{{ trip.pickup_when }} → {{ trip.dropoff_when }}</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          {% endif %}
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:0 0 16px;">
+                    <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ fumo }};">{{ 'Vehicle'|t }}</p>
+                    <p style="margin:0;font-size:18px;color:{{ notte }};">{{ trip.title }}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="50%" valign="top" style="padding:0 12px 0 0;">
+                          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ fumo }};">{{ 'Pick up'|t }}</p>
+                          <p style="margin:0 0 4px;font-size:14px;color:{{ notte }};">{{ trip.pickup_place }}</p>
+                          <p style="margin:0;font-size:13px;color:{{ grafite }};">{{ trip.pickup_when }}</p>
+                        </td>
+                        <td width="50%" valign="top" style="padding:0 0 0 12px;">
+                          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ fumo }};">{{ 'Drop off'|t }}</p>
+                          <p style="margin:0 0 4px;font-size:14px;color:{{ notte }};">{{ trip.dropoff_place }}</p>
+                          <p style="margin:0;font-size:13px;color:{{ grafite }};">{{ trip.dropoff_when }}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:{{ velo }};">
+                <tr>
+                  <td style="padding:20px 24px;">
+                    <p style="margin:0 0 12px;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:{{ fumo }};">{{ is_desk ? 'Guest'|t : 'Your details'|t }}</p>
+                    {% if guest.name %}<p style="margin:0 0 6px;font-size:14px;color:{{ notte }};">{{ guest.name }}</p>{% endif %}
+                    {% if guest.email %}<p style="margin:0 0 6px;font-size:14px;color:{{ grafite }};">{{ guest.email }}</p>{% endif %}
+                    {% if guest.phone %}<p style="margin:0;font-size:14px;color:{{ grafite }};">{{ guest.phone }}</p>{% endif %}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 36px;">
+              {% if is_desk %}
+                <p style="margin:0;font-size:13px;color:{{ grafite }};">{{ 'The previous quote (@total) is void. Do not treat this vehicle as held for @code.'|t({'@total': quote.total_formatted, '@code': reference}) }}</p>
+              {% elseif fleet_url %}
+                <a href="{{ fleet_url }}" style="display:inline-block;padding:12px 20px;background-color:{{ rosso }};color:{{ white }};text-decoration:none;font-size:13px;letter-spacing:0.04em;">{{ 'Back to fleet'|t }}</a>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:{{ notte }};padding:20px 32px;">
+              <p style="margin:0;font-size:11px;letter-spacing:0.06em;color:{{ fumo }};">
+                {% if site_url %}
+                  <a href="{{ site_url }}" style="color:{{ white }};text-decoration:none;">{{ site_name }}</a>
+                {% else %}
+                  {{ site_name }}
+                {% endif %}
+                — Miami
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
