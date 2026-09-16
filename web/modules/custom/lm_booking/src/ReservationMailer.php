@@ -38,7 +38,7 @@ final class ReservationMailer implements ReservationGuestMailerInterface {
    */
   public function sendPair(NodeInterface $booking, array $notice): void {
 
-    if (\Drupal::moduleHandler()->moduleExists('lm_notify') && $this->notifier === NULL) {
+    if (!\Drupal::moduleHandler()->moduleExists('lm_notify') && $this->notifier === NULL) {
       return;
     }
 
